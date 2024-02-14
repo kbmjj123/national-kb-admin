@@ -1,0 +1,24 @@
+├── assets: 项目资源文件，用于提供给readme.md说明文档的图片资源
+├── build: 自定义的nodejs项目打包配置目录，包括打包所需的静态化配置，并植入到windows对象中
+│  ├── script: 项目打包生成待植入到winsows对象中的脚本动作，由build动作自动触发的
+│  └── vite: 主要用来提供vite相关的服务
+│    └── plugin: vite所需的插件定义目录
+├── mock: 接口mock测试的目录定义
+├── public: 站点静态化资源定义目录
+├── src: 项目代码与资源相关目录
+│  ├── api: 接口API定义
+│  ├── assets: 项目资源文件
+│  ├── components: 全局公共组件目录
+│  ├── config: 项目具体配置文件
+│  ├── directives: 项目指令
+│  ├── enums: 统一的美剧
+│  ├── hooks: 项目自定义use-*方法目录集合
+│  ├── layout: 项目公共的布局组件
+│  ├── plugins: 项目公共的插件
+│  ├── router: 项目路由清单
+│  ├── settings: 项目设置相关
+│  ├── store: pinia的全局store管理器
+│  ├── styles: 项目中的样式
+│  ├── utils: 统一的工具目录
+│  └── views: 具体各个页面
+└── types: ts类型定义说明文档，用以辅助项目编码过程中的编码提示目的
