@@ -15,6 +15,6 @@
   ],
   "exclude": [
     "**/*.js",
-    "commitlint.config.js"
+    "commitlint.config.cjs"
   ]
 }
