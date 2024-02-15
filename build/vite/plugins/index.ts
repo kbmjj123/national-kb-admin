@@ -22,7 +22,6 @@ export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean, prodMock: 
     // have to
     vueJsx(),
     AutoImport({
-      dts: true,
       imports: [
         'vue',
         {
@@ -34,8 +33,7 @@ export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean, prodMock: 
             'useThemeVars'
           ]
         }
-      ],
-      resolvers: [NaiveUiResolver()],
+      ]
     }),
     // 按需引入NaiveUi且自动创建组件声明
     Components({

@@ -10,6 +10,14 @@ export const constantRouter: RouteRecordRaw[] = [
     }
   },
   {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: () => import('@/views/dashboard/index.vue'),
+    meta: {
+      title: '工作台'
+    }
+  },
+  {
     path: '/login',
     name: 'Login',
     component: () => import('@/views/login/index.vue'),

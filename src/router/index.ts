@@ -16,3 +16,4 @@ export function setupRouter(app: App){
   // 创建路由守卫
   createRouterGuards(router)
 }
+export default router
