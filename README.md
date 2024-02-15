@@ -216,3 +216,15 @@ export default {
 :trollface: 而关于这个`vite/client`的内容，可具体见[vite client官网内容描述](https://github.com/vitejs/vite/blob/main/packages/vite/client.d.ts)
 
 :confounded: 而关于这种语法，其实是`TypeScript`中所提供的关于命名空间的一种使用，就是通过多个一个/多个文件来提供统一的一个命名空间，对外暴露API的方式，具体见[ts关于namespace的描述](https://www.typescriptlang.org/docs/handbook/namespaces.html)
+
+#### 路由导入组件采用@方式
+> 在日常的coding过程中，我们通过对vite配置`alias`配置，设置`@`即为`src`目录，即可完成在编码过程中的实现组件的找寻相关动作，但是对于`typescript`来说，它根本不知道什么情况， :confused: 因此， :point_right: 需要提供一个
+机制，告诉`typescript`编译器，应该如何寻找，这里以`*.vue`文件为例子，通过定义以下的配置，来告诉`ts`编译器如何找寻
+```typescript
+declare module '*.vue' {
+  import { DefineComponent } from 'vue';
+  const Component: DefineComponent<{}, {}, any>;
+  export Component;
+}
+```
+:trollface: 在 `TypeScript` 项目中，当导入 `.vue` 文件时，`TypeScript` 默认无法识别 `.vue` 文件的内容，因为 `.vue` 文件不是标准的 `TypeScript` 模块。为了告诉 `TypeScript` 如何处理 `.vue` 文件，你需要添加一个模块声明文件。 :point_right: 声明了一个模块 `*.vue`，并导出了一个变量 `Component`，其类型为 `DefineComponent<{}, {}, any>`。这个声明告诉 `TypeScript` 当导入 `.vue` 文件时，应该将其视为一个 `DefineComponent` 类型的变量，并且这个变量的具体类型由 `Vue` 的 `DefineComponent` 接口定义。 :point_right: 通过这样的声明，`TypeScript` 就能够正确地识别 `.vue` 文件，并为其提供类型检查和智能提示。这也是为什么在你的 IDE 中，通过添加这个模块声明文件后，IDE 能够识别 `.vue` 文件中的内容，包括组件选项、`props`、`methods` 等，并为其提供相应的代码补全和类型检查。
