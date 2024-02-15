@@ -1,7 +1,8 @@
 module.exports = {
-    "extends": ["stylelint-config-standard", "stylelint-prettier/recommended"],
-    "plugins": ["stylelint-prettier"],
+    "extends": ["stylelint-config-standard", "stylelint-config-prettier"],
+    "customSyntax": "postcss-html",
+    "plugins": ["stylelint-order"],
     "rules": {
-        "prettier/prettier": true
+        // "prettier/prettier": true
     }
 };
