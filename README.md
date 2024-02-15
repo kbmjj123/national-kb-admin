@@ -165,7 +165,34 @@ import { NaiveUiResolver } from 'unplugin-vue-components/resolvers';
     })
   }
 ```
-:star2: 使用了上述的插件配置之后，将会自动地在项目的根目录中生成一`components.d.ts`文件
+:star2: 使用了上述的插件配置之后，将会自动地在项目的根目录中生成一`components.d.ts`文件，只要在项目中使用到的关于UI库的组件，则将会被自动导入到项目中，无需自行去一一导入，减少编码次数！
+
+#### use*方法自动导入:unplugin-auto-import
+> 在实际的编码过程中，只要我们使用的是组合式的编码方式，那么我们需要经常性地需要导入一系列的`use*方法`，写得多了，自然有点繁琐， :confused: 那么是否拥有那么一种方式，能够像`unplugin-vue-components`实现组件的自动导入般来实现`use*`方法的自动导入呢？ :point_right: 答案是肯定的: **unplugin-auto-import**，也是这个组织的库，通过导入该库，可以方便的实现`use*`方法的自动集成，按需导入来使用
+```typescript
+// vite.config.js
+import AutoImport from 'unplugin-auto-import/vite'
+export default {
+  plugins: [
+    // ...此处隐藏其他插件相关代码
+    AutoImport({
+      dts: true,
+      imorts: [
+        'vue',
+        {
+          'naive-ui': [
+            'useDialog',
+            'useMessage',
+            'useNotification',
+            'useLoadingBar'
+          ]
+        }
+      ]      
+    })
+  ]
+}
+```
+:star: 通过 :point_up_2: 的方式，则可以实现`use*`相关的composable方法的自动导入，无需在使用的时候，一个个进行手写，但也有一个需要注意的是，尽量避免滥用！！
 
 #### 打包发布自动集成版本信息: app.config.js?v=xxx
 > 为方便在项目中对整体项目运行过程分辨版本信息，通过使用`vite-plugin-html`插件，在构建生成的html文件中集成版本信息`app.config.js`配置文件，而该文件则是通过自定义的构建文件`/build/script/postBuild.ts`来生成的`app.config.js`，通过`esno`三方库，执行自定义的`postBuild.ts`来输出对应的配置文件，实现版本信息文件的输出并自动注入的目的！！
