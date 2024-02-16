@@ -2,12 +2,15 @@ import './styles/tailwind.css'
 import { createApp } from 'vue'
 import App from './App.vue'
 import { setupStore } from './store'
+import { setupDirectives } from './plugins/directives' 
 import router, { setupRouter } from './router'
 
 async function bootstrap() {
   const app = createApp(App)
 
   setupStore(app)
+
+  setupDirectives(app)
 
   setupRouter(app)
   // 路由准备就绪后挂载 APP 实例
