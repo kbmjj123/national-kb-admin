@@ -11,7 +11,10 @@
     "vite.config.ts",
     "build/**/*.ts",
     "build/**/*.d.ts",
-    "types/*.d.ts"
+    "types/*.d.ts",
+    "types/**/*.d.ts",
+    "components.d.ts",
+    "auto-import.d.ts"
   ],
   "exclude": [
     "**/*.js",

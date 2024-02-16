@@ -31,6 +31,13 @@ export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean, prodMock: 
             'useNotification',
             'useLoadingBar',
             'useThemeVars'
+          ],
+          'vue-router': [
+            'useRouter',
+            'useRoute',
+            'useLink',
+            'onBeforeRouteLeave',
+            'onBeforeRouteUpdate',
           ]
         }
       ]

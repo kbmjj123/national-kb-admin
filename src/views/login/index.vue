@@ -87,7 +87,7 @@
   import { reactive, ref } from 'vue';
   import { useMessage } from 'naive-ui'
   import { PersonOutline, LockClosedOutline, LogoGithub, LogoFacebook } from '@vicons/ionicons5';
-  import { websiteConfig } from '@/config/website.config';
+  import websiteConfig from '@/config/website';
   const formRef = ref();
   const message = useMessage();
   const loading = ref(false);
@@ -102,7 +102,10 @@
     username: { required: true, message: '请输入用户名', trigger: 'blur' },
     password: { required: true, message: '请输入密码', trigger: 'blur' },
   };
-  const handleSubmit = () => {}
+  const handleSubmit = (e: Event) => {
+    e.preventDefault()
+    
+  }
 </script>
 
 <style scoped>

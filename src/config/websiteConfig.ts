@@ -1,9 +1,10 @@
 import logoImage from '@/assets/images/logo.png';
 import loginImage from '@/assets/images/account-logo.png';
 
-export const websiteConfig = Object.freeze({
-  title: 'NaiveUiAdmin',
+const websiteConfig = Object.freeze({
+  title: 'KBAdmin',
   logo: logoImage,
   loginImage: loginImage,
-  loginDesc: 'Naive Ui Admin中后台前端/设计解决方案',
+  loginDesc: 'KB商城后台管理系统',
 });
+export default websiteConfig
