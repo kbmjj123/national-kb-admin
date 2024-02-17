@@ -7,6 +7,6 @@ export default [
     meta: {
       title: '设置',
       sort: 3,
-    },
+    }
   }
 ]
