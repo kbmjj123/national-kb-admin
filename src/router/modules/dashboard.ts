@@ -19,6 +19,6 @@ export default [
         },
         component: () => import('@/views/dashboard/index.vue'),
       },
-    ]
+    ],
   },
 ]

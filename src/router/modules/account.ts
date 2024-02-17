@@ -6,7 +6,7 @@ export default [
     component: Layout,
     meta: {
       title: '账号管理',
-      sort: 2
-    }
-  }
+      sort: 2,
+    },
+  },
 ]

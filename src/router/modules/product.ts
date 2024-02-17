@@ -8,5 +8,5 @@ export default [
       title: '商品管理',
       sort: 1,
     },
-  }
+  },
 ]
