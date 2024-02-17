@@ -7,6 +7,6 @@ export default [
     meta: {
       title: '账号管理',
       sort: 2,
-    },
+    }
   }
 ]
