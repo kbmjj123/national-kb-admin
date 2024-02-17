@@ -1,3 +1,3 @@
-import AsideMenu from "./AsideMenu.vue";
+import AsideMenu from './AsideMenu.vue'
 
-export {AsideMenu}
+export { AsideMenu }

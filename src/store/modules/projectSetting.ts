@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import projectSetting from '@/settings/projectSetting'
-import type { IHeaderSetting, IMenuSetting, IMultiTabsSetting, ICrumbsSetting } from '/#/config';
+import type { IHeaderSetting, IMenuSetting, IMultiTabsSetting, ICrumbsSetting } from '/#/config'
 
 // 先加载项目默认的配置
 const {
@@ -18,17 +18,17 @@ const {
 } = projectSetting
 
 interface ProjectSettingState {
-  navMode: string; //导航模式
-  navTheme: string; //导航风格
-  headerSetting: IHeaderSetting; //顶部设置
-  showFooter: boolean; //页脚
-  menuSetting: IMenuSetting; //多标签
-  multiTabsSetting: IMultiTabsSetting; //多标签
-  crumbsSetting: ICrumbsSetting; //面包屑
-  permissionMode: string; //权限模式
-  isPageAnimate: boolean; //是否开启路由动画
-  pageAnimateType: string; //路由动画类型
-  isMobile: boolean; // 是否处于移动端模式
+  navMode: string //导航模式
+  navTheme: string //导航风格
+  headerSetting: IHeaderSetting //顶部设置
+  showFooter: boolean //页脚
+  menuSetting: IMenuSetting //多标签
+  multiTabsSetting: IMultiTabsSetting //多标签
+  crumbsSetting: ICrumbsSetting //面包屑
+  permissionMode: string //权限模式
+  isPageAnimate: boolean //是否开启路由动画
+  pageAnimateType: string //路由动画类型
+  isMobile: boolean // 是否处于移动端模式
 }
 
 export const useProjectSettingStore = defineStore({
@@ -48,45 +48,45 @@ export const useProjectSettingStore = defineStore({
   }),
   getters: {
     getNavMode(): string {
-      return this.navMode;
+      return this.navMode
     },
     getNavTheme(): string {
-      return this.navTheme;
+      return this.navTheme
     },
     getIsMobile(): boolean {
-      return this.isMobile;
+      return this.isMobile
     },
     getHeaderSetting(): object {
-      return this.headerSetting;
+      return this.headerSetting
     },
     getShowFooter(): boolean {
-      return this.showFooter;
+      return this.showFooter
     },
     getMenuSetting(): object {
-      return this.menuSetting;
+      return this.menuSetting
     },
     getMultiTabsSetting(): object {
-      return this.multiTabsSetting;
+      return this.multiTabsSetting
     },
     getCrumbsSetting(): object {
-      return this.crumbsSetting;
+      return this.crumbsSetting
     },
     getPermissionMode(): string {
-      return this.permissionMode;
+      return this.permissionMode
     },
     getIsPageAnimate(): boolean {
-      return this.isPageAnimate;
+      return this.isPageAnimate
     },
     getPageAnimateType(): string {
-      return this.pageAnimateType;
-    }
+      return this.pageAnimateType
+    },
   },
   actions: {
     setNavTheme(value: string): void {
-      this.navTheme = value;
+      this.navTheme = value
     },
     setIsMobile(value: boolean): void {
-      this.isMobile = value;
-    }
-  }
+      this.isMobile = value
+    },
+  },
 })

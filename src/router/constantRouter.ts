@@ -1,4 +1,4 @@
-import { RouteRecordRaw } from "vue-router";
+import { RouteRecordRaw } from 'vue-router'
 
 export const constantRouter: RouteRecordRaw[] = [
   {
@@ -6,15 +6,15 @@ export const constantRouter: RouteRecordRaw[] = [
     name: 'Root',
     redirect: '/dashboard',
     meta: {
-      title: '根目录'
-    }
+      title: '根目录',
+    },
   },
   {
     path: '/login',
     name: 'Login',
     component: () => import('@/views/login/index.vue'),
     meta: {
-      title: '登录'
-    }
-  }
+      title: '登录',
+    },
+  },
 ]

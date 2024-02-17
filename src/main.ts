@@ -2,7 +2,7 @@ import './styles/tailwind.css'
 import { createApp } from 'vue'
 import App from './App.vue'
 import { setupStore } from './store'
-import { setupDirectives } from './plugins/directives' 
+import { setupDirectives } from './plugins/directives'
 import router, { setupRouter } from './router'
 
 async function bootstrap() {

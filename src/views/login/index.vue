@@ -9,7 +9,12 @@
         <div class="view-account-top-desc">{{ websiteConfig.loginDesc }}</div>
       </div>
       <div class="view-account-form">
-        <n-form ref="formRef" label-placement="left" size="large" :model="formInline" :rules="rules">
+        <n-form
+          ref="formRef"
+          label-placement="left"
+          size="large"
+          :model="formInline"
+          :rules="rules">
           <n-form-item path="username">
             <n-input v-model:value="formInline.username" placeholder="请输入用户名">
               <template #prefix>
@@ -43,7 +48,9 @@
             </div>
           </n-form-item>
           <n-form-item>
-            <n-button type="primary" size="large" :loading="loading" block @click="handleSubmit"> 登录 </n-button>
+            <n-button type="primary" size="large" :loading="loading" block @click="handleSubmit">
+              登录
+            </n-button>
           </n-form-item>
           <n-form-item class="default-color">
             <div class="flex view-account-other">

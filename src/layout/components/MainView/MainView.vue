@@ -4,7 +4,7 @@
       <!-- <keep-alive>
         <component :is="Component":key="route.fullPath"></component>
       </keep-alive> -->
-      <component :is="Component":key="route.fullPath"></component>
+      <component :is="Component" :key="route.fullPath"></component>
     </template>
   </router-view>
 </template>

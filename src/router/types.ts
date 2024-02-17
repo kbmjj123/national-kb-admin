@@ -1,5 +1,5 @@
-import { RouteRecordRaw } from "vue-router";
+import { RouteRecordRaw } from 'vue-router'
 
 export interface IModuleType {
-  default: Array<RouteRecordRaw> | RouteRecordRaw;
+  default: Array<RouteRecordRaw> | RouteRecordRaw
 }

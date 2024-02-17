@@ -1,51 +1,51 @@
-import { cloneDeep } from 'lodash-es';
-import { PageEnum } from '@/enums/pageEnum';
+import { cloneDeep } from 'lodash-es'
+import { PageEnum } from '@/enums/pageEnum'
 /**
  * 递归组装菜单格式
  */
 export function generatorMenu(routerMap: Array<any>) {
   return filterRouter(routerMap).map((item) => {
-    const isRoot = isRootRouter(item);
-    const info = isRoot ? item.children[0] : item;
+    const isRoot = isRootRouter(item)
+    const info = isRoot ? item.children[0] : item
     const currentMenu = {
       ...info,
       ...info.meta,
       label: info.meta?.title,
       key: info.name,
       icon: isRoot ? item.meta?.icon : info.meta?.icon,
-    };
+    }
     // 是否有子菜单，并递归处理
     if (info.children && info.children.length > 0) {
       // Recursion
-      currentMenu.children = generatorMenu(info.children);
+      currentMenu.children = generatorMenu(info.children)
     }
-    return currentMenu;
-  });
+    return currentMenu
+  })
 }
 
 /**
  * 混合菜单
  * */
 export function generatorMenuMix(routerMap: Array<any>, routerName: string, location: string) {
-  const cloneRouterMap = cloneDeep(routerMap);
-  const newRouter = filterRouter(cloneRouterMap);
+  const cloneRouterMap = cloneDeep(routerMap)
+  const newRouter = filterRouter(cloneRouterMap)
   if (location === 'header') {
-    const firstRouter: any[] = [];
+    const firstRouter: any[] = []
     newRouter.forEach((item) => {
-      const isRoot = isRootRouter(item);
-      const info = isRoot ? item.children[0] : item;
-      info.children = undefined;
+      const isRoot = isRootRouter(item)
+      const info = isRoot ? item.children[0] : item
+      info.children = undefined
       const currentMenu = {
         ...info,
         ...info.meta,
         label: info.meta?.title,
         key: info.name,
-      };
-      firstRouter.push(currentMenu);
-    });
-    return firstRouter;
+      }
+      firstRouter.push(currentMenu)
+    })
+    return firstRouter
   } else {
-    return getChildrenRouter(newRouter.filter((item) => item.name === routerName));
+    return getChildrenRouter(newRouter.filter((item) => item.name === routerName))
   }
 }
 
@@ -54,21 +54,21 @@ export function generatorMenuMix(routerMap: Array<any>, routerName: string, loca
  * */
 export function getChildrenRouter(routerMap: Array<any>) {
   return filterRouter(routerMap).map((item) => {
-    const isRoot = isRootRouter(item);
-    const info = isRoot ? item.children[0] : item;
+    const isRoot = isRootRouter(item)
+    const info = isRoot ? item.children[0] : item
     const currentMenu = {
       ...info,
       ...info.meta,
       label: info.meta?.title,
       key: info.name,
-    };
+    }
     // 是否有子菜单，并递归处理
     if (info.children && info.children.length > 0) {
       // Recursion
-      currentMenu.children = getChildrenRouter(info.children);
+      currentMenu.children = getChildrenRouter(info.children)
     }
-    return currentMenu;
-  });
+    return currentMenu
+  })
 }
 
 /**
@@ -78,7 +78,7 @@ export function isRootRouter(item) {
   return (
     item.meta?.alwaysShow != true &&
     item?.children?.filter((item) => !Boolean(item?.meta?.hidden))?.length === 1
-  );
+  )
 }
 
 /**
@@ -89,6 +89,6 @@ export function filterRouter(routerMap: Array<any>) {
     return (
       (item.meta?.hidden || false) != true &&
       !['/:path(.*)*', '/', PageEnum.REDIRECT, PageEnum.BASE_LOGIN].includes(item.path)
-    );
-  });
+    )
+  })
 }

@@ -1,3 +1,3 @@
-import Application from "./Application.vue";
+import Application from './Application.vue'
 
 export default Application
