@@ -7,7 +7,7 @@ export default [
     component: Layout,
     meta: {
       title: '工作台',
-      sort: 0
+      sort: 0,
     },
     children: [
       {
@@ -15,10 +15,10 @@ export default [
         name: 'dashboard_console',
         meta: {
           title: '主控台',
-          affix: true
+          affix: true,
         },
         component: () => import('@/views/dashboard/index.vue'),
-      }
-    ]
-  }
+      },
+    ],
+  },
 ]

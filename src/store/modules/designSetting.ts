@@ -9,7 +9,7 @@ export const useDesignSettingStore = defineStore({
   state: () => ({
     darkTheme,
     appTheme,
-    appThemeList
+    appThemeList,
   }),
   getters: {
     getDarkTheme(): boolean {
@@ -20,8 +20,8 @@ export const useDesignSettingStore = defineStore({
     },
     getAppThemeList(): string[] {
       return this.appThemeList
-    }
-  }
+    },
+  },
 })
 
 export function useDesignSetting() {

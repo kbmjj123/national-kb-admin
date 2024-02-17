@@ -9,13 +9,7 @@
         <div class="view-account-top-desc">{{ websiteConfig.loginDesc }}</div>
       </div>
       <div class="view-account-form">
-        <n-form
-          ref="formRef"
-          label-placement="left"
-          size="large"
-          :model="formInline"
-          :rules="rules"
-        >
+        <n-form ref="formRef" label-placement="left" size="large" :model="formInline" :rules="rules">
           <n-form-item path="username">
             <n-input v-model:value="formInline.username" placeholder="请输入用户名">
               <template #prefix>
@@ -29,9 +23,8 @@
             <n-input
               v-model:value="formInline.password"
               type="password"
-              showPasswordOn="click"
-              placeholder="请输入密码"
-            >
+              show-password-on="click"
+              placeholder="请输入密码">
               <template #prefix>
                 <n-icon size="18" color="#808695">
                   <LockClosedOutline />
@@ -50,9 +43,7 @@
             </div>
           </n-form-item>
           <n-form-item>
-            <n-button type="primary" @click="handleSubmit" size="large" :loading="loading" block>
-              登录
-            </n-button>
+            <n-button type="primary" size="large" :loading="loading" block @click="handleSubmit"> 登录 </n-button>
           </n-form-item>
           <n-form-item class="default-color">
             <div class="flex view-account-other">
@@ -84,78 +75,77 @@
   </div>
 </template>
 <script setup lang="ts">
-  import { reactive, ref } from 'vue';
-  import { useMessage } from 'naive-ui'
-  import { PersonOutline, LockClosedOutline, LogoGithub, LogoFacebook } from '@vicons/ionicons5';
-  import websiteConfig from '@/config/website';
-  const formRef = ref();
-  const message = useMessage();
-  const loading = ref(false);
-  const autoLogin = ref(true);
+import { reactive, ref } from 'vue'
+import { useMessage } from 'naive-ui'
+import { PersonOutline, LockClosedOutline, LogoGithub, LogoFacebook } from '@vicons/ionicons5'
+import websiteConfig from '@/config/website'
+const formRef = ref()
+const message = useMessage()
+const loading = ref(false)
+const autoLogin = ref(true)
 
-  const formInline = reactive({
-    username: 'admin',
-    password: '123456',
-    isCaptcha: true,
-  });
-  const rules = {
-    username: { required: true, message: '请输入用户名', trigger: 'blur' },
-    password: { required: true, message: '请输入密码', trigger: 'blur' },
-  };
-  const handleSubmit = (e: Event) => {
-    e.preventDefault()
-    
-  }
+const formInline = reactive({
+  username: 'admin',
+  password: '123456',
+  isCaptcha: true,
+})
+const rules = {
+  username: { required: true, message: '请输入用户名', trigger: 'blur' },
+  password: { required: true, message: '请输入密码', trigger: 'blur' },
+}
+const handleSubmit = (e: Event) => {
+  e.preventDefault()
+}
 </script>
 
 <style scoped>
-  .view-account {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: auto;
+.view-account {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: auto;
 
-    &-container {
-      flex: 1;
-      padding: 32px 12px;
-      max-width: 384px;
-      min-width: 320px;
-      margin: 0 auto;
+  &-container {
+    flex: 1;
+    padding: 32px 12px;
+    max-width: 384px;
+    min-width: 320px;
+    margin: 0 auto;
+  }
+
+  &-top {
+    padding: 32px 0;
+    text-align: center;
+
+    &-desc {
+      font-size: 14px;
+      color: #808695;
     }
+  }
 
-    &-top {
-      padding: 32px 0;
-      text-align: center;
+  &-other {
+    width: 100%;
+  }
 
-      &-desc {
-        font-size: 14px;
-        color: #808695;
-      }
-    }
+  .default-color {
+    color: #515a6e;
 
-    &-other {
-      width: 100%;
-    }
-
-    .default-color {
+    .ant-checkbox-wrapper {
       color: #515a6e;
-
-      .ant-checkbox-wrapper {
-        color: #515a6e;
-      }
     }
   }
+}
 
-  @media (min-width: 768px) {
-    .view-account {
-      background-image: url('../../assets/images/login.svg');
-      background-repeat: no-repeat;
-      background-position: 50%;
-      background-size: 100%;
-    }
-
-    .page-account-container {
-      padding: 32px 0 24px 0;
-    }
+@media (min-width: 768px) {
+  .view-account {
+    background-image: url('../../assets/images/login.svg');
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: 100%;
   }
+
+  .page-account-container {
+    padding: 32px 0 24px 0;
+  }
+}
 </style>
