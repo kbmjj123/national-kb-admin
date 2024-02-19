@@ -116,7 +116,20 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref, reactitve, toRefs, computed, unref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useDialog, useMessage } from 'naive-ui'
+
+const props = defineProps<{
+  collapsed: boolean
+  inverted: boolean
+}>()
+
+const mesage = useMessage()
+const dialog = useDialog()
+
+</script>
 
 <style lang="less" scoped>
 .layout-header {

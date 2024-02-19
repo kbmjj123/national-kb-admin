@@ -1,5 +1,6 @@
 import { cloneDeep } from 'lodash-es'
 import { PageEnum } from '@/enums/pageEnum'
+import { isObject } from './is/index'
 /**
  * 递归组装菜单格式
  */
@@ -91,4 +92,18 @@ export function filterRouter(routerMap: Array<any>) {
       !['/:path(.*)*', '/', PageEnum.REDIRECT, PageEnum.BASE_LOGIN].includes(item.path)
     )
   })
+}
+
+export function deepMerge<T = any>(src: any = {}, target: any = {}): T {
+  let key: string
+  for (key in target) {
+    src[key] = isObject(src[key]) ? deepMerge(src[key], target[key]) : (src[key] = target[key])
+  }
+  return src
+}
+/**
+ * 判断是否 url
+ * */
+export function isUrl(url: string) {
+  return /^(http|https):\/\//g.test(url)
 }
