@@ -128,7 +128,6 @@ const props = defineProps<{
 
 const mesage = useMessage()
 const dialog = useDialog()
-
 </script>
 
 <style lang="less" scoped>
