@@ -8,7 +8,7 @@ import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 
 import { configHtmlPlugin } from './html';
-// import { configMockPlugin } from './mock';
+import { configMockPlugin } from './mock';
 import { configCompressPlugin } from './compress';
 
 // 对外提供的统一插件入口
@@ -53,7 +53,7 @@ export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean, prodMock: 
   vitePlugins.push(configHtmlPlugin(viteEnv, isBuild));
 
   // vite-plugin-mock
-  // VITE_USE_MOCK && vitePlugins.push(configMockPlugin(isBuild, prodMock));
+  VITE_USE_MOCK && vitePlugins.push(configMockPlugin(isBuild, prodMock));
 
   if (isBuild) {
     // rollup-plugin-gzip

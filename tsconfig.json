@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
@@ -16,23 +16,13 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "experimentalDecorators": true,
-    "lib": [
-      "dom",
-      "esnext"
-    ],
-    "typeRoots": [
-      "./node_modules/@types/",
-      "./types"
-    ],
+    "lib": ["dom", "esnext"],
+    "typeRoots": ["./node_modules/@types/", "./types"],
     "noImplicitAny": false,
     "skipLibCheck": true,
     "paths": {
-      "@/*": [
-        "src/*"
-      ],
-      "/#/*": [
-        "types/*"
-      ]
+      "@/*": ["src/*"],
+      "/#/*": ["types/*"]
     }
   },
   "include": [
@@ -47,11 +37,7 @@
     "components.d.ts",
     "auto-imports.d.ts"
   ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "**/*.js"
-  ],
+  "exclude": ["node_modules", "dist", "**/*.js"],
   "references": [
     {
       "path": "./tsconfig.node.json"
