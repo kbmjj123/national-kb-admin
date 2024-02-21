@@ -15,7 +15,7 @@ module.exports = {
   parserOptions: {
     parser: '@typescript-eslint/parser',
     sourceType: 'module',
-    ecmaVersion: 2018,
+    ecmaVersion: 2021,
     ecmaFeatures: {
       globalReturn: false,
       impliedStrict: false,
@@ -23,8 +23,16 @@ module.exports = {
     },
   },
   rules: {
-    'prettier/prettier': 'error',
+    'prettier/prettier': [
+      'error',
+      {
+        singleQuote: true,
+        parser: 'flow',
+        tabWidth: 2,
+      },
+    ],
     'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
     'vue/multi-word-component-names': 'off',
     'no-useless-escape': 'warn',
     'generator-star-spacing': 'off',

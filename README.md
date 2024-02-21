@@ -212,6 +212,64 @@ export default {
 
 #### 模拟数据接入：Mock
 > 在之前的项目中，大都是直接对接的后台服务，基本上所有的功能都是等着后台的功能实现了，才进行前端功能的对接与联调， :confounded: 但是，实际上可以借助于这个`Mock`，采用与后台一致的数据结构协议，自行进行前端站点功能闭环的实现，而不用必须等到后台的服务提供之后，才来进行对接，这样子前后端的开发可以同时并行，而无需等待的情况，而且自己还可以通过`Mock`来实现不同场景下的场景复现，争取覆盖到不同情况下的测试用例，更有甚者，还可以实现自动化测试的目的，无需依赖后端的业务，自行完成测试的流程，具体见[Mock官网描述](https://github.com/nuysoft/Mock/wiki)
+>  :point_down: 来介绍下如何引入mockjs基础框架并集成使用(这里以`vite`集成为例)
+##### 1. 安装相关的依赖
+```shell
+  pnpm install mockjs
+  pnpm install vite-plugin-mock --save-dev
+```
+
+##### 2. 在vite.config.js插件中引入配置文件
+```typescript
+  import { viteMockServe } from 'vite-plugin-mock'
+  export default defineConfig({
+    plugins: [
+      viteMockServe({
+        ignore: /^\_/, // 忽略指定格式文件
+        mockPath: 'mock', // 设置模拟.ts文件存储文件夹
+        watchFiles: true,
+        enable: true // 这里的enable根据实际情况而定
+      })
+    ]
+  })
+```
+:stars: 关于这里的参数说明，具体见[vite-mock官网描述](https://github.com/vbenjs/vite-plugin-mock?tab=readme-ov-file#options)
+
+##### 3.对于生产环境创建对应的mock处理函数，因为开发环境用的cnnect来实现的
+```typescript
+  // mockProdServer.ts
+import { createProdMockServer } from 'vite-plugin-mock/client'
+// 逐一导入您的mock.ts文件
+import user from './user'
+export function setupProdMockServer() {
+  createProdMockServer([...user])
+}
+```
+:stars: 这里 :u6709: :one: 需要注意的地是，需要在`tsconfig.json`中对应将`moduleResolution`设置为`bundle`，否则将会找不到这个`vite-plugin-mock/client`
+
+##### 4. 编写具体的mock响应
+> 这里根据业务模式进行模拟拆分为不同的文件模块来处理对应的mock
+```typescript
+import Mock from 'mockjs'
+import { resultSuccess } from './_util'
+import { MockMethod } from 'vite-plugin-mock'
+
+const token = Mock.Random.string('upper', 32, 32)
+
+export default [
+  {
+    url: '/api/login',
+    timeout: 1000,
+    method: 'post',
+    response: () => {
+      return resultSuccess({ token });
+    },
+  },
+] as MockMethod[]
+
+```
+:point_down: 是对应的mock结果：
+![mock结果](./assets/mock结果.png)
 
 #### 引入vite客户端类型声明
 > 在`vite`的相关项目中，我们会经常看到在ts文件中有如下的一段代码
