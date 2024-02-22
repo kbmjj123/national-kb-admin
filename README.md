@@ -294,3 +294,74 @@ declare module '*.vue' {
 }
 ```
 :trollface: 在 `TypeScript` 项目中，当导入 `.vue` 文件时，`TypeScript` 默认无法识别 `.vue` 文件的内容，因为 `.vue` 文件不是标准的 `TypeScript` 模块。为了告诉 `TypeScript` 如何处理 `.vue` 文件，你需要添加一个模块声明文件。 :point_right: 声明了一个模块 `*.vue`，并导出了一个变量 `Component`，其类型为 `DefineComponent<{}, {}, any>`。这个声明告诉 `TypeScript` 当导入 `.vue` 文件时，应该将其视为一个 `DefineComponent` 类型的变量，并且这个变量的具体类型由 `Vue` 的 `DefineComponent` 接口定义。 :point_right: 通过这样的声明，`TypeScript` 就能够正确地识别 `.vue` 文件，并为其提供类型检查和智能提示。这也是为什么在你的 IDE 中，通过添加这个模块声明文件后，IDE 能够识别 `.vue` 文件中的内容，包括组件选项、`props`、`methods` 等，并为其提供相应的代码补全和类型检查。
+
+#### 尝试引入postcss
+> `postcss`是一个功能强大的CSS处理工具，帮助开发者编写更加高效、易维护的CSS，其工作原理通过Javascript以及其插件来转换CSS， :point_right: 这意味着可以通过编写Javascript来编写自定义的插件处理CSS，实现处理各种功能，比如自动添加前缀、压缩CSS、支持未来的CSS语法等等
+> 关于`postcss`的使用步骤，主要 :u6709: 几个步骤，具体可参见[官网关于postcss的使用](https://github.com/postcss/postcss#usage)：
+1. 在项目中引入相关的依赖
+```shell
+	npm install postcss --save-dev
+```
+2. 创建postcss.config.js，并引入相关的依赖
+```shell
+	npm install postcss-autoprefixer postcss-nested --save-dev
+```
+:star2: 在`postcss.config.s`中引入相关的依赖
+```javascript
+	// postcss.config.js
+	module.exports = {
+		plugins: [
+			require('autoprefixer'),
+			require('postcss-nested')
+		]
+	}
+```
+:confused: 这里的依赖并非必须的，但是`postcss`真是因为引入的相关的插件，才能够实现*javascript改写css的目的*
+3. 插件选择
+:trollface: 根据实际情况，选择适合自己项目的相关插件，并通过各个插件所提供的参数，可实现自己的各个目的，例如，`autoprefixer` 插件可以帮助你自动添加 CSS 前缀，`cssnano` 可以压缩 CSS，`postcss-preset-env` 可以让你使用未来的 CSS 语法，关于插件的浏览，具体可通过[官方插件](https://www.postcss.parts/)，找寻到自己所
+想要使用的插件，引入到项目中，实现对CSS的干预！！
+4. 实例使用
+比如 :u6709: :point_down: 一个场景：
+:point_right: 我想要将项目中的图片资源小于某个大小的尺寸给合并到一张雪碧图，并同时将相关的使用到的图片资源引入样式调整，这里借助于`postcss-sprites`
+```shell
+# 安装对应的依赖
+	npm install postcss-sprites --save-dev
+```
+:star2: 在对应的`postcss.config.js`中引入对应的依赖，并同时通过该插件所提供的参数，补充自定义的逻辑
+```javascript
+	const fs = require('fs');
+	const postcssSprites = require('postcss-sprites');
+	// postcss.config.js
+	module.exports = {
+		plugins: [
+			// ... 这里隐藏其他postcss插件
+			postcssSprites({
+				spritePath: './dist/images', // 雪碧图输出路径
+      	retina: true, // 是否支持 Retina 屏幕
+				filterBy: function(image) {
+					// 过滤函数，根据资源大小判断是否需要合并雪碧图
+					const stats = fs.statSync(image.path);
+					return stats.size < 1024 * 1024; // 小于1MB的资源进行合并
+				},
+				groupBy: function(image) {
+					// 根据文件路径进行分组，确保相同路径的图片合并到同一个雪碧图中
+					const dirname = path.dirname(image.path);
+					return path.join(dirname, 'sprite');
+				},
+				hooks: {
+					onSaveSpritesheet: function(opts, spritesheet) {
+						// 雪碧图保存后的回调函数，更新对应的 CSS 样式
+						const cssFilePath = path.join(opts.stylesheetPath, opts.spritePath, opts.spriteName + '.css');
+						let cssContent = fs.readFileSync(cssFilePath, 'utf8');
+
+						// 修改 CSS 样式，更新对应的图片路径
+						const spritesheetPath = path.join(opts.spritePath, opts.spriteName + '.png');
+						cssContent = cssContent.replace(new RegExp(opts.spritePath, 'g'), spritesheetPath);
+
+						fs.writeFileSync(cssFilePath, cssContent);
+					}
+				}
+			})
+		]
+	}
+```
