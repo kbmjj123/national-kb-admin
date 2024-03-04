@@ -9,6 +9,7 @@
 <script setup lang="ts">
 import { zhCN, dateZhCN, darkTheme } from 'naive-ui'
 import type { GlobalTheme } from 'naive-ui'
+import { ref } from 'vue'
 const theme = ref<GlobalTheme | null>(null)
 // const getDarkTheme = computed(() => )
 </script>

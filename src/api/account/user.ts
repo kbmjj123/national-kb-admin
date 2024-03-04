@@ -1,7 +1,6 @@
 import { http } from '@/utils/http'
 
-export function getUserInfo(params) {
-}
+export function getUserInfo(params) {}
 
 export function login(params) {
   return http.request({

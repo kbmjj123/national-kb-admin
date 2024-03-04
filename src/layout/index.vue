@@ -12,11 +12,11 @@
       class="layout-sider"
       @collapse="collapsed = true"
       @expand="collapsed = false">
-      <Logo :collapsed="collapsed"></Logo>
-      <AsideMenu v-model:collapsed="collapsed" location="left"></AsideMenu>
+      <Logo :collapsed="collapsed" />
+      <AsideMenu v-model:collapsed="collapsed" location="left" />
     </n-layout-sider>
     <n-layout :inverted="inverted">
-      <n-layout-header :inverted="getHeaderInverted"> </n-layout-header>
+      <n-layout-header :inverted="getHeaderInverted"></n-layout-header>
       <n-layout-content class="layout-content">
         <MainView />
       </n-layout-content>

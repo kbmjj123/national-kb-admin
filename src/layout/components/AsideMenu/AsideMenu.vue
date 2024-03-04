@@ -10,7 +10,7 @@
     :expanded-keys="state.openKeys"
     :value="getSelectedKeys"
     @update:value="clickMenuItem"
-    @update:expanded-keys="menuExpanded"></n-menu>
+    @update:expanded-keys="menuExpanded" />
 </template>
 
 <script setup lang="ts">

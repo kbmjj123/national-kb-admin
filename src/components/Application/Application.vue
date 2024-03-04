@@ -9,4 +9,5 @@
     </n-dialog-provider>
   </n-loading-bar-provider>
 </template>
+
 <script setup lang="ts"></script>

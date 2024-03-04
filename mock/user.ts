@@ -10,7 +10,7 @@ export default [
     timeout: 1000,
     method: 'post',
     response: () => {
-      return resultSuccess({ token });
+      return resultSuccess({ token })
     },
   },
 ] as MockMethod[]

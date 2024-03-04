@@ -23,6 +23,7 @@ const router = createRouter({
   scrollBehavior: () => ({ left: 0, top: 0 }),
 })
 
+// 对外暴露的设置路由的api方法，并设置对应的路由守卫
 export function setupRouter(app: App) {
   app.use(router)
   // 创建路由守卫
