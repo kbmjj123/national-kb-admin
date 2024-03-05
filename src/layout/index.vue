@@ -16,7 +16,7 @@
       <AsideMenu v-model:collapsed="collapsed" location="left" />
     </n-layout-sider>
     <n-layout :inverted="inverted">
-      <n-layout-header :inverted="getHeaderInverted"></n-layout-header>
+      <n-layout-header :inverted="getHeaderInverted" />
       <n-layout-content class="layout-content">
         <MainView />
       </n-layout-content>
