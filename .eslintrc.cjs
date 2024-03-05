@@ -22,6 +22,7 @@ module.exports = {
     'plugin:prettier/recommended',
   ],
   rules: {
+    'prettier/prettier': 'error',
     'vue/script-setup-uses-vars': 'error',
     'vue/multi-word-component-names': 'off',
     '@typescript-eslint/ban-ts-ignore': 'off',

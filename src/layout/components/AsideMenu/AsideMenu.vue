@@ -39,7 +39,12 @@ const currentRoute = useRoute()
 const router = useRouter()
 const settingStore = useProjectSettingStore()
 // 定义待使用的菜单
-const menus = ref<any[]>([])
+const menus = ref<any[]>([
+  {
+    label: '首页',
+    key: 'dashboard',
+  },
+])
 // 当前选中的路由的名称
 const selectedKeys = ref<string>(currentRoute.name as string)
 const headerMenuSelectKey = ref<string>('')

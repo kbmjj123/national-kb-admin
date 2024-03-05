@@ -3,6 +3,7 @@ import { Layout } from '../constant'
 export default [
   {
     path: '/order',
+		name: 'order',
     component: Layout,
     meta: {
       title: '订单管理',

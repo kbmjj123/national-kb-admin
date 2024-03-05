@@ -3,6 +3,7 @@ import { Layout } from '../constant'
 export default [
   {
     path: '/account',
+    name: 'account',
     component: Layout,
     meta: {
       title: '账号管理',
@@ -15,7 +16,7 @@ export default [
         meta: {
           title: '账号管理',
         },
-        component: () => import('@/view/account/index.vue'),
+        component: () => import('@/views/account/index.vue'),
       },
     ],
   },
