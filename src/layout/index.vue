@@ -1,5 +1,6 @@
 <template>
   <n-layout has-sider class="layout" :position="fixedMenu">
+    <!-- 左侧顶部的图标与菜单列表 -->
     <n-layout-sider
       show-trigger="bar"
       :position="fixedMenu"
@@ -12,11 +13,16 @@
       class="layout-sider"
       @collapse="collapsed = true"
       @expand="collapsed = false">
+      <!-- 系统图标logo -->
       <Logo :collapsed="collapsed" />
+      <!-- 映射的菜单 -->
       <AsideMenu v-model:collapsed="collapsed" location="left" />
     </n-layout-sider>
+    <!-- 右侧容器 -->
     <n-layout :inverted="inverted">
+      <!-- 头部视图组件 -->
       <n-layout-header :inverted="getHeaderInverted" />
+      <!-- 各个页面所在的layout组件 -->
       <n-layout-content class="layout-content">
         <MainView />
       </n-layout-content>
