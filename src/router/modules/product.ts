@@ -3,6 +3,7 @@ import { Layout } from '../constant'
 export default [
   {
     path: '/product',
+		name: 'product',
     component: Layout,
     meta: {
       title: '商品管理',
@@ -10,7 +11,8 @@ export default [
     },
     children: [
       {
-        name: 'manage',
+				path: 'manage',
+        name: 'product_manage',
         meta: {
           title: '商品管理',
         },

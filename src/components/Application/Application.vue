@@ -1,4 +1,5 @@
 <template>
+	<!-- 全局调用的准备工作 -->
   <n-loading-bar-provider>
     <n-dialog-provider>
       <n-notification-provider>

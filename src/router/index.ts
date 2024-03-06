@@ -15,10 +15,10 @@ const routeModuleList = Object.keys(modules).reduce((list, key) => {
 // routeModuleList.sort((a, b) => {
 //   return (a.meta?.sort ?? 0) - (b.meta?.sort ?? 0)
 // });
-
+const finalRouteList = constantRouter.concat(...routeModuleList)
 const router = createRouter({
   history: createWebHashHistory(),
-  routes: constantRouter.concat(...routeModuleList),
+  routes: finalRouteList,
   strict: true,
   scrollBehavior: () => ({ left: 0, top: 0 }),
 })
