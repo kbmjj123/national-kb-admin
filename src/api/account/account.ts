@@ -20,7 +20,7 @@ export function login(params: BasicParams): Promise<{ token: string }> {
 }
 
 // 修改登录密码
-export function changePassword(params) {
+export function changePassword(params: BasicParams) {
 	return http.request({
 		url: '/changepwd',
 		method: 'POST',
