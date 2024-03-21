@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { store } from '@/store'
 import { ACCESS_TOKEN, CURRENT_USER, IS_SCREENLOCKED } from '../mutation-types'
+import { login } from '@/api/account/user'
 
 import { storage } from '@/utils/Storage'
 
@@ -46,7 +47,8 @@ export const useUserStore = defineStore({
     // 用户登录动作
     async login(params: any) {
       const res = await login(params)
-    },
+			return res
+		},
     // 获取当前登录用户信息
     async getCurrentUserInfo() {},
     // 退出登录动作
