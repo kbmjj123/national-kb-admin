@@ -7,8 +7,6 @@
         <h2 v-show="!collapsed" class="title">{{ websiteConfig.title }}</h2>
       </div>
       <AsideMenu
-        v-model:collapsed="collapsed"
-        v-model:location="getMenuLocation"
         :inverted="getInverted"
         mode="horizontal" />
     </div>

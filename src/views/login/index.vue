@@ -83,12 +83,14 @@
 </template>
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { useMessage } from 'naive-ui'
+// import { useMessage } from 'naive-ui'
 import { PersonOutline, LockClosedOutline, LogoGithub, LogoFacebook } from '@vicons/ionicons5'
 import websiteConfig from '@/config/websiteConfig'
-import { login } from '@/api/account/user'
+import { useUser } from '@/store/modules/user'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const formRef = ref()
-const message = useMessage()
+// const message = useMessage()
 const loading = ref(false)
 const autoLogin = ref(true)
 
@@ -104,11 +106,16 @@ const rules = {
 const handleSubmit = async (e: Event) => {
   e.preventDefault()
   const { username, password } = formInline
-  const res = await login({
+	const useUserStore = useUser()
+	loading.value = true
+	await useUserStore.login({
     username,
     password,
   })
-  console.info(res)
+	loading.value = false
+	router.push({
+		name: 'dashboard'
+	})
 }
 </script>
 

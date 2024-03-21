@@ -28,3 +28,8 @@ export type BasicPageParams = {
   pageSize: number
   total: number
 }
+
+// 统一设置关于请求参数类型
+export type BasicParams = {
+	[index: string]: any
+}
