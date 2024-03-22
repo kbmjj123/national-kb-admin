@@ -26,7 +26,8 @@ export interface ArrayResponseModel<T> extends BasicResponseModel {
 export type BasicPageParams = {
   pageIndex: number
   pageSize: number
-  total: number
+  total: number,
+	[index: string]: any
 }
 
 // 统一设置关于请求参数类型
