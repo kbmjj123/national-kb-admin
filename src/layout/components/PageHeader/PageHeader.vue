@@ -1,16 +1,12 @@
 <template>
   <div class="layout-header">
     <!--顶部菜单-->
-    <div
-      class="layout-header-left"
-      v-if="navMode === 'horizontal' || (navMode === 'horizontal-mix' && mixMenu)">
+    <div class="layout-header-left" v-if="navMode === 'horizontal'">
       <div class="logo" v-if="navMode === 'horizontal'">
         <img :src="websiteConfig.logo" alt="" />
         <h2 v-show="!collapsed" class="title">{{ websiteConfig.title }}</h2>
       </div>
       <AsideMenu
-        v-model:collapsed="collapsed"
-        v-model:location="getMenuLocation"
         :inverted="getInverted"
         mode="horizontal" />
     </div>
@@ -38,36 +34,25 @@
       </div>
       <!-- 面包屑 -->
       <n-breadcrumb v-if="crumbsSetting.show">
-        <template
-          v-for="routeItem in breadcrumbList"
-          :key="routeItem.name === 'Redirect' ? void 0 : routeItem.name">
+        <template v-for="routeItem in breadcrumbList" :key="routeItem.name === 'Redirect' ? void 0 : routeItem.name">
           <n-breadcrumb-item v-if="routeItem.meta.title">
-            <n-dropdown
-              v-if="routeItem.children.length"
-              :options="routeItem.children"
-              @select="dropdownSelect">
+            <n-dropdown v-if="routeItem.children.length" :options="routeItem.children" @select="dropdownSelect">
               <span class="link-text">
-                <component
-                  v-if="crumbsSetting.showIcon && routeItem.meta.icon"
-                  :is="routeItem.meta.icon" />
+                <component v-if="crumbsSetting.showIcon && routeItem.meta.icon" :is="routeItem.meta.icon" />
                 {{ routeItem.meta.title }}
               </span>
             </n-dropdown>
             <span class="link-text" v-else>
-              <component
-                v-if="crumbsSetting.showIcon && routeItem.meta.icon"
-                :is="routeItem.meta.icon" />
+              <component v-if="crumbsSetting.showIcon && routeItem.meta.icon" :is="routeItem.meta.icon" />
               {{ routeItem.meta.title }}
             </span>
           </n-breadcrumb-item>
         </template>
       </n-breadcrumb>
     </div>
+		<!-- 右侧菜单 -->
     <div class="layout-header-right">
-      <div
-        class="layout-header-trigger layout-header-trigger-min"
-        v-for="item in iconList"
-        :key="item.icon">
+      <div class="layout-header-trigger layout-header-trigger-min" v-for="item in iconList" :key="item.icon">
         <n-tooltip placement="bottom">
           <template #trigger>
             <n-icon size="18">
@@ -120,6 +105,8 @@
 import { ref, reactitve, toRefs, computed, unref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useDialog, useMessage } from 'naive-ui'
+import './components'
+import websiteConfig from '@/config/websiteConfig'
 
 const props = defineProps<{
   collapsed: boolean

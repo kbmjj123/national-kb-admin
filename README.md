@@ -329,6 +329,7 @@ declare module '*.vue' {
 ```
 :star2: 在对应的`postcss.config.js`中引入对应的依赖，并同时通过该插件所提供的参数，补充自定义的逻辑
 ```javascript
+
 	const fs = require('fs');
 	const postcssSprites = require('postcss-sprites');
 	// postcss.config.js
@@ -365,3 +366,60 @@ declare module '*.vue' {
 		]
 	}
 ```
+
+#### 组件库使用过程记录
+> 项目所使用的三方ui库为：[naive-ui](https://www.naiveui.com/zh-CN/os-theme)，是一个仅能够在vue3.+以及typescript4.+以上版本，运行在现代浏览器上的UI组件库， :point_down: 将项目过程中的相关使用说明给列举出来，以便于后续自己方便查找。
+
+##### 全局插件的的使用
+> 在实际的编码过程中，难免需要使用到类似于`showLoading`、`showToast`、`showModal`等API，而且想以插件的形式来调用(也就是随时调用)，那么需要进行以下的一个配置，在`naive-ui`中主要是`n-loading-bar-provider`、`n-dialog-provider`、`n-notification-provider`、`n-message-provider`
+```vue
+	<!-- App.vue -->
+	<template>
+		<n-loading-bar-provider>
+			<n-dialog-provider>
+				<n-notification-provider>
+					<n-message-provider>
+						<RouterView></RouterView>
+					</n-message-provider>
+				</n-notification-provider>
+			</n-dialog-provider>
+		</n-loading-bar-provider>
+	</template>
+```
+:stars: 这里通过对全局路由对象进行一个包裹，使得在这个全局上下文中，都可以直接访问到外层节点provider，通过每个组件所提供的composite-api(相关的use*方法)，可实现对组件的直接访问，如下代码所示：
+```vue
+	<script lang="ts" setup>
+		import { useLoadingBar } from 'naive-ui'
+		const loadingBar = useLoadingBar()
+		loadingBar.start()
+	</script>
+```
+:trollface: 这样子之后，我们便能够直接在所有的组件中通过这个`use*`方法对全局组件的一个直接访问了！！
+
+:confused: 而在以往的项目过程中，有时不单单需要在sfc组件中使用到这功能，像store这种非组件上下文或者是网络请求框架`axios`中需要使用到这个功能， :point_right: 我们有必要将它暴露到全局范围中(通过`window.$loadingBar`)：
+```typescript
+	import { createDiscreteApi } from 'naive-ui'
+	const { message, notification, dialog, loadingBar } = createDiscreteApi([
+		'message', 'dialog', 'notification', 'loadingBar'
+	], {/*其他参数配置*/})
+	//! 并将其挂载到全局window对象中
+	window['$message'] = message
+	window['$notification'] = notification
+	window['$dialog'] = dialog
+	window['$loadingBar'] = loadingBar
+```
+:+1: 上述通过这个`createDiscreteApi()`可直接引用到当前APP上下文中的已经包裹配置过的全局provider组件，实现一个全局直接访问调用的目的！！
+
+##### 关于接口请求是否需要维护类型
+> 在编码的过程中，难免需要与后端接口服务进行通讯， :confused: 那么是否需要声明对应的类型，用于描述各个接口的调用呢？ :point_right: 答案是肯定的，虽然单纯的维护这个接口的数据结构会很繁琐，但是这这对我们在进行编码的过程中，对于代码的自动提示以及避免拼写错误，以及提前发现可能存在的代码漏洞有比较大的帮助，因此，建议还是尽量完善好对应的接口类型的声明，项目中由于是基于`axios`来进行发起网络请求的，这边针对`axios`的基础上搭建了一套基础的服务，因此，实际调用方仅需要简单的编写具体对应的业务逻辑接口即可，如下代码所示：
+```typescript
+	// 获取当前登录用户信息
+export function getUserInfo(): Promise<IUserState> {
+	return http.request({
+		url: '/user/info',
+		method: 'GET'
+	})
+}
+```
+:star_struck: 这里我们声明了一方法`getUserInfo`，用于获取登录用户的信息，而且我们将其申明为一Promise响应方法，通过这样子定义，在实际该方法的调用方编写时，即可直接获取到响应结果的数据结构，如下图所示:
+![针对声明的类型接口进行调用](./assets/针对声明的类型接口进行调用.png)

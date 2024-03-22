@@ -152,7 +152,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
       {
         timeout: 10 * 1000,
         // 接口前缀
-        prefixUrl: '',
+        prefixUrl: '/api',
         headers: { 'Content-Type': ContentTypeEnum.JSON },
         // 数据处理方式
         transform,

@@ -3,6 +3,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import { setupStore } from './store'
 import { setupDirectives } from './plugins/directives'
+import { setupNaiveDiscreteApi } from './plugins/naiveDiscreteApi'
 import router, { setupRouter } from './router'
 
 async function bootstrap() {
@@ -11,6 +12,8 @@ async function bootstrap() {
   setupStore(app)
 
   setupDirectives(app)
+
+	setupNaiveDiscreteApi()
 
   setupRouter(app)
   // 路由准备就绪后挂载 APP 实例

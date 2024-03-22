@@ -3,6 +3,7 @@ import { Layout } from '../constant'
 export default [
   {
     path: '/setting',
+		name: 'setting',
     component: Layout,
     meta: {
       title: '设置',

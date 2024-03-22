@@ -83,6 +83,7 @@ const updateMenu = () => {
   // }
   updateSelectedKeys()
 }
+// 菜单点击事件
 const clickMenuItem = (key: string) => {
   if (/http(s)/?.test(key)) {
     window.open(key)

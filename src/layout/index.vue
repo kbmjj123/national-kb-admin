@@ -1,5 +1,6 @@
 <template>
   <n-layout has-sider class="layout" :position="fixedMenu">
+    <!-- 左侧顶部的图标与菜单列表 -->
     <n-layout-sider
       show-trigger="bar"
       :position="fixedMenu"
@@ -12,11 +13,18 @@
       class="layout-sider"
       @collapse="collapsed = true"
       @expand="collapsed = false">
+      <!-- 系统图标logo -->
       <Logo :collapsed="collapsed" />
+      <!-- 映射的菜单 -->
       <AsideMenu v-model:collapsed="collapsed" location="left" />
     </n-layout-sider>
+    <!-- 右侧容器 -->
     <n-layout :inverted="inverted">
-      <n-layout-header :inverted="getHeaderInverted"></n-layout-header>
+      <!-- 头部视图组件 -->
+      <n-layout-header :inverted="getHeaderInverted" >
+				<PageHeader v-model:collapsed="collapsed" />
+			</n-layout-header>
+      <!-- 各个页面所在的layout组件 -->
       <n-layout-content class="layout-content">
         <MainView />
       </n-layout-content>
@@ -29,6 +37,7 @@ import { useProjectSetting } from '@/hooks/setting/useProjectSetting'
 import { Logo } from './components/Logo'
 import { AsideMenu } from './components/AsideMenu'
 import { MainView } from './components/MainView'
+import { PageHeader } from './components/PageHeader'
 
 const { navMode, navTheme, headerSetting, menuSetting, multiTabsSetting } = useProjectSetting()
 
@@ -45,6 +54,7 @@ const inverted = computed(() => {
 const getHeaderInverted = computed(() => {
   return ['light', 'header-dark'].includes(unref(navTheme)) ? unref(inverted) : !unref(inverted)
 })
+//? 根据菜单的展开与否，设置当前菜单的长度
 const leftMenuWidth = computed(() => {
   const { minMenuWidth, menuWidth } = unref(menuSetting)
   return collapsed.value ? minMenuWidth : menuWidth

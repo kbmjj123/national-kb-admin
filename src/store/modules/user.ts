@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { store } from '@/store'
 import { ACCESS_TOKEN, CURRENT_USER, IS_SCREENLOCKED } from '../mutation-types'
+import { login, getUserInfo } from '@/api/account/account'
 
 import { storage } from '@/utils/Storage'
 
@@ -13,9 +14,7 @@ export type UserInfoType = {
 export interface IUserState {
   token: string
   username: string
-  welcome: string
   avatar: string
-  permissions: any[]
   info: UserInfoType
 }
 
@@ -24,9 +23,7 @@ export const useUserStore = defineStore({
   state: () => ({
     token: storage.get(ACCESS_TOKEN, ''),
     username: '',
-    welcome: '',
     avatar: '',
-    permissions: [],
     info: storage.get(CURRENT_USER, {}),
   }),
   getters: {},
@@ -37,23 +34,32 @@ export const useUserStore = defineStore({
     setAvatar(avatar: string) {
       this.avatar = avatar
     },
-    setPermissions(permissions: []) {
-      this.permissions = permissions
-    },
-    setUserInfo(info: UserInfoType) {
+		setUsername(username: string) {
+			this.username = username
+		},
+    setUserInfo(info: UserInfoType | null) {
       this.info = info
     },
     // 用户登录动作
     async login(params: any) {
       const res = await login(params)
-    },
+			this.setToken(res.token)
+			storage.setCookie(ACCESS_TOKEN, res.token)
+			await this.getCurrentUserInfo()
+			return res
+		},
     // 获取当前登录用户信息
-    async getCurrentUserInfo() {},
+    async getCurrentUserInfo() {
+			const res = await getUserInfo()
+			this.setAvatar(res.avatar)
+			this.setUserInfo(res.info)
+			this.setUsername(res.username)
+			storage.set(CURRENT_USER, res)
+		},
     // 退出登录动作
     async logout() {
       this.setToken('')
-      this.setPermissions([])
-      this.setAvatar(''), this.setUserInfo({ name: '', email: '', phone: '' })
+      this.setAvatar(''), this.setUserInfo(null)
       storage.remove(ACCESS_TOKEN)
       storage.remove(CURRENT_USER)
     },

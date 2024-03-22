@@ -9,12 +9,12 @@ export interface StringOrBooleanResponseModel extends BasicResponseModel {
 }
 
 //? 对象类型响应结果
-export interface ObjectResonseModel<T> extends BasicResponseModel {
+export interface ObjectResponseModel<T> extends BasicResponseModel {
   data: T
 }
 
 //? 列表类型响应结果
-export interface ArrayResonseModel<T> extends BasicResponseModel {
+export interface ArrayResponseModel<T> extends BasicResponseModel {
   data: {
     list: Array<T>
     total: number
@@ -27,4 +27,9 @@ export type BasicPageParams = {
   pageIndex: number
   pageSize: number
   total: number
+}
+
+// 统一设置关于请求参数类型
+export type BasicParams = {
+	[index: string]: any
 }
