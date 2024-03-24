@@ -1,9 +1,9 @@
 import { RouteRecordRaw } from 'vue-router'
 
-export const constantRouter: RouteRecordRaw[] = [
+export const constantRouters: RouteRecordRaw[] = [
   {
     path: '/',
-    name: 'Root',
+    name: 'root',
     redirect: '/dashboard',
     meta: {
       title: '根目录',
@@ -11,10 +11,11 @@ export const constantRouter: RouteRecordRaw[] = [
   },
   {
     path: '/login',
-    name: 'Login',
+    name: 'login',
     component: () => import('@/views/login/index.vue'),
     meta: {
       title: '登录',
+			needLogin: false
     },
   },
 	{
@@ -22,7 +23,8 @@ export const constantRouter: RouteRecordRaw[] = [
 		name: '404',
 		component: () => import('@/views/404/index.vue'),
 		meta: {
-			title: '页面没找到'
+			title: '页面没找到',
+			needLogin: false
 		}
 	},
 	{
@@ -30,12 +32,8 @@ export const constantRouter: RouteRecordRaw[] = [
 		name: '403',
 		component: () => import('@/views/403/index.vue'),
 		meta: {
-			title: '没有权限'
+			title: '没有权限',
+			needLogin: false
 		}
-	}, 
-	{
-		path: '*',
-		name: '*',
-		redirect: '/'
 	}
 ]
