@@ -17,4 +17,20 @@ export const constantRouter: RouteRecordRaw[] = [
       title: '登录',
     },
   },
+	{
+		path: '/',
+		name: '/404',
+		component: () => import('@/views/404/index.vue'),
+		meta: {
+			title: '页面没找到'
+		}
+	},
+	{
+		name: '/',
+		path: '/403',
+		component: () => import('@/views/403/index.vue'),
+		meta: {
+			title: '没有权限'
+		}
+	}
 ]
