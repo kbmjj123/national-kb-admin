@@ -15,18 +15,20 @@ export interface IUserState {
   token: string
   username: string
   avatar: string
-  info: UserInfoType
+  info: UserInfoType | null
 }
 
 export const useUserStore = defineStore({
   id: 'app-user',
-  state: () => ({
+  state: ():IUserState => ({
     token: storage.getCookie(ACCESS_TOKEN),
     username: '',
     avatar: '',
     info: storage.get(CURRENT_USER, {}),
   }),
-  getters: {},
+  getters: {
+		showUserName: state => state.info?.name
+	},
   actions: {
     setToken(token: string) {
       this.token = token

@@ -86,6 +86,13 @@
 #### vite.config.ts配置文件
 > 一切从应用程序配置文件入手，通过自定义`build`动作，将原本单一入口的`vite.config.ts`调整自定义按照模块来进行划分的配置
 
+### 关于项目的图标
+> 项目中采用`xicons`图标库作为整体项目的图标，使用时，可借助于[官方xicons站点](https://www.xicons.org/#/)进行具体的查询操作，然后在项目中通过 :point_down: 的方式来使用
+```typescript
+	import { SettingOutlined } from '@vicons/antd'
+```
+:star: 上述的`SettingOutlined`来源于[官方xicons站点](https://www.xicons.org/#/)上的查询操作！
+
 ### 知识查漏补缺
 > 在项目coding过程中，由于是初次接触`ts`以及`vue3+`，因此这里将coding过程中未遇见过的相关知识给记录出来，以便于自己后续查阅
 

@@ -22,7 +22,7 @@
     <n-layout :inverted="inverted">
       <!-- 头部视图组件 -->
       <n-layout-header :inverted="getHeaderInverted" >
-				<PageHeader v-model:collapsed="collapsed" />
+				<PageHeader :collapsed="collapsed" :inverted="getHeaderInverted"/>
 			</n-layout-header>
       <!-- 各个页面所在的layout组件 -->
       <n-layout-content class="layout-content">

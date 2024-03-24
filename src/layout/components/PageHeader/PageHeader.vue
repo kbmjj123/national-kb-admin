@@ -52,6 +52,7 @@
     </div>
 		<!-- 右侧菜单 -->
     <div class="layout-header-right">
+			<!-- 循环遍历图标列表 -->
       <div class="layout-header-trigger layout-header-trigger-min" v-for="item in iconList" :key="item.icon">
         <n-tooltip placement="bottom">
           <template #trigger>
@@ -102,9 +103,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactitve, toRefs, computed, unref } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { useDialog, useMessage } from 'naive-ui'
+import { ref, reactive, toRefs, computed, unref } from 'vue'
+// import { useRouter, useRoute } from 'vue-router'
+import { useUser } from '@/store/modules/user' 
 import './components'
 import websiteConfig from '@/config/websiteConfig'
 
@@ -113,8 +114,56 @@ const props = defineProps<{
   inverted: boolean
 }>()
 
-const mesage = useMessage()
-const dialog = useDialog()
+//***** 刷新的相关属性与操作 *****
+const headerSetting = reactive({
+	isReload: true
+})
+const reloadPage = () => {
+	window.location.reload()
+}
+
+//***** 面包屑的相关属性与操作 *****
+const crumbsSetting = reactive({
+	show: true,
+	showIcon: true
+})
+const breadcrumbList = reactive([
+	{
+		
+	}
+])
+// 选中了面包屑
+const dropdownSelect = () => {}
+
+//***** 当前的屏幕模式 *****
+const navMode = ref('horizontal')
+const getInverted = computed(() => props.inverted)
+
+//***** 循环的图标列表 *****
+const iconList = ref([{
+	icon: 'GithubOutlined',
+	eventObject: () => {},
+	tips: ''
+}])
+
+//***** 从全局存储中获取的 *****
+const useUserStore = useUser()
+const username = useUserStore.showUserName
+
+//***** 全屏切换的相关属性以及操作 *****
+const fullscreenIcon = ref('FullscreenOutlined')
+const toggleFullScreen = () => {
+	fullscreenIcon.value = 'FullscreenOutlined' ? 'FullscreenExitOutlined' : 'FullscreenOutlined'
+	//! 执行全屏切换的相关操作
+}
+
+//***** 个人中心的相关属性以及操作 *****
+const avatarOptions = ref([])
+const avatarSelect = () => {}
+
+//***** 设置的相关属性以及操作 *****
+const openSetting = () => {}
+
 </script>
 
 <style lang="less" scoped>
