@@ -83,14 +83,14 @@
 </template>
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-// import { useMessage } from 'naive-ui'
+import { useMessage } from 'naive-ui'
 import { PersonOutline, LockClosedOutline, LogoGithub, LogoFacebook } from '@vicons/ionicons5'
 import websiteConfig from '@/config/websiteConfig'
 import { useUser } from '@/store/modules/user'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const formRef = ref()
-// const message = useMessage()
+const message = useMessage()
 const loading = ref(false)
 const autoLogin = ref(true)
 
@@ -112,6 +112,7 @@ const handleSubmit = async (e: Event) => {
     username,
     password,
   })
+	message.success('登录成功，即将进入系统')
 	loading.value = false
 	router.push({
 		name: 'dashboard'

@@ -21,12 +21,17 @@
     <!-- 右侧容器 -->
     <n-layout :inverted="inverted">
       <!-- 头部视图组件 -->
-      <n-layout-header :inverted="getHeaderInverted" >
-				<PageHeader :collapsed="collapsed" :inverted="getHeaderInverted"/>
+      <n-layout-header :inverted="getHeaderInverted" :position="fixedMenu">
+				<PageHeader v-model:collapsed="collapsed" :inverted="getHeaderInverted"/>
 			</n-layout-header>
       <!-- 各个页面所在的layout组件 -->
       <n-layout-content class="layout-content">
-        <MainView />
+				<div class="layout-content-main layout-content-main-fix">
+					<TagsView />
+					<div class="main-view main-view-fix">
+						<MainView />
+					</div>
+				</div>
       </n-layout-content>
     </n-layout>
   </n-layout>
@@ -38,6 +43,7 @@ import { Logo } from './components/Logo'
 import { AsideMenu } from './components/AsideMenu'
 import { MainView } from './components/MainView'
 import { PageHeader } from './components/PageHeader'
+import { TagsView } from './components/TagsView'
 
 const { navMode, navTheme, headerSetting, menuSetting, multiTabsSetting } = useProjectSetting()
 

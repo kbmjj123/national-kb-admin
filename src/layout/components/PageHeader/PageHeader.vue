@@ -1,6 +1,6 @@
 <template>
   <div class="layout-header">
-    <!--顶部菜单-->
+    <!--手机模式下的顶部菜单-->
     <div class="layout-header-left" v-if="navMode === 'horizontal'">
       <div class="logo" v-if="navMode === 'horizontal'">
         <img :src="websiteConfig.logo" alt="" />
@@ -8,6 +8,7 @@
       </div>
       <AsideMenu
         :inverted="getInverted"
+				location="left"
         mode="horizontal" />
     </div>
     <!--左侧菜单-->
@@ -34,7 +35,7 @@
       </div>
       <!-- 面包屑 -->
       <n-breadcrumb v-if="crumbsSetting.show">
-        <template v-for="routeItem in breadcrumbList" :key="routeItem.name === 'Redirect' ? void 0 : routeItem.name">
+        <!-- <template v-for="routeItem in breadcrumbList" :key="routeItem.name === 'Redirect' ? void 0 : routeItem.name">
           <n-breadcrumb-item v-if="routeItem.meta.title">
             <n-dropdown v-if="routeItem.children.length" :options="routeItem.children" @select="dropdownSelect">
               <span class="link-text">
@@ -47,7 +48,7 @@
               {{ routeItem.meta.title }}
             </span>
           </n-breadcrumb-item>
-        </template>
+        </template> -->
       </n-breadcrumb>
     </div>
 		<!-- 右侧菜单 -->
@@ -103,16 +104,36 @@
 </template>
 
 <script setup lang="ts">
+import { AsideMenu } from '../AsideMenu'
 import { ref, reactive, toRefs, computed, unref } from 'vue'
 // import { useRouter, useRoute } from 'vue-router'
 import { useUser } from '@/store/modules/user' 
-import './components'
 import websiteConfig from '@/config/websiteConfig'
+import {
+  SettingOutlined,
+  SearchOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  FullscreenOutlined,
+  FullscreenExitOutlined,
+  PoweroffOutlined,
+  GithubOutlined,
+  LockOutlined,
+  ReloadOutlined,
+  LogoutOutlined,
+  UserOutlined,
+  CheckOutlined,
+} from '@vicons/antd'
 
 const props = defineProps<{
-  collapsed: boolean
+  // collapsed: boolean
   inverted: boolean
 }>()
+
+const collapsed = defineModel('collapsed', {
+	type: Boolean,
+	default: false
+})
 
 //***** 刷新的相关属性与操作 *****
 const headerSetting = reactive({
@@ -136,24 +157,37 @@ const breadcrumbList = reactive([
 const dropdownSelect = () => {}
 
 //***** 当前的屏幕模式 *****
-const navMode = ref('horizontal')
+import { useProjectSetting } from '@/hooks/setting/useProjectSetting'
+const { navMode } = useProjectSetting()
 const getInverted = computed(() => props.inverted)
 
 //***** 循环的图标列表 *****
-const iconList = ref([{
-	icon: 'GithubOutlined',
-	eventObject: () => {},
-	tips: ''
-}])
+const iconList = reactive([
+	{
+		icon: SearchOutlined,
+		eventObject: () => {},
+		tips: ''
+	},
+	{
+		icon: GithubOutlined,
+		eventObject: () => {},
+		tips: ''
+	},
+	{
+		icon: LockOutlined,
+		eventObject: () => {},
+		tips: ''
+	}
+])
 
 //***** 从全局存储中获取的 *****
 const useUserStore = useUser()
 const username = useUserStore.showUserName
 
 //***** 全屏切换的相关属性以及操作 *****
-const fullscreenIcon = ref('FullscreenOutlined')
+const fullscreenIcon = FullscreenOutlined
 const toggleFullScreen = () => {
-	fullscreenIcon.value = 'FullscreenOutlined' ? 'FullscreenExitOutlined' : 'FullscreenOutlined'
+	fullscreenIcon.value = FullscreenOutlined ? FullscreenExitOutlined : FullscreenOutlined
 	//! 执行全屏切换的相关操作
 }
 
