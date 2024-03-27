@@ -60,13 +60,37 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useProjectSetting } from '@/hooks/setting/useProjectSetting'
+
 import { renderIcon } from '@/utils'
 import { ReloadOutlined, CloseOutlined, ColumnWidthOutlined, MinusOutlined } from '@vicons/antd'
-import { useTabsViewStore } from '@/store/modules/tabsView'
+import { useTabsViewStore, RouteItem } from '@/store/modules/tabsView'
+import { PageEnum } from '@/enums/pageEnum'
+
+import { useGo } from '@/hooks/web/usePage'
+// import type { RouteLocationRawEx } from '@/hooks/web/usePage'
+const go = useGo()
+
+import { useMessage } from 'naive-ui'
+const message = useMessage()
+
+import { useRoute } from 'vue-router'
+const route = useRoute()
+
+import { useDesignSetting } from '@/hooks/setting/useDesignSetting'
+const { getDarkTheme } = useDesignSetting()
+
 const tabsViewStore = useTabsViewStore()
+
 const { navMode, navTheme, headerSetting, menuSetting, multiTabsSetting } = useProjectSetting()
+
+const props = defineProps<{
+	collapsed: boolean
+}>()
+
+const isMultiHeaderFixed = ref(false)
+const activeKey = ref(route.fullPath)
 
 //动态组装样式 菜单缩进
 const getChangeStyle = computed(() => {
@@ -122,8 +146,72 @@ const TabsMenuOptions = computed(() => {
   ]
 })
 // 标签页列表
-const tabsList: any = computed(() => tabsViewStore.tabsList)
+const tabsList = computed(() => tabsViewStore.tabsList)
 const whiteList: string[] = [PageEnum.BASE_LOGIN_NAME, PageEnum.REDIRECT_NAME, PageEnum.ERROR_PAGE_NAME]
+
+// 点击触发页面跳转
+const goPage = (element) => {
+	const { fullPath } = element
+	if(fullPath === route.fullPath) return
+	//? 这里以replace的方式来进行的跳转
+	go(element, true)
+}
+const handleContextMenu = (e: Event, item) => {
+	e.preventDefault()
+
+}
+const closeTabItem = (element) => {
+	const { fullPath } = element
+	const routeInfo = tabsList.value.find(item => (item.fullPath === fullPath))
+	routeInfo && removeTab(routeInfo)
+}
+// 关闭页面
+const removeTab = (route: RouteItem) => {
+	if(1 === tabsList.value.length){
+		return message.warning('这已经是最后一页了，不能再关闭了！')
+	}
+	delKeepAliveCompName()
+	tabsViewStore.closeCurrentTab(route)
+	updateNavScroll()
+}
+
+// 移除缓存组件名称
+const delKeepAliveCompName = () => {
+	if(route.meta.keepAlive){
+	}
+}
+
+// tab的相关操作
+const closeHandleSelect = (key: '1' | '2' | '3' | '4') => {
+	switch(key){
+		case '1':
+			// 刷新
+			reloadPage()
+			break
+		case '2':
+			// 关闭
+			removeTab(route)
+			break
+		case '3':
+			// 关闭其他
+			closeOther(route)
+			break
+		case '4':
+			// 关闭所有
+			closeAll()
+			break
+	}
+	updateNavScroll()
+	showDropdown.value = false
+}
+
+//! 监听滚动条
+const onScroll = (e) => {
+	let scrollTop = e.target.scrollTop || document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
+	isMultiHeaderFixed.value = !!(!headerSetting.value.fixed && multiTabsSetting.value.fixed && scrollTop >= 64)
+}
+window.addEventListener('scroll', onScroll, true)
+
 </script>
 
 <style lang="less" scoped>
