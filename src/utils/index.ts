@@ -1,6 +1,15 @@
 import { cloneDeep } from 'lodash-es'
 import { PageEnum } from '@/enums/pageEnum'
 import { isObject } from './is/index'
+import { NIcon } from 'naive-ui'
+import { h } from 'vue'
+import type { Component } from 'vue' 
+
+// 渲染出一个图标
+export function renderIcon(icon: Component) {
+	return () => h(NIcon, null, { default: () => h(icon) })
+}
+
 /**
  * 递归组装菜单格式
  */

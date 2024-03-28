@@ -75,15 +75,16 @@ const go = useGo()
 import { useMessage } from 'naive-ui'
 const message = useMessage()
 
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter, RouteLocationNormalizedLoaded } from 'vue-router'
 const route = useRoute()
+const router = useRouter()
 
 import { useDesignSetting } from '@/hooks/setting/useDesignSetting'
 const { getDarkTheme } = useDesignSetting()
 
 const tabsViewStore = useTabsViewStore()
 
-const { navMode, navTheme, headerSetting, menuSetting, multiTabsSetting } = useProjectSetting()
+const { navMode, headerSetting, menuSetting, multiTabsSetting, isMobile } = useProjectSetting()
 
 const props = defineProps<{
 	collapsed: boolean
@@ -91,6 +92,13 @@ const props = defineProps<{
 
 const isMultiHeaderFixed = ref(false)
 const activeKey = ref(route.fullPath)
+const scrollable = ref(false)
+const navScroll = ref(null)
+const isCurrent = ref(false)
+const showDropdown = ref(false)
+const dropdownX = ref(0)
+const dropdownY = ref(0)
+
 
 //动态组装样式 菜单缩进
 const getChangeStyle = computed(() => {
@@ -156,17 +164,23 @@ const goPage = (element) => {
 	//? 这里以replace的方式来进行的跳转
 	go(element, true)
 }
-const handleContextMenu = (e: Event, item) => {
+const handleContextMenu = (e: PointerEvent, item: RouteItem) => {
 	e.preventDefault()
-
+	isCurrent.value = PageEnum.BASE_HOME_REDIRECT === item.path
+	showDropdown.value = false
+	nextTick().then(() => {
+		showDropdown.value = true
+		dropdownX.value = e.clientX
+		dropdownY.value = e.clientY
+	})
 }
-const closeTabItem = (element) => {
+const closeTabItem = (element: RouteItem) => {
 	const { fullPath } = element
 	const routeInfo = tabsList.value.find(item => (item.fullPath === fullPath))
 	routeInfo && removeTab(routeInfo)
 }
 // 关闭页面
-const removeTab = (route: RouteItem) => {
+const removeTab = (route) => {
 	if(1 === tabsList.value.length){
 		return message.warning('这已经是最后一页了，不能再关闭了！')
 	}
@@ -179,6 +193,54 @@ const removeTab = (route: RouteItem) => {
 const delKeepAliveCompName = () => {
 	if(route.meta.keepAlive){
 	}
+}
+
+const onClickOutside = () => {
+	showDropdown.value = false
+}
+
+// 是否开启自滚动功能
+const updateNavScroll = async (autoScroll?: boolean) => {
+	await nextTick()
+	if(!navScroll.value) return
+	const containerWidth = navScroll.value.offsetWidth
+	const navWidth = navScroll.value.scrollWidth
+	if(containerWidth < navWidth) {
+		scrollable.value = true
+		if(autoScroll) {
+			let tagList = navScroll.value.querySelectorAll('.tabs-card-scroll-item') || []
+			tagList.forEach((tag: HTMLElement) => {
+        // fix SyntaxError
+        if (tag.id === `tag${activeKey.value.split('/').join('\/')}`) {
+          tag.scrollIntoView && tag.scrollIntoView();
+        }
+      });
+		}else{
+			scrollable.value = false
+		}
+	}
+}
+
+const reloadPage = () => {
+	delKeepAliveCompName()
+	router.push({
+		path: `/redirect${route.fullPath}`
+	})
+}
+
+// 关闭其他
+const closeOther = (route) => {
+	tabsViewStore.closeOtherTbas(route)
+	activeKey.value = route.fullPath
+	router.replace(route.fullPath)
+	updateNavScroll()
+}
+
+// 关闭全部
+const closeAll = () => {
+	tabsViewStore.closeAllTabs()
+	router.replace(PageEnum.BASE_HOME)
+	updateNavScroll()
 }
 
 // tab的相关操作
@@ -203,6 +265,28 @@ const closeHandleSelect = (key: '1' | '2' | '3' | '4') => {
 	}
 	updateNavScroll()
 	showDropdown.value = false
+}
+
+const scrollPrev = () => {
+	const containerWidth = navScroll.value.offsetWidth;
+	const currentScroll = navScroll.value.scrollLeft;
+
+  if (!currentScroll) return;
+  const scrollLeft = currentScroll > containerWidth ? currentScroll - containerWidth : 0;
+  scrollTo(scrollLeft, (scrollLeft - currentScroll) / 20); 
+}
+
+const scrollNext = () => {
+	const containerWidth = navScroll.value.offsetWidth;
+  const navWidth = navScroll.value.scrollWidth;
+  const currentScroll = navScroll.value.scrollLeft;
+
+  if (navWidth - currentScroll <= containerWidth) return;
+  const scrollLeft =
+    navWidth - currentScroll > containerWidth * 2
+      ? currentScroll + containerWidth
+      : navWidth - containerWidth;
+  scrollTo(scrollLeft, (scrollLeft - currentScroll) / 20);
 }
 
 //! 监听滚动条
