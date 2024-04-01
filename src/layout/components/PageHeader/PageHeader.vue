@@ -54,7 +54,7 @@
 		<!-- 右侧菜单 -->
     <div class="layout-header-right">
 			<!-- 循环遍历图标列表 -->
-      <div class="layout-header-trigger layout-header-trigger-min" v-for="item in iconList" :key="item.icon">
+      <div class="layout-header-trigger layout-header-trigger-min" v-for="item in iconList" :key="item.tips">
         <n-tooltip placement="bottom">
           <template #trigger>
             <n-icon size="18">
@@ -161,24 +161,35 @@ import { useProjectSetting } from '@/hooks/setting/useProjectSetting'
 const { navMode } = useProjectSetting()
 const getInverted = computed(() => props.inverted)
 
+//***** 锁屏的相关变量 *****/
+import { useScreenLockStore } from '@/store/modules/screenLock'
+const useLockscreen = useScreenLockStore()
+
 //***** 循环的图标列表 *****
-const iconList = reactive([
+const iconList = [
 	{
 		icon: SearchOutlined,
-		eventObject: () => {},
-		tips: ''
+		tips: '搜索'
 	},
 	{
 		icon: GithubOutlined,
-		eventObject: () => {},
-		tips: ''
+		eventObject: {
+			click: () => {
+				window.open('https://www.baidu.com')
+			}
+		},
+		tips: 'github'
 	},
 	{
 		icon: LockOutlined,
-		eventObject: () => {},
-		tips: ''
+		eventObject: {
+			click: () => {
+				useLockscreen.setLock(true)
+			}
+		},
+		tips: '锁屏'
 	}
-])
+]
 
 //***** 从全局存储中获取的 *****
 const useUserStore = useUser()
@@ -189,6 +200,11 @@ const fullscreenIcon = FullscreenOutlined
 const toggleFullScreen = () => {
 	fullscreenIcon.value = FullscreenOutlined ? FullscreenExitOutlined : FullscreenOutlined
 	//! 执行全屏切换的相关操作
+	if(!document.fullscreenElement){
+		document.documentElement.requestFullscreen()
+	}else{
+		document.exitFullscreen && document.exitFullscreen()
+	}
 }
 
 //***** 个人中心的相关属性以及操作 *****

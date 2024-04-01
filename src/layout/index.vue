@@ -27,7 +27,7 @@
       <!-- 各个页面所在的layout组件 -->
       <n-layout-content class="layout-content">
 				<div class="layout-content-main layout-content-main-fix">
-					<TagsView />
+					<TagsView :collapsed="collapsed"/>
 					<div class="main-view main-view-fix">
 						<MainView />
 					</div>

@@ -60,27 +60,29 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useProjectSetting } from '@/hooks/setting/useProjectSetting'
+import Draggable from 'vuedraggable'
 
 import { renderIcon } from '@/utils'
-import { ReloadOutlined, CloseOutlined, ColumnWidthOutlined, MinusOutlined } from '@vicons/antd'
+import { ReloadOutlined, CloseOutlined, LeftOutlined, RightOutlined, ColumnWidthOutlined, MinusOutlined, DownOutlined } from '@vicons/antd'
 import { useTabsViewStore, RouteItem } from '@/store/modules/tabsView'
 import { PageEnum } from '@/enums/pageEnum'
 
 import { useGo } from '@/hooks/web/usePage'
-// import type { RouteLocationRawEx } from '@/hooks/web/usePage'
 const go = useGo()
 
 import { useMessage } from 'naive-ui'
 const message = useMessage()
 
-import { useRoute, useRouter, RouteLocationNormalizedLoaded } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
 
 import { useDesignSetting } from '@/hooks/setting/useDesignSetting'
-const { getDarkTheme } = useDesignSetting()
+const { getDarkTheme, getAppTheme } = useDesignSetting()
+import { useProjectSettingStore } from '@/store/modules/projectSetting';
+const settingStore = useProjectSettingStore();
 
 const tabsViewStore = useTabsViewStore()
 
@@ -93,12 +95,29 @@ const props = defineProps<{
 const isMultiHeaderFixed = ref(false)
 const activeKey = ref(route.fullPath)
 const scrollable = ref(false)
-const navScroll = ref(null)
+const navScroll: any = ref(null)
 const isCurrent = ref(false)
 const showDropdown = ref(false)
 const dropdownX = ref(0)
 const dropdownY = ref(0)
 
+
+const isMixMenuNoneSub = computed(() => {
+	const mixMenu = settingStore.menuSetting.mixMenu;
+  const currentRoute = useRoute();
+  if (navMode.value != 'horizontal-mix') return true;
+  return !(navMode.value === 'horizontal-mix' && mixMenu && currentRoute.meta.isRoot);
+});
+
+import { useThemeVars } from 'naive-ui';
+const themeVars = useThemeVars();
+const getCardColor = computed(() => {
+  return themeVars.value.cardColor;
+});
+
+const getBaseColor = computed(() => {
+  return themeVars.value.textColor1;
+});
 
 //动态组装样式 菜单缩进
 const getChangeStyle = computed(() => {
@@ -157,6 +176,41 @@ const TabsMenuOptions = computed(() => {
 const tabsList = computed(() => tabsViewStore.tabsList)
 const whiteList: string[] = [PageEnum.BASE_LOGIN_NAME, PageEnum.REDIRECT_NAME, PageEnum.ERROR_PAGE_NAME]
 
+// 获取简易的路由对象
+const getSimpleRoute = (route): RouteItem => {
+	const { fullPath, hash, meta, name, params, path, query } = route
+	return { fullPath, hash, meta, name, params, path, query }
+}
+
+// 是否开启自滚动功能
+const updateNavScroll = async (autoScroll?: boolean) => {
+	await nextTick()
+	if(!navScroll.value) return
+	const containerWidth = navScroll.value.offsetWidth
+	const navWidth = navScroll.value.scrollWidth
+	if(containerWidth < navWidth) {
+		scrollable.value = true
+		if(autoScroll) {
+			let tagList = navScroll.value.querySelectorAll('.tabs-card-scroll-item') || []
+			tagList.forEach((tag: HTMLElement) => {
+        // fix SyntaxError
+        if (tag.id === `tag${activeKey.value.split('/').join('\/')}`) {
+          tag.scrollIntoView && tag.scrollIntoView();
+        }
+      });
+		}else{
+			scrollable.value = false
+		}
+	}
+}
+
+watch(() => route.fullPath, (to: string) => {
+	if(whiteList.includes(route.name as string)) return
+	activeKey.value = to
+	tabsViewStore.addTab(getSimpleRoute(route))
+	updateNavScroll(true)
+}, { immediate: true })
+
 // 点击触发页面跳转
 const goPage = (element) => {
 	const { fullPath } = element
@@ -164,7 +218,7 @@ const goPage = (element) => {
 	//? 这里以replace的方式来进行的跳转
 	go(element, true)
 }
-const handleContextMenu = (e: PointerEvent, item: RouteItem) => {
+const handleContextMenu = (e: MouseEvent, item: RouteItem) => {
 	e.preventDefault()
 	isCurrent.value = PageEnum.BASE_HOME_REDIRECT === item.path
 	showDropdown.value = false
@@ -194,33 +248,12 @@ const delKeepAliveCompName = () => {
 	if(route.meta.keepAlive){
 	}
 }
-
+// 点击外部区域隐藏下拉菜单
 const onClickOutside = () => {
 	showDropdown.value = false
 }
 
-// 是否开启自滚动功能
-const updateNavScroll = async (autoScroll?: boolean) => {
-	await nextTick()
-	if(!navScroll.value) return
-	const containerWidth = navScroll.value.offsetWidth
-	const navWidth = navScroll.value.scrollWidth
-	if(containerWidth < navWidth) {
-		scrollable.value = true
-		if(autoScroll) {
-			let tagList = navScroll.value.querySelectorAll('.tabs-card-scroll-item') || []
-			tagList.forEach((tag: HTMLElement) => {
-        // fix SyntaxError
-        if (tag.id === `tag${activeKey.value.split('/').join('\/')}`) {
-          tag.scrollIntoView && tag.scrollIntoView();
-        }
-      });
-		}else{
-			scrollable.value = false
-		}
-	}
-}
-
+// 重新加载页面
 const reloadPage = () => {
 	delKeepAliveCompName()
 	router.push({
@@ -229,8 +262,8 @@ const reloadPage = () => {
 }
 
 // 关闭其他
-const closeOther = (route) => {
-	tabsViewStore.closeOtherTbas(route)
+const closeOther = (route: RouteItem) => {
+	tabsViewStore.closeOtherTabs(route)
 	activeKey.value = route.fullPath
 	router.replace(route.fullPath)
 	updateNavScroll()
@@ -256,7 +289,7 @@ const closeHandleSelect = (key: '1' | '2' | '3' | '4') => {
 			break
 		case '3':
 			// 关闭其他
-			closeOther(route)
+			closeOther(route as RouteItem)
 			break
 		case '4':
 			// 关闭所有

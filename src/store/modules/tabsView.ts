@@ -49,7 +49,7 @@ export const useTabsViewStore = defineStore({
 			this.tabsList = this.tabsList.filter((item, i) => i <= index || (item?.meta?.affix ?? false))
 		},
 		// 关闭其他标签
-		closeOtherTbas(route: RouteItem): void {
+		closeOtherTabs(route: RouteItem): void {
 			this.tabsList = this.tabsList.filter(
         (item) => item.fullPath == route.fullPath || (item?.meta?.affix ?? false)
       );
