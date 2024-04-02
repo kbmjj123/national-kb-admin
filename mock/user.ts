@@ -26,5 +26,11 @@ export default [
   			phone: '13728009642'
 			}
 		})
+	},
+	{
+		url: '/api/user/logout',
+		timeout: 1000,
+		method: 'post',
+		response: () => resultSuccess({})
 	}
 ] as MockMethod[]

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { store } from '@/store'
 import { ACCESS_TOKEN, CURRENT_USER, IS_SCREENLOCKED } from '../mutation-types'
-import { login, getUserInfo } from '@/api/account/account'
+import { login, getUserInfo, logout } from '@/api/account/account'
 
 import { storage } from '@/utils/Storage'
 
@@ -60,9 +60,11 @@ export const useUserStore = defineStore({
 		},
     // 退出登录动作
     async logout() {
+			await logout()
       this.setToken('')
-      this.setAvatar(''), this.setUserInfo(null)
-      storage.remove(ACCESS_TOKEN)
+      this.setAvatar('')
+			this.setUserInfo(null)
+      storage.removeCookie(ACCESS_TOKEN)
       storage.remove(CURRENT_USER)
     },
   },

@@ -106,9 +106,10 @@
 <script setup lang="ts">
 import { AsideMenu } from '../AsideMenu'
 import { ref, reactive, toRefs, computed, unref } from 'vue'
-// import { useRouter, useRoute } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useUser } from '@/store/modules/user' 
 import websiteConfig from '@/config/websiteConfig'
+import { useDialog } from 'naive-ui'
 import {
   SettingOutlined,
   SearchOutlined,
@@ -124,6 +125,9 @@ import {
   UserOutlined,
   CheckOutlined,
 } from '@vicons/antd'
+
+const router = useRouter()
+const dialog = useDialog()
 
 const props = defineProps<{
   // collapsed: boolean
@@ -208,8 +212,38 @@ const toggleFullScreen = () => {
 }
 
 //***** 个人中心的相关属性以及操作 *****
-const avatarOptions = ref([])
-const avatarSelect = () => {}
+const avatarOptions = [
+	{
+		label: '个人设置',
+		key: 1
+	},
+	{
+		label: '退出登录',
+		key: 2
+	}
+]
+const avatarSelect = (key) => {
+	if(1 === key){
+		router.push({ name: 'Setting' })
+	}else if(2 === key) {
+		doLogout()
+	}
+}
+// 退出登录操作
+const doLogout = () => {
+	dialog.warning({
+		title: '温馨提示',
+		content: '您确定要退出登录吗？',
+		negativeText: '我再想想',
+		positiveText: '确定',
+		onPositiveClick: async () => {
+			await useUserStore.logout()
+			router.replace({
+				name: 'login'
+			})
+		}
+	})
+}
 
 //***** 设置的相关属性以及操作 *****
 const openSetting = () => {}

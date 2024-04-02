@@ -31,7 +31,7 @@ export function changePassword(params: BasicParams) {
 // 退出登录
 export function logout() {
 	return http.request({
-		url: '/logout',
+		url: '/user/logout',
 		method: 'POST'
 	})
 }
