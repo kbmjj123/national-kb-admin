@@ -16,7 +16,7 @@ export default [
         meta: {
           title: '系统设置',
         },
-        component: () => '@/views/setting/index.vue',
+        component: () => import('@/views/setting/index.vue'),
       },
     ],
   },

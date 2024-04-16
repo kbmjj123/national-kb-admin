@@ -3,6 +3,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import { constantRouters } from './constantRouters'
 import { createRouterGuards } from './guards'
 import { IModuleType } from './types'
+import { NotFound } from './constant'
 
 const modules = import.meta.glob<IModuleType>('./modules/**/*.ts', { eager: true })
 
@@ -17,6 +18,16 @@ const routeModuleList = Object.keys(modules).reduce((list, key) => {
 //   return (a.meta?.sort ?? 0) - (b.meta?.sort ?? 0)
 // });
 const finalRouteList = constantRouters.concat(...routeModuleList)
+//! 添加404页面的捕获，记住这里需要将其放置在所有路由定义的最后面，用于其他路由没有匹配到时才匹配
+finalRouteList.push({
+	path: '/:catchAll(.*)',
+	name: '404',
+	component: NotFound,
+	meta: {
+		title: '页面没找到',
+		needLogin: false
+	}
+})
 const router = createRouter({
 	history: createWebHashHistory(),
 	routes: finalRouteList,

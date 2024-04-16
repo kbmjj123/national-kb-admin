@@ -19,15 +19,6 @@ export const constantRouters: RouteRecordRaw[] = [
     },
   },
 	{
-		path: '/404',
-		name: '404',
-		component: () => import('@/views/404/index.vue'),
-		meta: {
-			title: '页面没找到',
-			needLogin: false
-		}
-	},
-	{
 		path: '/403',
 		name: '403',
 		component: () => import('@/views/403/index.vue'),

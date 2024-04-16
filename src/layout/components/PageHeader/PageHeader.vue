@@ -214,7 +214,7 @@ const toggleFullScreen = () => {
 //***** 个人中心的相关属性以及操作 *****
 const avatarOptions = [
 	{
-		label: '个人设置',
+		label: '个人信息',
 		key: 1
 	},
 	{
@@ -224,7 +224,7 @@ const avatarOptions = [
 ]
 const avatarSelect = (key) => {
 	if(1 === key){
-		router.push({ name: 'Setting' })
+		router.push({ name: 'setting_manage' })
 	}else if(2 === key) {
 		doLogout()
 	}
