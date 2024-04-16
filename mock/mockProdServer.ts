@@ -4,9 +4,11 @@ import { createProdMockServer } from 'vite-plugin-mock/client'
 // 如果使用vite.mock.config.ts，只需直接导入文件
 // 可以使用 import.meta.glob功能来进行全部导入
 import user from './user'
+import menu from './menu'
 
 export function setupProdMockServer() {
   createProdMockServer([
-		...user
+		...user,
+		...menu
 	])
 }

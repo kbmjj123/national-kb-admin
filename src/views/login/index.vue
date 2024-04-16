@@ -87,7 +87,7 @@ import { useMessage } from 'naive-ui'
 import { PersonOutline, LockClosedOutline, LogoGithub, LogoFacebook } from '@vicons/ionicons5'
 import websiteConfig from '@/config/websiteConfig'
 import { useUser } from '@/store/modules/user'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
 const formRef = ref()
 const message = useMessage()
@@ -114,9 +114,14 @@ const handleSubmit = async (e: Event) => {
   })
 	message.success('登录成功，即将进入系统')
 	loading.value = false
-	router.push({
-		name: 'dashboard'
-	})
+	const route = useRoute()
+	if(route.query.targetPath){
+		router.push(route.query.targetPath as string)
+	}else{
+		router.push({
+			name: 'dashboard'
+		})
+	}
 }
 </script>
 

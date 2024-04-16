@@ -42,6 +42,9 @@ export const useUserStore = defineStore({
     setUserInfo(info: UserInfoType | null) {
       this.info = info
     },
+		getUserInfo(){
+			return this.info
+		},
     // 用户登录动作
     async login(params: any) {
       const res = await login(params)
