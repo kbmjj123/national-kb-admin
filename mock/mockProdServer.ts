@@ -5,10 +5,16 @@ import { createProdMockServer } from 'vite-plugin-mock/client'
 // 可以使用 import.meta.glob功能来进行全部导入
 import user from './user'
 import menu from './menu'
+import account from './account'
+import order from './order'
+import product from './product'
 
 export function setupProdMockServer() {
   createProdMockServer([
 		...user,
-		...menu
+		...menu,
+		...account,
+		...order,
+		...product
 	])
 }

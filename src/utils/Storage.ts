@@ -1,5 +1,5 @@
 // 默认缓存期限为7天
-const DEFAULT_CACHE_TIME = 60 * 60 * 24 * 7
+const DEFAULT_CACHE_TIME = 60 * 60 * 24 * 1
 
 /**
  * 创建本地缓存对象

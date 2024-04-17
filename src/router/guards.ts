@@ -2,13 +2,14 @@ import { Router, isNavigationFailure, RouteLocationNamedRaw } from 'vue-router'
 import { useUser } from '../store/modules/user'
 import { PageEnum } from '@/enums/pageEnum'
 import { useAsyncRouteStore } from '@/store/modules/asyncRoute'
+import { NotFoundName, NotFoundRoute } from './constant'
 
 const LOGIN_NAME = PageEnum.BASE_LOGIN_NAME
 
 // 创建全局路由守卫
 export function createRouterGuards(router: Router) {
 	const asyncRouteStore = useAsyncRouteStore()
-  router.beforeEach((to, from ,next) => {
+  router.beforeEach(async (to, from ,next) => {
 		window['$loadingBar'] && window['$loadingBar'].start()
 
 		const useUserStore = useUser()
@@ -34,9 +35,16 @@ export function createRouterGuards(router: Router) {
 		if(asyncRouteStore.getIsDynamicRouteAdd){
 			next()
 		}
-		const routes = 
+		// 动态添加可访问路由
+		const routes = await asyncRouteStore.generateRoutes()
+		console.info(routes)
+		//! 添加404页面，记住这里需要将其放置在所有路由定义的最后面，用于其他路由没有匹配到时才匹配
+		const notFoundIndex = router.getRoutes().findIndex((item) => item.name === NotFoundName)
+		if(-1 === notFoundIndex){
+			// 不存在404的配置，才添加
+			router.addRoute(NotFoundRoute)
+		}
   })
-
   router.afterEach((to, from, failure) => {
 		document.title = (to?.meta?.title as string) || document.title
 		window['$loadingBar'] && window['$loadingBar'].finish()

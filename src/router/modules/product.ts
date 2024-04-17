@@ -14,7 +14,7 @@ export default [
 				path: '/product_manage',
         name: 'product_manage',
         meta: {
-          title: '商品管理',
+          title: '商品列表',
 					isMenu: true
         },
         component: () => import('@/views/product/index.vue'),

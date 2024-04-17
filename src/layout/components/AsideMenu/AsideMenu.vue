@@ -18,7 +18,8 @@ import { computed, reactive, ref, unref, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useProjectSettingStore } from '@/store/modules/projectSetting'
 import { useProjectSetting } from '@/hooks/setting/useProjectSetting'
-import { generatorMenu, generatorMenuMix } from '@/utils'
+import { useAsyncRouteStore } from '@/store/modules/asyncRoute'
+import { generatorMenu } from '@/utils'
 
 const collapsed = defineModel('collapsed', {
   type: Boolean,
@@ -38,13 +39,9 @@ const props = withDefaults(
 const currentRoute = useRoute()
 const router = useRouter()
 const settingStore = useProjectSettingStore()
+const asyncRouteStore = useAsyncRouteStore()
 // 定义待使用的菜单
-const menus = ref<any[]>([
-  {
-    label: '首页',
-    key: 'dashboard',
-  },
-])
+const menus = ref<any[]>([])
 // 当前选中的路由的名称
 const selectedKeys = ref<string>(currentRoute.name as string)
 const headerMenuSelectKey = ref<string>('')
@@ -72,6 +69,7 @@ const updateSelectedKeys = () => {
   selectedKeys.value = activeMenu ? (activeMenu as string) : (currentRoute.name as string)
 }
 const updateMenu = () => {
+	menus.value = generatorMenu(asyncRouteStore.getMenus)
   // if (!settingStore.menuSetting.mixMenu) {
   //   menus.value = generatorMenu(asyncRouteStore.getMenus)
   // } else {
