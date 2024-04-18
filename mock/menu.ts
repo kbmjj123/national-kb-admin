@@ -19,4 +19,4 @@ export default [
       return resultSuccess(MENU_LIST)
     },
   },
-]
+] as MockMethod[]

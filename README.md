@@ -243,7 +243,7 @@ export default {
 ```
 :stars: 关于这里的参数说明，具体见[vite-mock官网描述](https://github.com/vbenjs/vite-plugin-mock?tab=readme-ov-file#options)
 
-##### 3.对于生产环境创建对应的mock处理函数，因为开发环境用的cnnect来实现的
+##### 3.对于生产环境创建对应的mock处理函数，开发环境用的cnnect来实现的
 ```typescript
   // mockProdServer.ts
 import { createProdMockServer } from 'vite-plugin-mock/client'
@@ -278,6 +278,36 @@ export default [
 ```
 :point_down: 是对应的mock结果：
 ![mock结果](./assets/mock结果.png)
+
+##### 5. 引用上下文环境来辅助编写响应
+> :thinking: 这样子的一个问题：`如果我想要像*restful*的方式来编写接口`，那么这个`mock`是否可以满足到呢？
+> :disguised_face: 答案是可以的，但是需要将上述第4点的编写方式稍微调整一下，比如我想通过get请求获取一个商品详情信息，一般我们是通过get请求，然后在url链接中拼接参数的方式，如下代码所示：
+```typescript
+export default [
+	{
+		url: '/api/product/:id',
+    timeout: 1000,
+    method: 'get',
+		response: ({url}) => {
+			// 定义正则表达式来匹配路由参数
+      const regex = /\/product\/(.*?)(\?|$)/;
+      // 使用正则表达式匹配URL
+      const match = url.match(regex);
+      if (match) {
+        // 获取匹配到的参数值
+        const id = match[1];
+        // 根据:id的值做相应的处理
+        // 这里返回一个空数组作为示例
+        return resultSuccess(id);
+      } else {
+        // 如果未匹配到路由参数，返回错误信息或者其他处理
+        return resultFailed('请按照协议来传参');
+      }
+    }
+	}
+]
+```
+:star2: 这里我们通过自定义的正则匹配的方式，正确匹配到传递过来的链接中的信息，然后对应来处理
 
 #### 引入vite客户端类型声明
 > 在`vite`的相关项目中，我们会经常看到在ts文件中有如下的一段代码

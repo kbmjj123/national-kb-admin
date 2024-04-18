@@ -9,7 +9,7 @@ export default [
     url: '/api/user/login',
     timeout: 1000,
     method: 'post',
-    response: () => {
+    response: () =>  {
       return resultSuccess({ token })
     },
   },
