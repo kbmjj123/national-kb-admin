@@ -8,8 +8,9 @@
 			<n-input v-model:value="brandForm.key" placeholder="请输入品牌关键词" clearable></n-input>
 		</n-form-item>
 		<n-form-item :label-width="0">
-			<n-button type="primary" @click="getBrandList">搜索</n-button>
+			<n-button type="primary" @click="getBrandListAction">搜索</n-button>
 			<n-button>重置</n-button>
+			<n-button type="primary" @click="onAddBrand">新增</n-button>
 		</n-form-item>
 	</n-form>
 	<n-data-table
@@ -20,11 +21,14 @@
 		:loading="loading"
 		:pagination="pagination"
 	></n-data-table>
+	<edit-brand-modal v-model="showBrand" :item-info="currentBrand"></edit-brand-modal>
 </template>
 
 <script setup lang="ts">
-	import { ref, reactive, onMounted, Ref } from 'vue'
-	import type { DataTableColumns } from 'naive-ui'
+	import { ref, reactive, onMounted, h, Ref } from 'vue'
+	import { type DataTableColumns, useDialog } from 'naive-ui'
+	import { BrandType, getBrandList, deleteBrand } from '@/api/product/brand'
+	import EditBrandModal from './component/edit-brand-modal.vue';
 
 	const brandForm = reactive({
 		key: ''
@@ -32,17 +36,33 @@
 
 	const columns: Ref<DataTableColumns> = ref([
 		{
-			title: '',
-			key: ''
+			title: '品牌名称',
+			key: 'name',
+			align: 'center'
+		},
+		{
+			title: '操作',
+			key: 'action',
+			render: (row) => h('span', [
+				h('span', { onClick: () => onEditBrand(row) }, '编辑'),
+				h('span', { onClick: () => onDeleteBrand(row) }, '删除'),
+			])
 		}
 	])
 
-	const brandList = ref([])
+	let brandList = reactive<BrandType[]>([])
+
+	const showBrand = ref(false)
+	let currentBrand = reactive<BrandType>({
+		id: '',
+		name: ''
+	})
 
 	const loading = ref(false)
 	const params = reactive({
 		pageIndex: 0,
 		pageSize: 20,
+		total: 0,
 		key: ''
 	})
 	const pagination = reactive({
@@ -51,21 +71,48 @@
 		showSizePicker: true,
 		onChange: (page: number) => {
 			pagination.page = page
-			getBrandList()
+			getBrandListAction()
 		},
 		onUpdatePageSize: (pageSize: number) => {
 			pagination.pageSize = pageSize
 			pagination.page = 1
-			getBrandList()
+			getBrandListAction()
 		}
 	})
 	// 获取分类列表数据
-	const getBrandList = () => {
-		
+	const getBrandListAction = async () => {
+		const res = await getBrandList(params)
+		brandList = res.data.list
+	}
+
+	const onAddBrand = () => {
+		currentBrand.id = ''
+		currentBrand.name = ''
+		showBrand.value = true
+	}
+
+	const onEditBrand = (row) => {
+		currentBrand.id = row.id
+		currentBrand.name = row.name
+		showBrand.value = true
+	}
+
+	const dialog = useDialog()
+	const onDeleteBrand = (row) => {
+		const dialogInstance = dialog.warning({
+			title: '温馨提示',
+			content: `您确定要删除品牌：【${row.name}】吗`,
+			negativeText: '我再想想',
+			positiveText: '确定',
+			onPositiveClick: async () => {
+				await deleteBrand(row.id)
+				dialogInstance.destroy()
+			}
+		})
 	}
 
 	onMounted(() => {
-		getBrandList()
+		getBrandListAction()
 	})
 
 </script>
