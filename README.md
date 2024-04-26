@@ -407,6 +407,44 @@ declare module '*.vue' {
 #### 组件库使用过程记录
 > 项目所使用的三方ui库为：[naive-ui](https://www.naiveui.com/zh-CN/os-theme)，是一个仅能够在vue3.+以及typescript4.+以上版本，运行在现代浏览器上的UI组件库， :point_down: 将项目过程中的相关使用说明给列举出来，以便于后续自己方便查找。
 
+#### 关于`v-model`的类型检测
+> 当我们在使用这个`v-model`的时候，需要告知组件这个变量的属性，因为它也是由props发展而来的，就只是在其基础上做了一个语法糖的包装而已，因此我们在定义的时候，需要像`props`来声明这个变量的类型，否则，就会出现 :point_down: 的类型提示：
+```typescript
+const model = defineModel()
+```
+![v-model属性缺失类型提示](/assets/v-model属性缺失类型提示.png)
+
+#### 对于表格数组类型的变量，使用ref/reactive来定义？
+> 当我们在组件中定义一数组对象的时候，一般采用的是**ref**来定义的响应式变量，而非`reactive()`，因为在一般的情况下，使用这个数组对象用于展示在表格中的，而表格中的数据，则根据接口返回的来进行的展示的，在我们拿到数据的时候，则通过`list.value = res.data.list`这种方式，而假如使用了`reactive()`方法来创建的变量的时候，则会**导致原本创建的响应式对象代理被重新赋值**，失去了之前的响应式的特性！
+> :trollface: 所以，这边简单得出一个结论，当在使用表格的时候，建议采用`ref`来做对应表格的数据捆绑的响应式变量！
+
+#### 当远程的数据也提供了类型说明时，如何在程序中编写对应的ts代码
+> 这里已其中的一个小例子来说明一下场景，假如
+```typescript
+// 接口响应基本数据结构
+interface BasicResponseModel {
+  status: number
+  message: string
+}
+//? 列表类型响应结果
+export interface ArrayResponseModel<T> extends BasicResponseModel {
+  data: {
+    list: Array<T>
+    total: number
+    pageIndex: number
+  }
+}
+	// 获取品牌列表
+export function getBrandList(params: BasicPageParams): Promise<ArrayResponseModel<BrandType>>{
+	return http.request({
+		url: '/brand/list',
+		data: params
+	})
+}
+// ***** 上面我们对接口响应的数据做了一个类型说明，将返回的结果按照既定的数据结构来包装说明
+
+```
+
 #### 使用`Array.from()`来创建一个长度为某个数值的数组
 > 在`mockjs`来模拟数据的时候，经常需要模拟一个数据列表，手写感觉不现实，编码效率低，可以使用`Array.from()`方法来创建一个包含指定长度的数组，并且可以指定数组中的每个元素的值，因为`Array.from()`会根据传入的可迭代对象或者类似数组对象来创建一个新的数组实例，因此我们可以通过采用 :point_down: 的方式来创建一个数组
 ```typescript
