@@ -8,6 +8,8 @@ import menu from './menu'
 import account from './account'
 import order from './order'
 import product from './product'
+import brand from './brand'
+// import category from './category'
 
 export function setupProdMockServer() {
   createProdMockServer([
@@ -15,6 +17,7 @@ export function setupProdMockServer() {
 		...menu,
 		...account,
 		...order,
-		...product
+		...product,
+		...brand
 	])
 }

@@ -1,11 +1,11 @@
 import Mock from 'mockjs'
 import { resultSuccess, resultFailed } from './_util'
 import { MockMethod } from 'vite-plugin-mock'
-import { IncomingMessage } from 'http'
 
 const TARGET_PRODUCT = '/api/product'
 
 export default [
+	// **** 以下是商品的相关接口 ****
 	{
     url: `${TARGET_PRODUCT}/list`,
     timeout: 1000,

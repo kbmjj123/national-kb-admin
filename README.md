@@ -407,6 +407,14 @@ declare module '*.vue' {
 #### 组件库使用过程记录
 > 项目所使用的三方ui库为：[naive-ui](https://www.naiveui.com/zh-CN/os-theme)，是一个仅能够在vue3.+以及typescript4.+以上版本，运行在现代浏览器上的UI组件库， :point_down: 将项目过程中的相关使用说明给列举出来，以便于后续自己方便查找。
 
+#### 使用`Array.from()`来创建一个长度为某个数值的数组
+> 在`mockjs`来模拟数据的时候，经常需要模拟一个数据列表，手写感觉不现实，编码效率低，可以使用`Array.from()`方法来创建一个包含指定长度的数组，并且可以指定数组中的每个元素的值，因为`Array.from()`会根据传入的可迭代对象或者类似数组对象来创建一个新的数组实例，因此我们可以通过采用 :point_down: 的方式来创建一个数组
+```typescript
+	const array = Array.from({ length: 20 }, () => undefined);
+	console.info(array)
+```
+:star2: 这里我们创建了一个长度为20的数组，而且成员都是`undefined`的，这样子我们就可以借助`mockjs`的数据随机性来生成一个成员都不一样的数组数据！
+
 ##### 全局插件的的使用
 > 在实际的编码过程中，难免需要使用到类似于`showLoading`、`showToast`、`showModal`等API，而且想以插件的形式来调用(也就是随时调用)，那么需要进行以下的一个配置，在`naive-ui`中主要是`n-loading-bar-provider`、`n-dialog-provider`、`n-notification-provider`、`n-message-provider`
 ```vue
