@@ -1,5 +1,5 @@
 import { http } from '@/utils/http'
-import type { BasicParams, BasicPageParams } from '../types'
+import { BasicParams, BasicPageParams } from '../types'
 
 export type ProductType = {
 	id: string,

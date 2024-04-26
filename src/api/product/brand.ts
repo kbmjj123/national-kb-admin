@@ -1,7 +1,7 @@
 import { http } from '@/utils/http'
 import type { BasicParams, BasicPageParams, StringOrBooleanResponseModel, ArrayResponseModel } from '../types'
 
-export type BrandType = {
+export interface BrandType extends BasicParams {
 	id?: string,
 	name: string
 }

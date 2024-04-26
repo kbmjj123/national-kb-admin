@@ -1,5 +1,5 @@
 import { http } from '@/utils/http'
-import type { BasicParams } from '../types'
+import { BasicParams } from '../types'
 import type { IUserState } from '@/store/modules/user'
 
 // 获取当前登录用户信息
