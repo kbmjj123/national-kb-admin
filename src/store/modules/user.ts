@@ -48,18 +48,18 @@ export const useUserStore = defineStore({
     // 用户登录动作
     async login(params: any) {
       const res = await login(params)
-			this.setToken(res.token)
-			storage.setCookie(ACCESS_TOKEN, res.token)
+			this.setToken(res.data.token)
+			storage.setCookie(ACCESS_TOKEN, res.data.token)
 			await this.getCurrentUserInfo()
 			return res
 		},
     // 获取当前登录用户信息
     async getCurrentUserInfo() {
 			const res = await getUserInfo()
-			this.setAvatar(res.avatar)
-			this.setUserInfo(res.info)
-			this.setUsername(res.username)
-			storage.set(CURRENT_USER, res)
+			this.setAvatar(res.data.avatar)
+			this.setUserInfo(res.data.info)
+			this.setUsername(res.data.username)
+			storage.set(CURRENT_USER, res.data)
 		},
     // 退出登录动作
     async logout() {

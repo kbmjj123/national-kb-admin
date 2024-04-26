@@ -39,15 +39,12 @@ const transform: AxiosTransform = {
     if (!responseData) {
       throw new Error('网络请求出错，请稍后重试!')
     }
-    const { status, message, data } = responseData
+    const { status, message } = responseData
     const hasSuccess =
       responseData && Reflect.has(responseData, 'status') && status === ResultEnum.SUCCESS
     if (isShowMessage) {
       if (hasSuccess && (successMessageText || isShowSuccessMessage)) {
-        $dialog.success({
-          type: 'success',
-          content: successMessageText || message || '操作成功!',
-        })
+        $message.success(successMessageText || message || '操作成功!')
       } else if (!hasSuccess && (errorMessageText || isShowErrorMessage)) {
         $message.error(message || errorMessageText || '操作失败!')
       } else if (!hasSuccess) {
@@ -64,7 +61,7 @@ const transform: AxiosTransform = {
       }
     }
     if (status === ResultEnum.SUCCESS) {
-      return data
+      return responseData
     }
     let errorMsg = message
     switch (status) {

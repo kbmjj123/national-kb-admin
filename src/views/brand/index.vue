@@ -2,31 +2,37 @@
 	<n-form
 		ref="brandFormRef"
 		inline
+		label-placement="left"
+		label-width="auto"
 		:model="brandForm"
-		:label-width="80">
+		>
 		<n-form-item label="品牌关键词" path="key">
 			<n-input v-model:value="brandForm.key" placeholder="请输入品牌关键词" clearable></n-input>
 		</n-form-item>
 		<n-form-item :label-width="0">
-			<n-button type="primary" @click="getBrandListAction">搜索</n-button>
-			<n-button>重置</n-button>
-			<n-button type="primary" @click="onAddBrand">新增</n-button>
+			<n-space>
+				<n-button type="primary" @click="getBrandListAction">搜索</n-button>
+				<n-button>重置</n-button>
+				<n-button type="primary" @click="onAddBrand">新增</n-button>
+			</n-space>
 		</n-form-item>
 	</n-form>
 	<n-data-table
 		bordered
 		bottom-bordered
+		:single-line="false"
 		:columns="columns"
 		:data="brandList"
 		:loading="loading"
 		:pagination="pagination"
 	></n-data-table>
+	<!-- 新增或编辑视图 -->
 	<edit-brand-modal v-model="showBrand" :item-info="currentBrand"></edit-brand-modal>
 </template>
 
 <script setup lang="ts">
 	import { ref, reactive, onMounted, h, Ref } from 'vue'
-	import { type DataTableColumns, useDialog } from 'naive-ui'
+	import { type DataTableColumns, useDialog, NSpace, NButton } from 'naive-ui'
 	import { BrandType, getBrandList, deleteBrand } from '@/api/product/brand'
 	import EditBrandModal from './component/edit-brand-modal.vue';
 
@@ -43,14 +49,14 @@
 		{
 			title: '操作',
 			key: 'action',
-			render: (row) => h('span', [
-				h('span', { onClick: () => onEditBrand(row) }, '编辑'),
-				h('span', { onClick: () => onDeleteBrand(row) }, '删除'),
+			render: (row) => h(NSpace, [
+				h(NButton, { type: 'primary', text: true, onClick: () => onEditBrand(row) }, '编辑'),
+				h(NButton, { type: 'warning', text: true, onClick: () => onDeleteBrand(row) }, '删除'),
 			])
 		}
 	])
 
-	let brandList = reactive<BrandType[]>([])
+	let brandList: Ref<Array<BrandType>> = ref([])
 
 	const showBrand = ref(false)
 	let currentBrand = reactive<BrandType>({
@@ -68,7 +74,11 @@
 	const pagination = reactive({
 		page: params.pageIndex,
 		pageSize: params.pageSize,
+		pageSizes: [10, 20, 30],
+		pageCount: 20,
+		showQuickJumper: true,
 		showSizePicker: true,
+		itemCount: params.total,
 		onChange: (page: number) => {
 			pagination.page = page
 			getBrandListAction()
@@ -81,8 +91,12 @@
 	})
 	// 获取分类列表数据
 	const getBrandListAction = async () => {
+		loading.value = true
 		const res = await getBrandList(params)
-		brandList = res.data.list
+		loading.value = false
+		brandList.value = res.data.list
+		params.total = res.data.total
+		pagination.page = res.data.pageIndex
 	}
 
 	const onAddBrand = () => {

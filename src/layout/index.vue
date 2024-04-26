@@ -28,7 +28,7 @@
       <n-layout-content class="layout-content">
 				<div class="layout-content-main layout-content-main-fix">
 					<TagsView :collapsed="collapsed"/>
-					<div class="main-view main-view-fix">
+					<div class="main-view main-view-fix m-3">
 						<MainView />
 					</div>
 				</div>

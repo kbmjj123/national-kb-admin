@@ -1,9 +1,9 @@
 import { http } from '@/utils/http'
-import { BasicParams } from '../types'
+import { BasicParams, ObjectResponseModel } from '../types'
 import type { IUserState } from '@/store/modules/user'
 
 // 获取当前登录用户信息
-export function getUserInfo(): Promise<IUserState> {
+export function getUserInfo(): Promise<ObjectResponseModel<IUserState>> {
 	return http.request({
 		url: '/user/info',
 		method: 'GET'
@@ -11,7 +11,7 @@ export function getUserInfo(): Promise<IUserState> {
 }
 
 // 登录动作
-export function login(params: BasicParams): Promise<{ token: string }> {
+export function login(params: BasicParams): Promise<ObjectResponseModel<{token: string}>> {
   return http.request({
     url: '/user/login',
     method: 'POST',

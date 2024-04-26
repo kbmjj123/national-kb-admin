@@ -115,7 +115,7 @@ const handleSubmit = async (e: Event) => {
 	message.success('登录成功，即将进入系统')
 	loading.value = false
 	const route = useRoute()
-	if(route.query.targetPath){
+	if(route?.query?.targetPath){
 		router.push(route.query.targetPath as string)
 	}else{
 		router.push({

@@ -12,7 +12,7 @@ export function addBrand(params: BrandType): Promise<StringOrBooleanResponseMode
 		url: '/brand',
 		method: 'post',
 		data: params
-	})
+	}, { isShowSuccessMessage: true })
 }
 
 // 编辑品牌
@@ -20,12 +20,12 @@ export function editBrand(params: BrandType): Promise<StringOrBooleanResponseMod
 	return http.request({
 		url: '/brand/:id',
 		data: params
-	})
+	}, { isShowSuccessMessage: true })
 }
 // 获取品牌列表
 export function getBrandList(params: BasicPageParams): Promise<ArrayResponseModel<BrandType>>{
 	return http.request({
-		url: '/brand',
+		url: '/brand/list',
 		data: params
 	})
 }
