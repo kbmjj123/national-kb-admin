@@ -13,6 +13,11 @@ export interface ObjectResponseModel<T> extends BasicResponseModel {
   data: T
 }
 
+//? 嵌套的响应结果
+export interface WrapArrayResponseModel<T> extends BasicResponseModel {
+	data: Array<T>
+}
+
 //? 列表类型响应结果
 export interface ArrayResponseModel<T> extends BasicResponseModel {
   data: {

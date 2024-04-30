@@ -23,6 +23,14 @@ export function resultListSuccess<T>(data: Array<T>, total: number, pageIndex: n
 	})
 }
 
+export function resultWrapListSuccess<T>(data: Array<T>, { message = '操作成功' } = {}) {
+	return Mock.mock({
+		status: 0,
+		message: message,
+		data: data
+	})
+}
+
 export function resultFailed<T>(
 	data: boolean | string | null | object | Array<T>,
 	{ message = '操作失败!' } = {},

@@ -26,6 +26,7 @@ export function editBrand(params: BrandType): Promise<StringOrBooleanResponseMod
 export function getBrandList(params: BasicPageParams): Promise<ArrayResponseModel<BrandType>>{
 	return http.request({
 		url: '/brand/list',
+		method: 'get',
 		data: params
 	})
 }
