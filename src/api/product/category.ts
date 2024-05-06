@@ -1,5 +1,5 @@
 import { http } from '@/utils/http'
-import type { BasicParams, StringOrBooleanResponseModel, ArrayResponseModel } from '../types'
+import type { BasicParams, ObjectResponseModel, StringOrBooleanResponseModel, WrapArrayResponseModel } from '../types'
 export interface CateType extends BasicParams{
 	id?: string,
 	name: string,
@@ -7,7 +7,7 @@ export interface CateType extends BasicParams{
 }
 
 // 获取所有的分类列表
-export function getCategoryList(): Promise<ArrayResponseModel<CateType>> {
+export function getCategoryList(): Promise<WrapArrayResponseModel<CateType>> {
 	return http.request({
 		url: '/category/list',
 		method: 'get'
@@ -15,7 +15,7 @@ export function getCategoryList(): Promise<ArrayResponseModel<CateType>> {
 }
 
 // 新增分类
-export function addCate(params: CateType): Promise<CateType> {
+export function addCate(params: CateType): Promise<ObjectResponseModel<CateType>> {
 	return http.request({
 		url: '/category',
 		method: 'post',
@@ -24,7 +24,7 @@ export function addCate(params: CateType): Promise<CateType> {
 }
 
 // 编辑分类
-export function editCate(params: CateType): Promise<CateType> {
+export function editCate(params: CateType): Promise<ObjectResponseModel<CateType>> {
 	return http.request({
 		url: '/category/:id',
 		method: 'post',

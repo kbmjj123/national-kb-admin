@@ -27,14 +27,14 @@
 		:pagination="pagination"
 	></n-data-table>
 	<!-- 新增或编辑视图 -->
-	<edit-brand-modal v-model="showBrand" :item-info="currentBrand"></edit-brand-modal>
+	<EditBrandModal v-model="showBrand" :item-info="currentBrand"></EditBrandModal>
 </template>
 
 <script setup lang="ts">
 	import { ref, reactive, onMounted, h, Ref } from 'vue'
 	import { type DataTableColumns, useDialog, NSpace, NButton } from 'naive-ui'
 	import { BrandType, getBrandList, deleteBrand } from '@/api/product/brand'
-	import EditBrandModal from './component/edit-brand-modal.vue';
+	import EditBrandModal from './component/EditBrandModal.vue';
 
 	const brandForm = reactive({
 		key: ''
