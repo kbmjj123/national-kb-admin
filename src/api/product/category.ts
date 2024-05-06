@@ -1,6 +1,5 @@
 import { http } from '@/utils/http'
-import type { BasicParams, BasicPageParams, StringOrBooleanResponseModel, ArrayResponseModel } from '../types'
-
+import type { BasicParams, StringOrBooleanResponseModel, ArrayResponseModel } from '../types'
 export interface CateType extends BasicParams{
 	id?: string,
 	name: string,
@@ -43,4 +42,10 @@ export function deleteCate(id: string): Promise<StringOrBooleanResponseModel> {
 }
 
 // 调整分类顺序
-export function changeSort() {}
+export function changeSort(params): Promise<StringOrBooleanResponseModel> {
+	return http.request({
+		url: '/category/sort',
+		method: 'post',
+		data: params
+	})
+}

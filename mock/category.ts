@@ -22,13 +22,40 @@ function generateCategoryList() {
 }
 
 export default [
+	// 获取分类列表
 	{
 		url: `${TARGET_CATEGORY}/list`,
 		method: 'get',
-		timeout: 1000,
 		response: () => resultWrapListSuccess(generateCategoryList())
 	},
+	// 新增分类
 	{
-		
+		url: `${TARGET_CATEGORY}`,
+		method: 'post',
+		response: () => resultSuccess({
+			id: mockjs.Random.guid(),
+			name: mockjs.Random.cword(2, 4)
+		})
+	},
+	// 编辑分类
+	{
+		url: `${TARGET_CATEGORY}/:id`,
+		method: 'post',
+		response: () => resultSuccess({
+			id: mockjs.Random.guid(),
+			name: mockjs.Random.cword(2, 4)
+		})
+	},
+	// 删除分类
+	{
+		url: `${TARGET_CATEGORY}/:id`,
+		method: 'delete',
+		response: () => resultSuccess(true)
+	},
+	// 调整分类顺序
+	{
+		url: `${TARGET_CATEGORY}/sort`,
+		method: 'post',
+		response: () => resultSuccess(true)
 	}
 ] as MockMethod[]
