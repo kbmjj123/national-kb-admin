@@ -1,19 +1,42 @@
-import Mock from 'mockjs'
-import { resultSuccess, resultFailed } from './_util'
+import mockjs from 'mockjs'
+import { resultSuccess, resultFailed, resultListSuccess } from './_util'
 import { MockMethod } from 'vite-plugin-mock'
 
 const TARGET_PRODUCT = '/api/product'
 
+const generateProduct = (detailFlag?: boolean) => {
+	let productInfo = {
+		id: mockjs.Random.guid(),
+		productName: mockjs.Random.cword(4, 20),
+		slug: `kb-product-slug-${mockjs.Random.word(3, 8)}`,
+		masterPicture: mockjs.Random.image('100x100', mockjs.Random.color(), mockjs.Random.color(), 'png', mockjs.Random.cword(2, 4)),
+		price: mockjs.Random.float(0.01, 9999, 0, 2),
+		activityPrice: mockjs.Random.float(0.01, 9999, 0, 2)
+	}
+	if(detailFlag){
+		productInfo['descPictures'] = Array.from({ length: mockjs.Random.integer(1, 5) }, () => mockjs.Random.image('300x300', mockjs.Random.color(), mockjs.Random.color(), 'jpg', mockjs.Random.cword(2, 4)))
+		productInfo['richText'] = Array.from({ length: mockjs.Random.integer(5, 20) }, (index: number) => {
+			return index % 3 === 0 ? `<p>${mockjs.Random.cparagraph()}</p>` : `<p><img src="${mockjs.Random.image('500x500', mockjs.Random.color(),mockjs.Random.color(), 'jpg')}" style="width: 100%;"></p>`
+		}).join('')
+	}
+	return productInfo
+}
+
+const genreateProductList = (num: number) => {
+	return Array.from({ length: num }, () => generateProduct())
+}
+
 export default [
-	// **** 以下是商品的相关接口 ****
+	// 获取商品列表
 	{
     url: `${TARGET_PRODUCT}/list`,
     timeout: 1000,
     method: 'get',
     response: () => {
-      return resultSuccess([])
+      return resultListSuccess(genreateProductList(20), 50, 1)
     },
   },
+	// 获取商品详情
 	{
     url: `${TARGET_PRODUCT}/:id`,
     timeout: 1000,
@@ -35,12 +58,19 @@ export default [
       }
     },
   },
+	// 发布/编辑商品
 	{
     url: `${TARGET_PRODUCT}/publish`,
     timeout: 1000,
     method: 'post',
     response: () => {
-      return resultSuccess([])
+      return resultSuccess()
     },
   },
+	// 上下架商品
+	{
+		url: `${TARGET_PRODUCT}/sale/:id`,
+		method: 'post',
+		response: () => resultSuccess()
+	}
 ] as MockMethod[]

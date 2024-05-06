@@ -1,7 +1,7 @@
 import Mock from 'mockjs'
 
 export function resultSuccess<T>(
-	data: boolean | string | null | object,
+	data?: T,
 	{ message = '操作成功!' } = {},
 ) {
 	return Mock.mock({
