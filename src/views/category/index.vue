@@ -26,7 +26,14 @@ const currentCateInfo = reactive<CateType>({
 onMounted(() => {
   getCategoryAction()
 })
-
+const appendLevel = (array, level) => {
+	if(array && array.length > 0){
+		array = array.map(item => ({
+			...item,
+			level
+		}))
+	}
+}
 // 获取分类列表
 const getCategoryAction = async () => {
   const res = await getCategoryList()
