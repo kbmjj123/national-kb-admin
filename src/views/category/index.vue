@@ -30,7 +30,10 @@ onMounted(() => {
 // 获取分类列表
 const getCategoryAction = async () => {
   const res = await getCategoryList()
-  categoryList.value = res.data
+  categoryList.value = res.data.map(item => ({
+		...item,
+		isExpand: false
+	}))
 }
 
 // 新增分类
