@@ -1,7 +1,7 @@
 import { http } from '@/utils/http'
 import type { BasicParams, ObjectResponseModel, StringOrBooleanResponseModel, WrapArrayResponseModel } from '../types'
 export interface CateType extends BasicParams{
-	id?: string,
+	id: string,
 	name: string,
 	level: number,
 	parentId?: string,

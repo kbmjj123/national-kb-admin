@@ -13,7 +13,7 @@ function generateCategoryList() {
 		children: Array.from({ length: mockjs.Random.natural(4, 8) }, () => ({
 			id: mockjs.Random.guid(),
 			name: mockjs.Random.cword(2, 4),
-			leven: 2,
+			level: 2,
 			children: Array.from({ length: mockjs.Random.natural(2, 5) }, () => ({
 				id: mockjs.Random.guid(),
 				name: mockjs.Random.cword(2, 4),
