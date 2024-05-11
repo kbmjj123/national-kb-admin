@@ -3,6 +3,7 @@ import type { BasicParams, ObjectResponseModel, StringOrBooleanResponseModel, Wr
 export interface CateType extends BasicParams{
 	id?: string,
 	name: string,
+	level: number,
 	parentId?: string,
 }
 

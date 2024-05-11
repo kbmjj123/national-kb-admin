@@ -453,7 +453,7 @@ export function getBrandList(params: BasicPageParams): Promise<ArrayResponseMode
 ```
 :star2: 这里我们创建了一个长度为20的数组，而且成员都是`undefined`的，这样子我们就可以借助`mockjs`的数据随机性来生成一个成员都不一样的数组数据！
 
-##### 全局插件的的使用
+#### 全局插件的的使用
 > 在实际的编码过程中，难免需要使用到类似于`showLoading`、`showToast`、`showModal`等API，而且想以插件的形式来调用(也就是随时调用)，那么需要进行以下的一个配置，在`naive-ui`中主要是`n-loading-bar-provider`、`n-dialog-provider`、`n-notification-provider`、`n-message-provider`
 ```vue
 	<!-- App.vue -->
@@ -493,7 +493,7 @@ export function getBrandList(params: BasicPageParams): Promise<ArrayResponseMode
 ```
 :+1: 上述通过这个`createDiscreteApi()`可直接引用到当前APP上下文中的已经包裹配置过的全局provider组件，实现一个全局直接访问调用的目的！！
 
-##### 关于接口请求是否需要维护类型
+#### 关于接口请求是否需要维护类型
 > 在编码的过程中，难免需要与后端接口服务进行通讯， :confused: 那么是否需要声明对应的类型，用于描述各个接口的调用呢？ :point_right: 答案是肯定的，虽然单纯的维护这个接口的数据结构会很繁琐，但是这这对我们在进行编码的过程中，对于代码的自动提示以及避免拼写错误，以及提前发现可能存在的代码漏洞有比较大的帮助，因此，建议还是尽量完善好对应的接口类型的声明，项目中由于是基于`axios`来进行发起网络请求的，这边针对`axios`的基础上搭建了一套基础的服务，因此，实际调用方仅需要简单的编写具体对应的业务逻辑接口即可，如下代码所示：
 ```typescript
 	// 获取当前登录用户信息
@@ -506,3 +506,7 @@ export function getUserInfo(): Promise<IUserState> {
 ```
 :star_struck: 这里我们声明了一方法`getUserInfo`，用于获取登录用户的信息，而且我们将其申明为一Promise响应方法，通过这样子定义，在实际该方法的调用方编写时，即可直接获取到响应结果的数据结构，如下图所示:
 ![针对声明的类型接口进行调用](./assets/针对声明的类型接口进行调用.png)
+
+#### v-show的使用限制
+> 当我直接在组件上使用：`v-show`指令的时候，确提示：`Runtime directive used on component with non-element root node. The directives will not function as intended.`
+> 意思是这个`v-show`指令不能直接使用在非`element`节点上，具体见[官方介绍](https://cn.vuejs.org/guide/essentials/conditional.html#v-show)

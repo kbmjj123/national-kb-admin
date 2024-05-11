@@ -9,12 +9,15 @@ function generateCategoryList() {
 	return Array.from({ length: mockjs.Random.natural(10, 15) }, () => ({
 		id: mockjs.Random.guid(),
 		name: mockjs.Random.cword(2, 4),
+		level: 1,
 		children: Array.from({ length: mockjs.Random.natural(4, 8) }, () => ({
 			id: mockjs.Random.guid(),
 			name: mockjs.Random.cword(2, 4),
+			leven: 2,
 			children: Array.from({ length: mockjs.Random.natural(2, 5) }, () => ({
 				id: mockjs.Random.guid(),
 				name: mockjs.Random.cword(2, 4),
+				level: 3,
 				children: []
 			}))
 		}))
