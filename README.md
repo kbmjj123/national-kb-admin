@@ -510,3 +510,14 @@ export function getUserInfo(): Promise<IUserState> {
 #### v-show的使用限制
 > 当我直接在组件上使用：`v-show`指令的时候，确提示：`Runtime directive used on component with non-element root node. The directives will not function as intended.`
 > 意思是这个`v-show`指令不能直接使用在非`element`节点上，具体见[官方介绍](https://cn.vuejs.org/guide/essentials/conditional.html#v-show)
+
+#### 关于h函数的使用注意
+> 在coding项目的过程中，会经常性地使用到`h()`来渲染元素，但是在使用的过程中，突然遇到：`Non-function value encountered for default slot. Prefer function slots for better performance.`
+> :point_right: 直接翻译就是：`默认插槽为非函数值，推荐使用函数插槽以获得更加性能`
+```typescript
+	h(NButton, { type: 'primary', text: true, onClick: () => onEditBrand(row) }, '编辑')
+```
+:trollface: 上述在以前vue2.0中并没有提示什么，但是在vue3.+中，则提示上述的提示，意思是这里的'编辑'二字推荐使用函数式的方式来使用，调整如下：
+```typescript
+	h(NButton, { type: 'primary', text: true, onClick: () => onEditBrand(row) }, () => '编辑')
+```

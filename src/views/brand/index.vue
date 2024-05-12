@@ -49,9 +49,9 @@
 		{
 			title: '操作',
 			key: 'action',
-			render: (row) => h(NSpace, [
-				h(NButton, { type: 'primary', text: true, onClick: () => onEditBrand(row) }, '编辑'),
-				h(NButton, { type: 'warning', text: true, onClick: () => onDeleteBrand(row) }, '删除'),
+			render: (row) => h(NSpace, () => [
+				h(NButton, { type: 'primary', text: true, onClick: () => onEditBrand(row) }, () => '编辑'),
+				h(NButton, { type: 'warning', text: true, onClick: () => onDeleteBrand(row) }, () => '删除'),
 			])
 		}
 	])
