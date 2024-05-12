@@ -17,16 +17,16 @@
 							{{ element.name }} - {{ element.level }}
 						</n-flex>
 						<n-flex>
-							<n-button text type="primary" v-if="element.level < 3" @click="onAddCate">新增</n-button>
-							<n-button text type="primary" @click="onEditCate(element)">编辑</n-button>
-							<n-button text type="error" @click="onDeleteCate(element)">删除</n-button>
+							<n-button text type="primary" v-if="element.level < 3" @click.stop="onAddCate">新增</n-button>
+							<n-button text type="primary" @click.stop="onEditCate(element)">编辑</n-button>
+							<n-button text type="error" @click.stop="onDeleteCate(element)">删除</n-button>
 						</n-flex>
 					</n-flex>
 					<Transition name="fade">
 						<section v-show="element.isExpand">
 							<NestedDraggableList
 								:item-key="itemKey"
-								@on-success="emit('onSuccess')"
+								@on-success="emit('on-success')"
 								v-model="element.children"></NestedDraggableList>
 						</section>
 					</Transition>
@@ -61,7 +61,9 @@ const currentCateInfo = reactive<CateType>({
 	level: 0,
 	children: []
 })
-const emit = defineEmits(['onSuccess'])
+const emit = defineEmits<{
+	'on-success': []
+}>()
 // 切换子元素的显隐状态
 const toggleItem = (element: CateType) => {
   element.isExpand = !element.isExpand
@@ -80,15 +82,14 @@ const onEditCate = (row: CateType) => {
 }
 
 const onDeleteCate = (row: CateType) => {
-	emit('onSuccess')
-	// if(row.children && row.children.length > 0){
-	// 	dialog.warning({
-	// 		title: `温馨提示`,
-	// 		content: `您好，该分类下拥有子分类，请确保没有子分类，方可进行删除操作`,
-	// 		positiveText: '好的'
-	// 	})
-	// 	return
-	// }
+	if(row.children && row.children.length > 0){
+		dialog.warning({
+			title: `温馨提示`,
+			content: `您好，该分类下拥有子分类，请确保没有子分类，方可进行删除操作`,
+			positiveText: '好的'
+		})
+		return
+	}
   dialog.warning({
     title: `温馨提示`,
     content: `您确定要删除分类：${row.name}吗？`,
@@ -97,7 +98,7 @@ const onDeleteCate = (row: CateType) => {
     onPositiveClick: async () => {
 			const res = await deleteCate(row.id)
 			message.success(res.message)
-			emit('onSuccess')
+			emit('on-success')
 		},
   })
 }

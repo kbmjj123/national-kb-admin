@@ -2,7 +2,7 @@
   <n-modal
     v-model:show="model"
     preset="dialog"
-    title="编辑分类"
+    :title="itemInfo && itemInfo.id ? '编辑分类' : '新增分类'"
     negative-text="取消"
     positive-text="确定"
     @positive-click="onAddOrEditAction">
@@ -13,8 +13,11 @@
       ref="editCateForm"
       :model="cateForm"
       :rules="cateFormRules">
-      <n-form-item label="上级分类:">
-				<n-select clearable placeholder="请选择分类"></n-select>
+      <n-form-item label="上级分类:" v-if="parentCate">
+				<n-input readonly></n-input>
+			</n-form-item>
+			<n-form-item label="分类名称:" path="name">
+				<n-input clearable autofocus placeholder="请输入分类名称" v-model:value="cateForm.name"></n-input>
 			</n-form-item>
     </n-form>
   </n-modal>
@@ -24,8 +27,9 @@
 import { ref, reactive, watch } from 'vue'
 import { CateType, addCate, editCate } from '@/api/product/category'
 
-const { itemInfo } = defineProps<{
-  itemInfo: CateType
+const { itemInfo, parentCate } = defineProps<{
+  itemInfo?: CateType,
+	parentCate?: string
 }>()
 
 const emit = defineEmits<{
@@ -45,8 +49,10 @@ const cateFormRules = {
 
 watch(model, (newVal) => {
   if (newVal) {
-    cateForm.id = itemInfo.id
-    cateForm.name = itemInfo.name
+		if(itemInfo){
+			cateForm.id = itemInfo.id
+			cateForm.name = itemInfo.name
+		}
   }
 })
 
@@ -54,6 +60,8 @@ const editCateForm = ref()
 const cateForm = reactive<CateType>({
   id: '',
   name: '',
+	level: 0,
+	parentId: ''
 })
 
 // 新增或者编辑操作
