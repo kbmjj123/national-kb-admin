@@ -4,7 +4,7 @@ import { MockMethod } from 'vite-plugin-mock'
 
 const TARGET_PRODUCT = '/api/product'
 
-const generateProduct = (detailFlag?: boolean) => {
+export const generateProduct = (detailFlag?: boolean) => {
 	let productInfo = {
 		id: mockjs.Random.guid(),
 		productName: mockjs.Random.cword(4, 20),
