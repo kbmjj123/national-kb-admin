@@ -1,5 +1,5 @@
 import { http } from '@/utils/http'
-import { BasicParams, BasicPageParams } from '../types'
+import { BasicParams, BasicPageParams, StringOrBooleanResponseModel, ArrayResponseModel, ObjectResponseModel } from '../types'
 
 export type ProductType = {
 	id: string,
@@ -14,7 +14,7 @@ export type ProductType = {
 }
 
 // 发布/编辑商品信息
-export function publishOrEdit(params: ProductType): Promise<{}>{
+export function publishOrEdit(params: ProductType): Promise<StringOrBooleanResponseModel>{
 	return http.request({
 		url: '/product',
 		method: 'post',
@@ -23,7 +23,7 @@ export function publishOrEdit(params: ProductType): Promise<{}>{
 }
 
 // 获取商品信息
-export function getProductInfo(id: string): Promise<ProductType>{
+export function getProductInfo(id: string): Promise<ObjectResponseModel<ProductType>>{
 	return http.request({
 		url: '/product/:id',
 		data: {id},
@@ -32,7 +32,7 @@ export function getProductInfo(id: string): Promise<ProductType>{
 }
 
 // 分页获取商品列表
-export function getProductList(params: BasicPageParams): Promise<ProductType> {
+export function getProductList(params: BasicPageParams): Promise<ArrayResponseModel<ProductType>> {
 	return http.request({
 		url: '/product/list',
 		data: params,
@@ -41,7 +41,7 @@ export function getProductList(params: BasicPageParams): Promise<ProductType> {
 }
 
 // 商品上下架
-export function upOrDownShelves(params: BasicParams): Promise<{}>{
+export function upOrDownShelves(params: BasicParams): Promise<StringOrBooleanResponseModel>{
 	return http.request({
 		url: '/product/upOrDownShelves',
 		data: params,
