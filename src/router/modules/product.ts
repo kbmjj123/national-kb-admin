@@ -43,6 +43,15 @@ export default [
 					isMenu: true
 				},
 				component: () => import('@/views/brand/index.vue')
+			},
+			{
+				path: '/stock',
+				name: 'stock_manage',
+				meta: {
+					title: '库存管理',
+					isMenu: true
+				},
+				component: () => import('@/views/stock/index.vue')
 			}
     ],
   },
