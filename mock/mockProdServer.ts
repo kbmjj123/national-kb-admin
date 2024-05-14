@@ -9,7 +9,9 @@ import account from './account'
 import order from './order'
 import product from './product'
 import brand from './brand'
-// import category from './category'
+import category from './category'
+import stock from './stock'
+import file from './file'
 
 export function setupProdMockServer() {
   createProdMockServer([
@@ -18,6 +20,9 @@ export function setupProdMockServer() {
 		...account,
 		...order,
 		...product,
-		...brand
+		...brand,
+		...category,
+		...stock,
+		...file
 	])
 }

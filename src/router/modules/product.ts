@@ -24,7 +24,8 @@ export default [
 				name: 'product_edit',
 				meta: {
 					title: '商品编辑'
-				}
+				},
+				component: () => import('@/views/product/detail/index.vue')
 			},
 			{
 				path: '/category',
