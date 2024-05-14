@@ -18,10 +18,12 @@
 	import { reactive, ref, h, toRaw, onMounted } from 'vue'
 	import { useRouter } from 'vue-router'
 	import { ProductType, getProductList, upOrDownShelves } from '@/api/product/product.ts'
-	import { NImage, NFlex, NButton, useMessage } from 'naive-ui'
+	import { NImage, NFlex, NButton, useMessage, useDialog } from 'naive-ui'
+	import QuickEditPriceView from './component/QuickEditPriceView.vue'
 
 	const router = useRouter()
 	const message = useMessage()
+	consg dialog = useDialog()
 	let filterForm = reactive({
 		productCode: '',
 		productName: '',
@@ -38,7 +40,7 @@
 		{ title: '商品名称', ellipsis: true },
 		{ title: '所属分类', key: 'category' },
 		{ title: '商品slug', key: 'slug' },
-		{ title: '价格', key: 'price' },
+		{ title: '价格', key: 'price', render: (row: ProductType) => h(QuickEditPriceView, { itemInfo: row }) },
 		{ title: '操作', render: (row: ProductType) => h(
 			NFlex, () => [
 				h(NButton, { text: true, onClick: toDetail.bind(null, row) }, () => '编辑'),
@@ -50,6 +52,7 @@
 		getProductList(filterForm)
 	})
 
+	// 跳转到商品详情
 	const toDetail = (row: ProductType): void => {
 		router.push({
 			name: 'product_edit',
@@ -61,15 +64,24 @@
 
 	// 商品上下架动作
 	const upOrDownShelf = async (row: ProductType) => {
-		const res = await upOrDownShelves({
-			id: row.id
+		dialog.warning({
+			title: '温馨提示',
+			content: `您确定要下架"${row.name}"吗？`,
+			negativeText: '我再想想🤔',
+			positiveText: '确定',
+			onPositiveClick: () => {
+				const res = await upOrDownShelves({
+					id: row.id
+				})
+				message.success(res.message)
+			}
 		})
-		message.success(res.message)
 	}
-
+	// 搜索
 	const onSearch = () => {
 		getProductList(filterForm)
 	}
+	// 重置
 	const onReset = () => {
 		filterForm = Object.assign(filterForm, originalFilter)
 		getProductList(filterForm)
