@@ -14,6 +14,8 @@
 		:showFileList="computedOptions.showFileList"
 		:showPreviewButton="computedOptions.showPreviewButton"
 		@download="onDownload"
+		@change="onChange"
+		:file-list="fileList"
 		>
     <n-upload-dragger v-if="'single' === computedOptions.uploadDragger">
       <div class="mb-3">
@@ -84,19 +86,20 @@ const computedOptions = computed(() => ({
   ...defaultOptions,
   ...options,
 }))
-const computedFileList = computed({
-	get() {
-		return fileList
-	},
-	set(newVal){
-		fileList = newVal
-	}
-})
+
+const emit = defineEmits<{
+	'on-upload': [filieList: []]
+}>()
 
 // 文件下载动作
 const onDownload = (file: UploadFileInfo) => {
 	alert(`${file.name}`)
 }
+// 上传了文件动作
+const onChange = (data: { fileList: UploadFileInfo[] }) => {
+	// emit('on-upload', data.fileList)
+	// computedFileList.value = data.fileList
+} 
 // 文件图标渲染函数，仅在list-type=image/image-card有效
 // const renderIcon = (file: UploadSettledFileInfo) => {}
 
