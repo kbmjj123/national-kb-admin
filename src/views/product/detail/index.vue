@@ -1,7 +1,7 @@
 <template>
 	<div>
 		文件上传
-		<Uploader :file-list="fileList"></Uploader>
+		<Uploader :file-list="fileList" :options="{ uploadDragger: 'normal', listType: 'image-card' }"></Uploader>
 	</div>
 </template>
 

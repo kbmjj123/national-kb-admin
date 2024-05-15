@@ -13,8 +13,8 @@
 		:showRemoveButton="computedOptions.showRemoveButton"
 		:showFileList="computedOptions.showFileList"
 		:showPreviewButton="computedOptions.showPreviewButton"
+		@download="onDownload"
 		>
-    <!-- 一个大区域的拖动上传 -->
     <n-upload-dragger v-if="'single' === computedOptions.uploadDragger">
       <div class="mb-3">
         <n-icon size="48" :depth="3">
@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { UploadFileInfo, UploadSettledFileInfo, ListType } from 'naive-ui'
+import { UploadFileInfo, UploadSettledFileInfo } from 'naive-ui'
 import { ArchiveOutline } from '@vicons/ionicons5'
 
 export type UploadOptions = {
@@ -42,7 +42,7 @@ export type UploadOptions = {
   headers?: Record<string, string>
 	method?: string
   data?: Record<string, string | number | object>
-  listType: 'text' | 'image' | 'image-card' // 文件列表格式：text、image、image-card，默认是image-card
+  listType?: 'text' | 'image' | 'image-card' // 文件列表格式：text、image、image-card，默认是image-card
   defaultUpload?: boolean // 是否选择时直接上传文件
   max?: number // 限制上传文件数量，默认最多时9个
   multiple?: boolean // 是否支持同时选中多个文件
@@ -77,7 +77,7 @@ const defaultOptions: UploadOptions = {
 
 let { options, fileList } = defineProps<{
   options?: UploadOptions
-  fileList: []
+  fileList: UploadFileInfo[]
 }>()
 
 const computedOptions = computed(() => ({
@@ -93,6 +93,10 @@ const computedFileList = computed({
 	}
 })
 
+// 文件下载动作
+const onDownload = (file: UploadFileInfo) => {
+	alert(`${file.name}`)
+}
 // 文件图标渲染函数，仅在list-type=image/image-card有效
 // const renderIcon = (file: UploadSettledFileInfo) => {}
 
