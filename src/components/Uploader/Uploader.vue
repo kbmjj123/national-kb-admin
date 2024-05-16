@@ -14,8 +14,8 @@
 		:showFileList="computedOptions.showFileList"
 		:showPreviewButton="computedOptions.showPreviewButton"
 		@download="onDownload"
-		@change="onChange"
 		:file-list="fileList"
+		@update:file-list="onChange"
 		>
     <n-upload-dragger v-if="'single' === computedOptions.uploadDragger">
       <div class="mb-3">
@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { UploadFileInfo, UploadSettledFileInfo } from 'naive-ui'
+import { UploadFileInfo } from 'naive-ui'
 import { ArchiveOutline } from '@vicons/ionicons5'
 
 export type UploadOptions = {
@@ -74,13 +74,15 @@ const defaultOptions: UploadOptions = {
   showRemoveButton: true,
   showFileList: true,
   showPreviewButton: true,
-  uploadDragger: 'single',
+  uploadDragger: 'single'
 }
 
-let { options, fileList } = defineProps<{
-  options?: UploadOptions
-  fileList: UploadFileInfo[]
+let { options } = defineProps<{
+  options: UploadOptions
 }>()
+const fileList = defineModel<UploadFileInfo[]>({
+	required: true
+})
 
 const computedOptions = computed(() => ({
   ...defaultOptions,
@@ -96,11 +98,8 @@ const onDownload = (file: UploadFileInfo) => {
 	alert(`${file.name}`)
 }
 // 上传了文件动作
-const onChange = (data: { fileList: UploadFileInfo[] }) => {
-	// emit('on-upload', data.fileList)
-	// computedFileList.value = data.fileList
-} 
-// 文件图标渲染函数，仅在list-type=image/image-card有效
-// const renderIcon = (file: UploadSettledFileInfo) => {}
+const onChange = (data) => {
+	fileList.value = data
+}
 
 </script>
