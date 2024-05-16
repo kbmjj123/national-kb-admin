@@ -8,6 +8,7 @@ export const generateProduct = (detailFlag?: boolean) => {
 	let productInfo = {
 		id: mockjs.Random.guid(),
 		productName: mockjs.Random.cword(4, 20),
+		category: Array.from({ length: mockjs.Random.natural(1, 3) }, () => mockjs.Random.cword(2, 4)).join('/'),
 		slug: `kb-product-slug-${mockjs.Random.word(3, 8)}`,
 		masterPicture: mockjs.Random.image('100x100', mockjs.Random.color(), mockjs.Random.color(), 'png', mockjs.Random.cword(2, 4)),
 		price: mockjs.Random.float(0.01, 9999, 0, 2),

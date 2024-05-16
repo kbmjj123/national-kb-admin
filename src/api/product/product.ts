@@ -5,10 +5,11 @@ export type ProductType = {
 	id: string,
 	name: string,
 	slug: string,
-	masterPic: string,
+	category: string,
+	masterPicture: string,
 	descPic: string[],
 	detailContent: string,
-	price: number,
+	price: string,
 	activityPrice: number,
 	remark: string
 }
@@ -16,7 +17,7 @@ export type ProductType = {
 // 发布/编辑商品信息
 export function publishOrEdit(params: ProductType): Promise<StringOrBooleanResponseModel>{
 	return http.request({
-		url: '/product',
+		url: '/product/publish',
 		method: 'post',
 		data: params
 	})
