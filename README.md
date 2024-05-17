@@ -493,6 +493,17 @@ export function getBrandList(params: BasicPageParams): Promise<ArrayResponseMode
 ```
 :+1: 上述通过这个`createDiscreteApi()`可直接引用到当前APP上下文中的已经包裹配置过的全局provider组件，实现一个全局直接访问调用的目的！！
 
+#### 全局主题色配置
+> 为使整体项目采用统一的主题色来进行管理，可以采用在app外层使用`n-config-provider`进行包裹，在这个provider上进行主题方案的配置，然后项目中的所有的组件都不使用自定义的颜色，而是通过`useThemeVars`的方式，来引用到系统的主题色
+> 通过以下的方式来访问到应用的主题色
+```typescript
+	<template>
+		<div :style="{ color: themeVars.primaryColor }">我是自定义div</div>
+	</template>
+	import { useThemeVars } from 'naive-ui'
+	const themeVars = useThemeVars()
+```
+
 #### 关于接口请求是否需要维护类型
 > 在编码的过程中，难免需要与后端接口服务进行通讯， :confused: 那么是否需要声明对应的类型，用于描述各个接口的调用呢？ :point_right: 答案是肯定的，虽然单纯的维护这个接口的数据结构会很繁琐，但是这这对我们在进行编码的过程中，对于代码的自动提示以及避免拼写错误，以及提前发现可能存在的代码漏洞有比较大的帮助，因此，建议还是尽量完善好对应的接口类型的声明，项目中由于是基于`axios`来进行发起网络请求的，这边针对`axios`的基础上搭建了一套基础的服务，因此，实际调用方仅需要简单的编写具体对应的业务逻辑接口即可，如下代码所示：
 ```typescript
