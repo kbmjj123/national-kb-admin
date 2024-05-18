@@ -1,15 +1,24 @@
 <template>
-	<div>
-		文件上传
-		<Uploader 
-		v-model="fileList" 
-		:options="{ uploadDragger: 'normal', listType: 'image-card' }"></Uploader>
-	</div>
+	<CategoryView :item-info="productInfo"></CategoryView>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { UploadFileInfo } from 'naive-ui'
-const fileList = ref<UploadFileInfo[]>([])
+import { ref, reactive } from 'vue'
+import { ProductType } from '@/api/product/product.ts'
+import CategoryView from '../component/CategoryView.vue'
+
+// 当前页面的商品信息对象
+const productInfo = reactive<ProductType>({
+	id: '',
+	name: '',
+	slug: '',
+	category: '',
+	masterPicture: '',
+	descPic: [],
+	detailContent: '',
+	price: '',
+	activityPrice: 0,
+	remark: ''
+})
 
 </script>
