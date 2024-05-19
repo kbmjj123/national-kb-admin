@@ -17,7 +17,7 @@
 		:file-list="fileList"
 		@update:file-list="onChange"
 		>
-    <n-upload-dragger v-if="'single' === computedOptions.uploadDragger" class="w-[100px] inline-block">
+    <n-upload-dragger v-if="'single' === computedOptions.uploadDragger" class="w-[300px] inline-block">
       <n-flex vertical align="center">
         <n-icon size="48" :depth="3">
           <ArchiveOutline></ArchiveOutline>
@@ -103,3 +103,9 @@ const onChange = (data) => {
 }
 
 </script>
+
+<style>
+	.n-upload.n-upload--dragger-inside .n-upload-trigger{
+		display: inline-block !important;
+	}
+</style>

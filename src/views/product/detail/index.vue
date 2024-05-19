@@ -2,7 +2,7 @@
 	<n-form :label-width="100" label-placement="left">
 		<KArea title="商品信息">
 			<CategoryView :item-info="productInfo"></CategoryView>
-			
+			<BrandView></BrandView>
 			<n-form-item label="商品名称: ">
 				<n-input placeholder="请输入商品名称" clearable></n-input>
 			</n-form-item>
@@ -38,6 +38,7 @@
 import { ref, reactive } from 'vue'
 import { ProductType } from '@/api/product/product.ts'
 import CategoryView from '../component/CategoryView.vue'
+import BrandView from '../component/BrandView.vue'
 import SlugView from '../component/SlugView.vue'
 import ProductPictureView from '../component/ProductPictureView.vue'
 import {ChevronForwardCircleOutline} from '@vicons/ionicons5'
