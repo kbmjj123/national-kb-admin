@@ -8,11 +8,14 @@
 
 <script setup lang="ts">
 import { ref, Ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 
 import type { CateType } from '@/api/product/category'
 import { getCategoryList } from '@/api/product/category'
 import NestedDraggableList from './component/NestedDraggableList.vue'
 import EditCateModal from './component/EditCateModal.vue'
+
+const route = useRoute()
 
 // 新增与编辑相关的Modal视图
 const showCateFlag = ref(false)
@@ -21,6 +24,9 @@ const categoryList: Ref<Array<CateType>> = ref([])
 
 onMounted(() => {
   getCategoryAction()
+	if(route.query?.showAutoAdd){
+		onAddFirstCate()
+	}
 })
 
 

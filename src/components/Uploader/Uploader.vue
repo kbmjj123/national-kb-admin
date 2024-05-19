@@ -17,13 +17,13 @@
 		:file-list="fileList"
 		@update:file-list="onChange"
 		>
-    <n-upload-dragger v-if="'single' === computedOptions.uploadDragger">
-      <div class="mb-3">
+    <n-upload-dragger v-if="'single' === computedOptions.uploadDragger" class="w-[100px] inline-block">
+      <n-flex vertical align="center">
         <n-icon size="48" :depth="3">
           <ArchiveOutline></ArchiveOutline>
         </n-icon>
-      </div>
-      <n-text class="text-xs">点击或者拖动文件到该区域来上传</n-text>
+				<n-text class="text-xs">点击或者拖动文件到该区域来上传</n-text>
+      </n-flex>
     </n-upload-dragger>
     <n-upload-dragger v-else-if="'normal' === computedOptions.uploadDragger">
 			文件上传
