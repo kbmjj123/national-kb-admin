@@ -11,6 +11,5 @@
 
 <script setup lang="ts">
 import testLogo from '@/assets/images/logo.png'
-import { useThemeVars } from 'naive-ui'
 
 </script>

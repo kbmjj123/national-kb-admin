@@ -8,6 +8,7 @@ export type ProductType = {
 	category: string,
 	masterPicture: string,
 	descPic: string[],
+	params: [],
 	detailContent: string,
 	price: string,
 	activityPrice: number,

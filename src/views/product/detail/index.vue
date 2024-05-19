@@ -31,6 +31,11 @@
 				<Uploader v-model="productInfo.descPic" :options="{uploadDragger: 'single', listType: 'image'}"></Uploader>
 			</n-form-item>
 		</KArea>
+		<KArea title="商品属性"></KArea>
+			<ProductParamsView></ProductParamsView>
+		<KArea title="图文详情">
+			<KEditor></KEditor>
+		</KArea>
 	</n-form>
 </template>
 
@@ -41,6 +46,7 @@ import CategoryView from '../component/CategoryView.vue'
 import BrandView from '../component/BrandView.vue'
 import SlugView from '../component/SlugView.vue'
 import ProductPictureView from '../component/ProductPictureView.vue'
+import ProductParamsView from '../component/ProductParamsView.vue'
 import {ChevronForwardCircleOutline} from '@vicons/ionicons5'
 
 // 当前页面的商品信息对象
@@ -51,6 +57,7 @@ const productInfo = reactive<ProductType>({
 	category: '',
 	masterPicture: '',
 	descPic: [],
+	params: [],
 	detailContent: '',
 	price: '',
 	activityPrice: 0,
