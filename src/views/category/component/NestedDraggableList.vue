@@ -115,7 +115,7 @@ const onEditParam = (row: CateType) => {
 }
 </script>
 
-<style lang="less">
+<style scoped>
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s ease;
