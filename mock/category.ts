@@ -23,6 +23,15 @@ function generateCategoryList() {
 		}))
 	}))
 }
+// 生成该分类下的所有的属性集合
+function generateCategoryParams() {
+	return Array.from({ length: mockjs.Random.natural(1, 3) }, () => ({
+		id: mockjs.Random.guid(),
+		name: mockjs.Random.cword(2, 4),
+		level: mockjs.Random.natural(1, 3),
+		params: Array.from({ length: mockjs.Random.natural(1, 10) }, () => mockjs.Random.cword(2, 4))
+	}))
+}
 
 export default [
 	// 获取分类列表
@@ -60,5 +69,11 @@ export default [
 		url: `${TARGET_CATEGORY}/sort`,
 		method: 'post',
 		response: () => resultSuccess(true)
+	},
+	// 获取分类下的属性集合，包括从父节点菜单获取到的
+	{
+		url: `${TARGET_CATEGORY}/params`,
+		method: 'get',
+		response: () => resultSuccess(generateCategoryParams())
 	}
 ] as MockMethod[]

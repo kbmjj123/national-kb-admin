@@ -1,10 +1,15 @@
 import { http } from '@/utils/http'
 import type { BasicParams, ObjectResponseModel, StringOrBooleanResponseModel, WrapArrayResponseModel } from '../types'
+
 export interface CateType extends BasicParams{
 	id: string,
 	name: string,
 	level: number,
 	parentId?: string,
+}
+
+export interface ParamType extends CateType{
+	params: string[]
 }
 
 // 获取所有的分类列表
@@ -47,6 +52,15 @@ export function changeSort(params): Promise<StringOrBooleanResponseModel> {
 	return http.request({
 		url: '/category/sort',
 		method: 'post',
+		data: params
+	})
+}
+
+// 获取分类下的属性集合
+export function getCategoryParams(params): Promise<WrapArrayResponseModel<ParamType>> {
+	return http.request({
+		url: '/category/params',
+		method: 'get',
 		data: params
 	})
 }

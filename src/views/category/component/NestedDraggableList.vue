@@ -19,6 +19,7 @@
 						<n-flex>
 							<n-button text type="primary" v-if="element.level < 3" @click.stop="onAddCate">新增</n-button>
 							<n-button text type="primary" @click.stop="onEditCate(element)">编辑</n-button>
+							<n-button text type="primary" @click.stop="onEditParam(element)">商品属性</n-button>
 							<n-button text type="error" @click.stop="onDeleteCate(element)">删除</n-button>
 						</n-flex>
 					</n-flex>
@@ -35,6 +36,8 @@
 		</Draggable>
 		<!-- 新增/编辑分类的视图 -->
 		<EditCateModal v-model="showCateFlag" :item-info="currentCateInfo"></EditCateModal>
+		<!-- 编辑分类下的商品属性视图 -->
+		<EditParamsModal v-model="showEditParamFlag" :category-id="showEditParamCateId"></EditParamsModal>
 	</div>
 </template>
 
@@ -44,6 +47,7 @@ import { useDialog, useMessage } from 'naive-ui'
 import { CateType, deleteCate } from '@/api/product/category'
 import EditCateModal from './EditCateModal.vue'
 import { ChevronForwardCircleOutline } from '@vicons/ionicons5'
+import EditParamsModal from './EditParamsModal.vue'
 const dialog = useDialog()
 const message = useMessage()
 const { itemKey } = defineProps<{
@@ -101,6 +105,13 @@ const onDeleteCate = (row: CateType) => {
 			emit('on-success')
 		},
   })
+}
+// 编辑分类下关联的商品属性
+const showEditParamFlag = ref(false)
+const showEditParamCateId = ref('')
+const onEditParam = (row: CateType) => {
+	showEditParamCateId.value = row.id
+	showEditParamFlag.value = true
 }
 </script>
 
