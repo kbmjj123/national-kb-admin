@@ -14,7 +14,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, inject } from 'vue'
 import { ChevronForwardCircleOutline } from '@vicons/ionicons5'
 const onAddBrand = () => {}
+
+const brand = ref()
+const registerItemRef = inject('registerItemRef') as (prop: string, el: HTMLElement) => void
+onMounted(() => {
+	if(brand.value){
+		registerItemRef('brand', brand.value?.$el)
+	}
+})
 </script>

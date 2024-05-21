@@ -4,12 +4,12 @@
 			<CategoryView :item-info="productInfo"></CategoryView>
 			<BrandView></BrandView>
 			<n-form-item label="商品名称: " path="name" ref="name">
-				<n-input placeholder="请输入商品名称" clearable></n-input>
+				<n-input placeholder="请输入商品名称" clearable v-model:value="productInfo.name"></n-input>
 			</n-form-item>
 			<SlugView :item-info="productInfo"></SlugView>
 			<n-form-item label="商品价格: " path="price" ref="price">
 				<n-flex align="center" :wrap="false" class="w-[100%]">
-					<n-input placeholder="请输入商品价格" clearable class="w-[50%]">
+					<n-input placeholder="请输入商品价格" clearable class="w-[50%]" v-model:value="productInfo.price">
 						<template #suffix>
 							元
 						</template>
@@ -17,8 +17,8 @@
 					<n-checkbox class="w-40">面议<n-icon><ChevronForwardCircleOutline></ChevronForwardCircleOutline></n-icon></n-checkbox>
 				</n-flex>
 			</n-form-item>
-			<n-form-item label="市场价: " path="activityPrice" ref=activityPrice>
-				<n-input placeholder="请输入市场价">
+			<n-form-item label="市场价: " path="marketPrice" ref=marketPrice>
+				<n-input placeholder="请输入市场价" v-model:value="productInfo.marketPrice">
 					<template #suffix>
 						元
 					</template>
@@ -26,7 +26,7 @@
 			</n-form-item>
 		</KArea>
 		<KArea title="媒体信息">
-			<ProductPictureView></ProductPictureView>
+			<ProductPictureView :item-info="productInfo"></ProductPictureView>
 			<n-form-item label="商品视频: ">
 				<Uploader v-model="productInfo.descPic" :options="{uploadDragger: 'single', listType: 'image'}"></Uploader>
 			</n-form-item>
@@ -36,7 +36,7 @@
 				<ProductParamsView :item-info="productInfo"></ProductParamsView>
 			</n-form-item>
 		<KArea title="图文详情">
-			<KEditor></KEditor>
+			<KEditor ></KEditor>
 		</KArea>
 	</n-form>
 	<FixBottomArea>
@@ -46,8 +46,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, provide } from 'vue'
-import { ProductType } from '@/api/product/product.ts'
+import { ref, reactive, provide, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { ProductType, getProductInfo } from '@/api/product/product.ts'
 import CategoryView from '../component/CategoryView.vue'
 import BrandView from '../component/BrandView.vue'
 import SlugView from '../component/SlugView.vue'
@@ -55,19 +56,21 @@ import ProductPictureView from '../component/ProductPictureView.vue'
 import ProductParamsView from '../component/ProductParamsView.vue'
 import {ChevronForwardCircleOutline} from '@vicons/ionicons5'
 
+const route = useRoute()
 const productForm = ref()
 // 当前页面的商品信息对象
 const productInfo = reactive<ProductType>({
 	id: '',
 	name: '',
 	slug: '',
+	slugTarget: '',
 	category: '',
 	masterPicture: '',
 	descPic: [],
 	params: [],
 	detailContent: '',
 	price: '',
-	activityPrice: 0,
+	marketPrice: '',
 	remark: ''
 })
 // 缓存当前页面的表单校验规则
@@ -84,6 +87,21 @@ const registerItemRef = (prop: string, el: HTMLElement) => {
 	itemRefsMap[prop] = el
 }
 provide('registerItemRef', registerItemRef)
+
+const name = ref()
+const price = ref()
+const descPic = ref()
+onMounted(() => {
+	registerItemRef('name', name.value?.$el)
+	registerItemRef('price', price.value?.$el)
+	registerItemRef('descPic', descPic.value?.$el)
+	getProductInfoAction()
+})
+// 获取商品信息
+const getProductInfoAction = async () => {
+	const res = await getProductInfo(route.params.id as string)
+	Object.assign(productInfo, res.data)
+}
 // 保存商品的动作
 const onSaveProductInfo = () => {
 	productForm.value?.validate((errors) => {
@@ -91,7 +109,6 @@ const onSaveProductInfo = () => {
 		if(errors && errors.length > 0){
 			const field = errors[0][0].field as string
 			if(field){
-				console.info(itemRefsMap[field])
 				itemRefsMap[field].scrollIntoView({ behavior: 'smooth' })
 			}
 		}

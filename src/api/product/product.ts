@@ -14,13 +14,14 @@ export type ProductType = {
 	id: string,
 	name: string,
 	slug: string,
+	slugTarget?: string,
 	category: string,
 	masterPicture: string,
 	descPic: string[],
 	params: ProductParams[],
 	detailContent: string,
 	price: string,
-	activityPrice: number,
+	marketPrice: string,
 	remark: string
 }
 
@@ -56,6 +57,15 @@ export function upOrDownShelves(params: BasicParams): Promise<StringOrBooleanRes
 	return http.request({
 		url: '/product/upOrDownShelves',
 		data: params,
+		method: 'post'
+	})
+}
+
+// 检测slug的唯一性
+export function detectionUniqueness(slug: string): Promise<StringOrBooleanResponseModel>{
+	return http.request({
+		url: '/product/slug/check',
+		data: { slug },
 		method: 'post'
 	})
 }

@@ -45,8 +45,6 @@
 		</span>
 	</div>
   <div id="editor">
-    <h2>Demo Content</h2>
-    <p>Preset build with <code>snow</code> theme, and some common formats.</p>
   </div>
 </template>
 
@@ -55,8 +53,10 @@ import hljs from 'highlight.js'
 import Quill from 'quill'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
-
 import { onMounted } from 'vue'
+
+
+
 onMounted(() => {
   const quill = new Quill('#editor', {
     theme: 'snow',

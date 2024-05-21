@@ -26,4 +26,5 @@ const onAddNewParams = () => {
 const onDeleteParams = (index: number) => {
 	itemInfo.params.splice(index, 1)
 }
+
 </script>
