@@ -11,10 +11,15 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import { ProductType } from '@/api/product/product'
-
+import { useRef } from '@/hooks/web/useRef.ts'
 
 const { itemInfo } = defineProps<{
 	itemInfo: ProductType
 }>()
+const { slug } = useRef('slug', 'registerItemRef')
+onMounted(() => {
+	console.info(slug)
+})
 </script>
