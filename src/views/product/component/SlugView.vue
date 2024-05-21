@@ -11,15 +11,16 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, inject } from 'vue'
 import { ProductType } from '@/api/product/product'
-import { useRef } from '@/hooks/web/useRef.ts'
 
 const { itemInfo } = defineProps<{
 	itemInfo: ProductType
 }>()
-const { slug } = useRef('slug', 'registerItemRef')
+const slug = ref()
+const registerItemRef = inject('registerItemRef') as (prop: string, el: HTMLElement) => void
 onMounted(() => {
-	console.info(slug)
+	slug.value && registerItemRef('slug', slug.value?.$el)
 })
+
 </script>
