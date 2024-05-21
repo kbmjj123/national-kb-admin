@@ -1,5 +1,5 @@
 <template>
-	<n-form :label-width="100" label-placement="left">
+	<n-form ref="productForm" :label-width="100" label-placement="left" :rules="productRules">
 		<KArea title="商品信息">
 			<CategoryView :item-info="productInfo"></CategoryView>
 			<BrandView></BrandView>
@@ -32,11 +32,17 @@
 			</n-form-item>
 		</KArea>
 		<KArea title="商品属性"></KArea>
-			<ProductParamsView></ProductParamsView>
+			<n-form-item label="商品属性">
+				<ProductParamsView :item-info="productInfo"></ProductParamsView>
+			</n-form-item>
 		<KArea title="图文详情">
 			<KEditor></KEditor>
 		</KArea>
 	</n-form>
+	<FixBottomArea>
+		<n-button>返回</n-button>
+		<n-button type="primary" @click="onSaveProductInfo">保存</n-button>
+	</FixBottomArea>
 </template>
 
 <script lang="ts" setup>
@@ -49,6 +55,7 @@ import ProductPictureView from '../component/ProductPictureView.vue'
 import ProductParamsView from '../component/ProductParamsView.vue'
 import {ChevronForwardCircleOutline} from '@vicons/ionicons5'
 
+const productForm = ref()
 // 当前页面的商品信息对象
 const productInfo = reactive<ProductType>({
 	id: '',
@@ -63,5 +70,18 @@ const productInfo = reactive<ProductType>({
 	activityPrice: 0,
 	remark: ''
 })
+// 缓存当前页面的表单校验规则
+const productRules = {
+	name: [{ required: true, message: '请输入商品名称', trigger: 'blur' }]
+}
+
+// 保存商品的动作
+const onSaveProductInfo = () => {
+	productForm.value?.validate(errors => {
+		if(!errors){
+
+		}
+	})
+}
 
 </script>

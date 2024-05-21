@@ -1,6 +1,15 @@
 import { http } from '@/utils/http'
 import { BasicParams, BasicPageParams, StringOrBooleanResponseModel, ArrayResponseModel, ObjectResponseModel } from '../types'
 
+export type ProductParams = {
+	key: string,
+	values: {
+		id?: string,
+		name: string,
+		categoryId?: string
+	}[]
+}
+
 export type ProductType = {
 	id: string,
 	name: string,
@@ -8,7 +17,7 @@ export type ProductType = {
 	category: string,
 	masterPicture: string,
 	descPic: string[],
-	params: [],
+	params: ProductParams[],
 	detailContent: string,
 	price: string,
 	activityPrice: number,
