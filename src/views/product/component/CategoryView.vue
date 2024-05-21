@@ -1,5 +1,5 @@
 <template>
-	<n-form-item label="分类: ">
+	<n-form-item label="分类: " path="category" ref="category">
 		<n-flex class="w-[100%]">
 			<n-cascader
 				placeholder="请选择商品分类"
@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import { CascaderOption } from 'naive-ui'
 import { ProductType } from '@/api/product/product.ts'
@@ -40,8 +40,12 @@ const useCategoryStore = useCategory()
 const { itemInfo } = defineProps<{
   itemInfo: ProductType
 }>()
-
+const category = ref()
+const registerItemRef = inject('registerItemRef') as (prop: string, el: HTMLElement) => void
 onMounted(async () => {
+	if(category.value){
+		registerItemRef('category', category.value.$el)
+	}
 	await useCategoryStore.getCategoryListAction()
 })
 

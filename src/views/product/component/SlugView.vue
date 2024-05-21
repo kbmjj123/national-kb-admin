@@ -1,5 +1,5 @@
 <template>
-  <n-form-item label="商品slug: ">
+  <n-form-item label="商品slug: " path="slug" ref="slug">
     <n-flex class="w-[100%]" :wrap="false">
       <n-input-group class="w-[50%]">
         <n-input-group-label>kb-</n-input-group-label>

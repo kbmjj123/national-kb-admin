@@ -1,5 +1,5 @@
 <template>
-  <n-form-item label="品牌: ">
+  <n-form-item label="品牌: " path="brand" ref="brand">
     <n-flex class="w-[100%]">
       <n-select clearable placeholder="请选择品牌" class="w-[50%]">
         <template #empty>
@@ -14,6 +14,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import { ChevronForwardCircleOutline } from '@vicons/ionicons5'
 const onAddBrand = () => {}
 </script>
