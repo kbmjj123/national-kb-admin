@@ -13,18 +13,19 @@ const generateOrder = (detailFlag?: boolean) => {
 		orderAmount: mockjs.Random.float(1, 10000, 0, 2),
 		payAmount: mockjs.Random.float(1, 10000, 0, 2),
 		orderStatus: mockjs.Random.natural(1, 5),
-		productList: Array.from({ length: mockjs.Random.natural(1, 5) }, () => generateProduct(false))
+		productList: Array.from({ length: mockjs.Random.natural(1, 5) }, () => generateProduct(false)),
+		buyerInfo: {
+			id: mockjs.Random.guid(),
+			name: mockjs.Random.cword(2, 4),
+			avatar: mockjs.Random.dataImage('80x80', mockjs.Random.cword(2, 4))
+		}
 	}
 	if(detailFlag){
 		orderInfo['cancelTime'] = mockjs.Random.datetime()
 		orderInfo['payTime'] = mockjs.Random.datetime()
 		orderInfo['deleveryTime'] = mockjs.Random.datetime()
 		orderInfo['finishTime'] = mockjs.Random.datetime()
-		orderInfo['buyerInfo'] = {
-			id: mockjs.Random.guid(),
-			name: mockjs.Random.cword(2, 4),
-			avatar: mockjs.Random.dataImage('80x80', mockjs.Random.cword(2, 4))
-		}
+		orderInfo['writeOffTime'] = mockjs.Random.datetime()
 		orderInfo['deliveryInfo'] = {
 			deliveryCompany: mockjs.Random.cword(2, 6),
 			deliveryNo: mockjs.Random.string('upper', 2) + mockjs.Random.integer(100000000, 9999999999)
@@ -56,10 +57,26 @@ export default [
 		method: 'post',
 		response: () => resultSuccess('发货成功')
 	},
-	// 取消
+	// 订单取消
 	{
 		url: `${ORDER_TARGET}/:id/cancel`,
 		method: 'post',
 		response: () => resultSuccess('订单取消成功')
+	},
+	// 订单核销
+	{
+		url: `${ORDER_TARGET}/:id/write-off`,
+		method: 'post',
+		response: () => resultSuccess('订单核销成功')
+	},
+	// 查看订单物流轨迹
+	{
+		url: `${ORDER_TARGET}/:id/logistics`,
+		method: 'post',
+		response: () => resultSuccess({
+			logisticsNo: `sf${mockjs.Random.string('number', 8)}`,
+			company: '顺丰快递',
+			logisticsList: []
+		})
 	}
 ] as MockMethod[]
