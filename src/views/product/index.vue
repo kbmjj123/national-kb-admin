@@ -15,14 +15,14 @@
     striped
     bordered
     :single-line="false"
-		:pagination="pagination"
+    :pagination="pagination"
     :loading="loading"
     :data="productList"
     :columns="productColumns"></n-data-table>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, h, toRaw, onMounted, type Ref } from 'vue'
+import { reactive, ref, h, toRaw, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ProductType, getProductList, upOrDownShelves } from '@/api/product/product.ts'
 import { type DataTableColumns, NImage, NFlex, NButton, useMessage, useDialog } from 'naive-ui'
@@ -41,11 +41,12 @@ let filterForm = reactive({
 const originalFilter = toRaw(filterForm) // 原始过滤器
 const loading = ref(false)
 const productList = ref<Array<ProductType>>([])
-const productColumns = [
-  { title: '序号', width: 60, render: (row, index: number) => h('span', index + 1) },
+const productColumns: DataTableColumns<ProductType> = [
+  { title: '序号', width: 60, key: 'index', render: (row, index: number) => h('span', index + 1) },
   {
     title: '商品图片',
     align: 'center',
+    key: 'masterPicture',
     width: 90,
     render: (row: ProductType) => h(NImage, { src: row.masterPicture, alt: row.name, lazy: true }),
   },
@@ -62,6 +63,7 @@ const productColumns = [
   {
     title: '操作',
     fixed: 'right',
+    key: 'action',
     width: 100,
     render: (row: ProductType) =>
       h(NFlex, () => [
