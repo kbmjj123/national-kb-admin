@@ -63,10 +63,10 @@ export default [
 	// 发布/编辑商品
 	{
 		url: `${TARGET_PRODUCT}/publish`,
-		timeout: 1000,
 		method: 'post',
+		timeout: 3000,
 		response: () => {
-			return resultSuccess()
+			return resultSuccess('编辑成功')
 		},
 	},
 	// 上下架商品

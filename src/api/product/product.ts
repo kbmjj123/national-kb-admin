@@ -31,7 +31,7 @@ export function publishOrEdit(params: ProductType): Promise<StringOrBooleanRespo
 		url: '/product/publish',
 		method: 'post',
 		data: params
-	})
+	}, { isShowSuccessMessage: true })
 }
 
 // 获取商品信息

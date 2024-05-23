@@ -49,11 +49,11 @@ const transform: AxiosTransform = {
         $message.error(message || errorMessageText || '操作失败!')
       } else if (!hasSuccess) {
         if (options.errorMessageMode === 'modal') {
-          $dialog.info({
+          $dialog.error({
             title: '温馨提示',
             content: message,
-            positiveText: '确定',
-            onPositiveClick: () => {},
+            positiveText: '好的',
+            onPositiveClick: () => {}
           })
         } else if (options.errorMessageMode === 'toast') {
           $message.error(message)

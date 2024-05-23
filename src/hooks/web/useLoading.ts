@@ -2,18 +2,18 @@ import { ref, type Ref } from 'vue'
 
 type LoadingResult<T> = {
 	loading: Ref<boolean>,
-	execute?: Function,
+	execute: Function,
 	result: Ref<T>,
 	error?: Ref<any>
 }
 
-export const useLoading = <T>(promise: Promise<T>): LoadingResult<T> => {
+export const useLoading = <T>(promise: (params: any) => Promise<T>): LoadingResult<T> => {
 	const loading = ref(false)
 	const result = ref<T>() as Ref<T>
 	const error = ref()
-	const execute = () => {
+	const execute = (params: any) => {
 		loading.value = true
-		promise.then(res => {
+		promise(params).then(res => {
 			result.value = res
 		}).catch(err => {
 			error.value = err

@@ -50,7 +50,7 @@ const productColumns: DataTableColumns<ProductType> = [
     width: 90,
     render: (row: ProductType) => h(NImage, { src: row.masterPicture, alt: row.name, lazy: true }),
   },
-  { title: '商品名称', key: 'productName', minWidth: 150 },
+  { title: '商品名称', key: 'name', minWidth: 150 },
   { title: '所属分类', align: 'center', width: 140, key: 'category' },
   { title: '商品slug', align: 'center', width: 100, key: 'slug' },
   {

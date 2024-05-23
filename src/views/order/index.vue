@@ -1,5 +1,5 @@
 <template>
-  <n-form label-placement="left" label-width="auto" :model="orderForm">
+  <n-form label-placement="left" label-width="auto" :model="orderForm" inline>
     <n-form-item label="单号: ">
       <n-input placeholder="请输入订单号" v-model:value="orderForm.orderNo"></n-input>
     </n-form-item>
@@ -22,14 +22,16 @@
     bordered
     :single-line="false"
     :loading="loading"
-    :data="orderList"
+    :data="result.data.list"
     :columns="orderColumns"></n-data-table>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, toRaw } from 'vue'
+import { ref, reactive, toRaw, onMounted, h } from 'vue'
 import { OrderStatusType, OrderType, getOrderList } from '@/api/order/order.ts'
+import { useLoading } from '@/hooks/web/useLoading.ts'
 import { type DataTableColumns } from 'naive-ui'
+
 
 const orderStatusList = ref([
   {
@@ -62,11 +64,9 @@ const orderForm = reactive({
   buyer: '',
   startTime: '',
   endTime: '',
-  time: [],
+  time: [1183135260000, Date.now()],
 })
 const originalFilter = toRaw(orderForm)
-const loading = ref(false)
-const orderList = ref<OrderType[]>([])
 const orderColumns: DataTableColumns<OrderType> = [
 	{
 		title: '序号',
@@ -74,12 +74,48 @@ const orderColumns: DataTableColumns<OrderType> = [
 		key: 'index'
 	},
 	{
+		title: '订单状态',
 		key: ''
+	},
+	{
+		title: '下单时间',
+		key: 'createTime'
+	},
+	{
+		title: '订单金额',
+		key: ''
+	},
+	{
+		title: '实收金额',
+		key: ''
+	},
+	{
+		title: '商品信息',
+		key: 'productList',
+		render: (rowData, index) => {
+			return h(NPopover, {  }, h(NImage))
+		}
+	},
+	{
+		title: '操作',
+		key: 'action',
+		render: (rowData, index) => {
+			return h(NFlex)
+		}
 	}
-]
-
-const onSearch = () => {}
-const onReset = () => {
 	
+]
+const { loading, execute, result } = useLoading(getOrderList)
+
+onMounted(() => {
+	execute && execute(orderForm)
+})
+
+const onSearch = () => {
+	execute && execute(orderForm)
+}
+const onReset = () => {
+	Object.assign(orderForm, originalFilter)
+	execute && execute(orderForm)
 }
 </script>

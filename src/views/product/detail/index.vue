@@ -103,7 +103,7 @@ const getProductInfoAction = async () => {
 	const res = await getProductInfo(route.params.id as string)
 	Object.assign(productInfo, res.data)
 }
-const { loading, execute } = useLoading(publishOrEdit(productInfo))
+const { loading, execute } = useLoading(publishOrEdit)
 // 保存商品的动作
 const onSaveProductInfo = () => {
 	productForm.value?.validate((errors) => {
@@ -114,7 +114,7 @@ const onSaveProductInfo = () => {
 				itemRefsMap[field].scrollIntoView({ behavior: 'smooth' })
 			}
 		}else{
-			execute && execute()
+			execute && execute(productInfo)
 		}
 	})
 }
