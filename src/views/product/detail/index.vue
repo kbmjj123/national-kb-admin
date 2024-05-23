@@ -41,20 +41,21 @@
 	</n-form>
 	<FixBottomArea>
 		<n-button>返回</n-button>
-		<n-button type="primary" @click="onSaveProductInfo">保存</n-button>
+		<n-button type="primary" :loading="loading" @click="onSaveProductInfo">保存</n-button>
 	</FixBottomArea>
 </template>
 
 <script lang="ts" setup>
 import { ref, reactive, provide, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { ProductType, getProductInfo } from '@/api/product/product.ts'
+import { ProductType, getProductInfo, publishOrEdit } from '@/api/product/product.ts'
 import CategoryView from '../component/CategoryView.vue'
 import BrandView from '../component/BrandView.vue'
 import SlugView from '../component/SlugView.vue'
 import ProductPictureView from '../component/ProductPictureView.vue'
 import ProductParamsView from '../component/ProductParamsView.vue'
 import {ChevronForwardCircleOutline} from '@vicons/ionicons5'
+import { useLoading } from '@/hooks/web/useLoading.ts'
 
 const route = useRoute()
 const productForm = ref()
@@ -102,15 +103,18 @@ const getProductInfoAction = async () => {
 	const res = await getProductInfo(route.params.id as string)
 	Object.assign(productInfo, res.data)
 }
+const { loading, execute } = useLoading(publishOrEdit(productInfo))
 // 保存商品的动作
 const onSaveProductInfo = () => {
 	productForm.value?.validate((errors) => {
-		console.info(errors)
 		if(errors && errors.length > 0){
+			// 存在异常，则滚动至有异常的位置
 			const field = errors[0][0].field as string
 			if(field){
 				itemRefsMap[field].scrollIntoView({ behavior: 'smooth' })
 			}
+		}else{
+			execute && execute()
 		}
 	})
 }
