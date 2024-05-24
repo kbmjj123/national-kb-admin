@@ -18,6 +18,14 @@ export default [
         },
         component: () => import('@/views/order/index.vue'),
       },
+			{
+        path: 'detail/:id',
+        name: 'order_detail',
+        meta: {
+          title: '订单详情',
+        },
+        component: () => import('@/views/order/index.vue'),
+      },
     ],
   },
 ]

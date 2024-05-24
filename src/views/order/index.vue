@@ -31,7 +31,8 @@ import { ref, reactive, toRaw, onMounted, h } from 'vue'
 import { OrderStatusType, OrderType, getOrderList } from '@/api/order/order.ts'
 import { useLoading } from '@/hooks/web/useLoading.ts'
 import { type DataTableColumns } from 'naive-ui'
-
+import ProductView from './component/ProductView'
+import OrderOptArea from './component/OrderOptArea'
 
 const orderStatusList = ref([
   {
@@ -75,7 +76,7 @@ const orderColumns: DataTableColumns<OrderType> = [
 	},
 	{
 		title: '订单状态',
-		key: ''
+		key: 'orderStatus'
 	},
 	{
 		title: '下单时间',
@@ -83,24 +84,24 @@ const orderColumns: DataTableColumns<OrderType> = [
 	},
 	{
 		title: '订单金额',
-		key: ''
+		key: 'amount'
 	},
 	{
 		title: '实收金额',
-		key: ''
+		key: 'receiveAmount'
 	},
 	{
 		title: '商品信息',
 		key: 'productList',
-		render: (rowData, index) => {
-			return h(NPopover, {  }, h(NImage))
+		render: (rowData) => {
+			return h(ProductView, { productList: rowData.productList })
 		}
 	},
 	{
 		title: '操作',
 		key: 'action',
-		render: (rowData, index) => {
-			return h(NFlex)
+		render: (rowData) => {
+			return h(OrderOptArea, { orderItem: rowData, isDetail: false, vertical: false })
 		}
 	}
 	
