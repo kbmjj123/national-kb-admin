@@ -24,9 +24,9 @@ export type BuyerType = {
 }
 
 export type LogisticsType = {
-	logisticsNo?: string,
-	company?: string,
-	logisticsList: Array<{}>
+	logisticsNo: string,
+	company: string,
+	logisticsList?: Array<{}>
 }
 
 // 从商品类型中捞一些属性作为订单中的商品类型
