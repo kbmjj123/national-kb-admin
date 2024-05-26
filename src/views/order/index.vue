@@ -10,19 +10,24 @@
       <n-date-picker v-model:value="orderForm.time" type="datetimerange" clearable></n-date-picker>
     </n-form-item>
     <n-form-item>
-      <n-button type="primary" @click="onSearch">查询</n-button>
-      <n-button @click="onReset">重置</n-button>
+			<n-flex :vertical="false">
+				<n-button type="primary" @click="onSearch">查询</n-button>
+				<n-button @click="onReset">重置</n-button>
+			</n-flex>
     </n-form-item>
   </n-form>
-  <n-tabs type="line" animated>
-    <n-tab v-for="(item, index) in orderStatusList" :key="index" :name="item.status">{{ item.name }}</n-tab>
-  </n-tabs>
+	<n-affix :top="0" listen-to="main-view-fix">
+		<n-tabs type="line" animated class="mb-1">
+			<n-tab v-for="(item, index) in orderStatusList" :key="index" :name="item.status">{{ item.name }}</n-tab>
+		</n-tabs>
+	</n-affix>
+  
   <n-data-table
     striped
     bordered
     :single-line="false"
     :loading="loading"
-    :data="result.data.list"
+    :data="result?.data?.list"
     :columns="orderColumns"></n-data-table>
 </template>
 
@@ -31,8 +36,8 @@ import { ref, reactive, toRaw, onMounted, h } from 'vue'
 import { OrderStatusType, OrderType, getOrderList } from '@/api/order/order.ts'
 import { useLoading } from '@/hooks/web/useLoading.ts'
 import { type DataTableColumns } from 'naive-ui'
-import ProductView from './component/ProductView'
-import OrderOptArea from './component/OrderOptArea'
+import ProductView from './component/ProductView.vue'
+import OrderOptArea from './component/OrderOptArea.vue'
 
 const orderStatusList = ref([
   {
@@ -72,27 +77,37 @@ const orderColumns: DataTableColumns<OrderType> = [
 	{
 		title: '序号',
 		width: 60,
-		key: 'index'
+		align: 'center',
+		key: 'index',
+		render: (_, index) => h('span', index + 1)
 	},
 	{
 		title: '订单状态',
-		key: 'orderStatus'
+		key: 'orderStatus',
+		align: 'center',
+		render: (rowData) => {
+			return h('span', orderStatusList.value.find(item => item.status === rowData.orderStatus)?.name)
+		}
 	},
 	{
 		title: '下单时间',
-		key: 'createTime'
+		key: 'createTime',
+		align: 'center',
 	},
 	{
 		title: '订单金额',
-		key: 'amount'
+		key: 'amount',
+		align: 'center',
 	},
 	{
 		title: '实收金额',
-		key: 'receiveAmount'
+		key: 'payAmount',
+		align: 'center',
 	},
 	{
 		title: '商品信息',
 		key: 'productList',
+		width: 120,
 		render: (rowData) => {
 			return h(ProductView, { productList: rowData.productList })
 		}
@@ -100,6 +115,9 @@ const orderColumns: DataTableColumns<OrderType> = [
 	{
 		title: '操作',
 		key: 'action',
+		fixed: 'right',
+		width: 200,
+		align: 'center',
 		render: (rowData) => {
 			return h(OrderOptArea, { orderItem: rowData, isDetail: false, vertical: false })
 		}

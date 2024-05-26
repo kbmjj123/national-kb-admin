@@ -14,7 +14,7 @@ export default [
         path: 'manage',
         name: 'order_manage',
         meta: {
-          title: '订单管理',
+          title: '销售订单',
         },
         component: () => import('@/views/order/index.vue'),
       },
@@ -24,8 +24,24 @@ export default [
         meta: {
           title: '订单详情',
         },
-        component: () => import('@/views/order/index.vue'),
+        component: () => import('@/views/order/detail/index.vue'),
       },
+			{
+        path: 'write-off/:id',
+        name: 'order_write_off',
+        meta: {
+          title: '订单核销',
+        },
+        component: () => import('@/views/order/write-off/index.vue'),
+      },
+			{
+				path: 'print/:id',
+        name: 'order_print',
+        meta: {
+          title: '订单打印',
+        },
+        component: () => import('@/views/order/write-off/index.vue'),
+			}
     ],
   },
 ]

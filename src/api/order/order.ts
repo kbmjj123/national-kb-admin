@@ -79,7 +79,7 @@ export enum OrderOptType {
 // 获取订单列表
 export function getOrderList(params: BasicPageParams): Promise<ArrayResponseModel<OrderType>> {
 	return http.request({
-		url: '/order',
+		url: '/order/list',
 		method: 'get',
 		data: params
 	})
@@ -100,7 +100,7 @@ export function deliveryOrder(params: BasicParams): Promise<StringOrBooleanRespo
 		url: '/order/:id/delivery',
 		method: 'post',
 		data: params
-	})
+	}, { isShowSuccessMessage: true })
 }
 
 // 订单取消
@@ -109,7 +109,7 @@ export function cancelOrder(params: BasicParams): Promise<StringOrBooleanRespons
 		url: '/order/:id/cancel',
 		method: 'post',
 		data: params
-	})
+	}, { isShowSuccessMessage: true })
 }
 
 // 订单核销

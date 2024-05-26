@@ -1,22 +1,34 @@
 <template>
-  <n-flex :vertical="vertical">
+  <n-flex :vertical="vertical" justify="center">
     <n-button
       v-for="(item, index) in buttonList"
       :key="index"
       @click="item.clickAction && item.clickAction()"
       :type="item.type"
       :ghost="item.ghost"
+      :text="item.text"
       >{{ item.name }}</n-button
     >
   </n-flex>
+	<!-- 录入快递单号信息的对话框 -->
+  <InputLogisticsNoModal
+    v-model="showInputLogisticsInfoFlag"
+    :id="orderItem.id"
+    @on-success="emits('on-success')"></InputLogisticsNoModal>
+	<!-- 查看快递物流轨迹的对话框 -->
+	<LogisticsTrackModal v-model="showLogisticsTrackFlag" :id="orderItem.id"></LogisticsTrackModal>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { OrderType, OrderStatusType } from '@/api/order/order.ts'
+import { useDialog } from 'naive-ui'
+import { OrderType, OrderStatusType, cancelOrder } from '@/api/order/order.ts'
+import InputLogisticsNoModal from './InputLogisticsNoModal.vue'
+import LogisticsTrackModal from './LogisticsTrackModal.vue'
 
 const router = useRouter()
+const dialog = useDialog()
 const { vertical, orderItem, isDetail } = withDefaults(
   defineProps<{
     vertical: boolean
@@ -25,10 +37,17 @@ const { vertical, orderItem, isDetail } = withDefaults(
   }>(),
   {
     vertical: false,
-    orderItem: null,
     isDetail: false,
   },
 )
+const emits = defineEmits<{
+  'on-success': []
+}>()
+
+// 发货相关变量
+const showInputLogisticsInfoFlag = ref(false)
+// 查看快读物流轨迹的对话框
+const showLogisticsTrackFlag = ref(false)
 
 const BUTTON_OPT_MAG = [
   {
@@ -52,8 +71,9 @@ const BUTTON_OPT_MAG = [
     ghost: false,
     sort: 9,
     clickAction: () => {
-			// 发货动作
-		},
+      // 发货动作
+      showInputLogisticsInfoFlag.value = true
+    },
     optList: [OrderStatusType.WAIT_TO_DELIVERY],
   },
   {
@@ -62,8 +82,14 @@ const BUTTON_OPT_MAG = [
     ghost: false,
     sort: 8,
     clickAction: () => {
-			// 核销动作
-		},
+      // 核销动作，进入统一核销页面
+			router.push({
+				name: 'order_write_off',
+				params: {
+					id: orderItem.id
+				}
+			})
+    },
     optList: [OrderStatusType.WAIT_TO_DELIVERY],
   },
   {
@@ -71,9 +97,21 @@ const BUTTON_OPT_MAG = [
     type: 'primary',
     ghost: false,
     sort: 7,
-		clickAction: () => {
-			// 取消订单
-		},
+    clickAction: () => {
+      // 取消订单
+      dialog.warning({
+        title: '温馨提示',
+        content: `您确定要删除订单(单号: ${orderItem.orderNo})吗?`,
+        negativeText: '我再想想',
+        positiveText: '确定删除',
+        onPositiveClick: async () => {
+          await cancelOrder({
+            id: orderItem.id
+          })
+					emits('on-success')
+        },
+      })
+    },
     optList: [OrderStatusType.WAIT_TO_PAY],
   },
   {
@@ -82,8 +120,9 @@ const BUTTON_OPT_MAG = [
     ghost: false,
     sort: 6,
     clickActoin: () => {
-			// 查看物流轨迹
-		},
+      // 查看物流轨迹 --> 通过第三方内嵌的网页去进行查询
+
+    },
     optList: [OrderStatusType.WAIT_TO_RECEIVE, OrderStatusType.FINISH],
   },
   {
@@ -92,18 +131,19 @@ const BUTTON_OPT_MAG = [
     ghost: false,
     sort: 6,
     clickAction: () => {
-			// 打印
-		},
+      //TODO 打印
+    },
     optList: [OrderStatusType.WAIT_TO_DELIVERY, OrderStatusType.WAIT_TO_RECEIVE, OrderStatusType.FINISH],
   },
 ]
 
 const buttonList = computed(() => {
   return BUTTON_OPT_MAG.filter((item) => {
-    return item.optList.includes(orderItem.orderStatus) || (isDetail && item.optList[0] === 999)
+    return item.optList.includes(orderItem.orderStatus) || (!isDetail && item.optList[0] === 999)
   }).map((item) => ({
     ...item,
     ghost: !isDetail,
+    text: !isDetail,
   }))
 })
 </script>

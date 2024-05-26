@@ -12,12 +12,14 @@ const generateOrder = (detailFlag?: boolean) => {
 		orderNo: mockjs.Random.natural(100000000000, 999999999999),
 		orderAmount: mockjs.Random.float(1, 10000, 0, 2),
 		payAmount: mockjs.Random.float(1, 10000, 0, 2),
+		amount: mockjs.Random.float(1, 10000, 0, 2),
+		quantity: mockjs.Random.natural(1, 10),
 		orderStatus: mockjs.Random.natural(1, 5),
 		productList: Array.from({ length: mockjs.Random.natural(1, 5) }, () => generateProduct(false)),
 		buyerInfo: {
 			id: mockjs.Random.guid(),
 			name: mockjs.Random.cword(2, 4),
-			avatar: mockjs.Random.dataImage('80x80', mockjs.Random.cword(2, 4))
+			avatar: mockjs.Random.image('300x300', mockjs.Random.color(), mockjs.Random.color(), 'png', mockjs.Random.cword(2, 4))
 		}
 	}
 	if(detailFlag){
@@ -75,8 +77,7 @@ export default [
 		method: 'post',
 		response: () => resultSuccess({
 			logisticsNo: `sf${mockjs.Random.string('number', 8)}`,
-			company: '顺丰快递',
-			logisticsList: []
+			company: '顺丰快递'
 		})
 	}
 ] as MockMethod[]
