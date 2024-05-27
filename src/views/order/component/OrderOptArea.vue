@@ -28,9 +28,12 @@ import { useDialog } from 'naive-ui'
 import { OrderType, OrderStatusType, cancelOrder } from '@/api/order/order.ts'
 import InputLogisticsNoModal from './InputLogisticsNoModal.vue'
 import LogisticsTrackModal from './LogisticsTrackModal.vue'
+import WriteOffHistoryModal from './WriteOffHistoryModal.vue'
+import { useDrawer } from '@/hooks/web/useDrawer.ts'
 
 const router = useRouter()
 const dialog = useDialog()
+const { showDetail } = useDrawer()
 const { vertical, orderItem, isDetail } = withDefaults(
   defineProps<{
     vertical: boolean
@@ -60,12 +63,7 @@ const BUTTON_OPT_MAG = [
     ghost: true,
     sort: 10,
     clickAction: () => {
-      router.push({
-        name: 'order_detail',
-        params: {
-          id: orderItem.id,
-        },
-      })
+      showDetail('@/views/order/detail/index.vue', {})
     },
     optList: [999],
   },
