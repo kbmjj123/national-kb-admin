@@ -86,6 +86,55 @@
 #### vite.config.ts配置文件
 > 一切从应用程序配置文件入手，通过自定义`build`动作，将原本单一入口的`vite.config.ts`调整自定义按照模块来进行划分的配置
 
+### 编码实现过程文档记录
+> 记录在编码实现项目过程的点点滴滴，便于后续回过头来再浏览
+
+#### 自定义组合函数
+> 本章节主要记录关于在项目过程中的自定义组合函数，提升编码效率
+
+#### useLoading: 再也不用每个需要loading的组件去定义变量以及在接口响应后进行控制了
+> 以前在编写项目，需要控制按钮的时候，都需要编写一个变量loading，然后在按钮点击发起动作的时候，设置loading为true，然后接口响应之后，再将loading设置为false，每次都需要编写这样子的代码
+> :thinking: 因此，想把loading的赋值，以及在拿到数据之后，对数据进行返回，还有，想要随时能够控制到是否需要执行接口请求动作，以及我还想让这个组合函数是带编码提示的，因此，设计了 :point_down: 的一个 `useLoading`组合函数
+```typescript
+import { ref, type Ref } from 'vue'
+type LoadingResult<T> = {
+	loading: Ref<boolean>,
+	execute: Function,
+	result: Ref<T>,
+	error?: Ref<any>
+}
+export const useLoading = <T>(promise: (params: any) => Promise<T>): LoadingResult<T> => {
+	const loading = ref(false)
+	const result = ref<T>() as Ref<T>
+	const error = ref()
+	const execute = (params: any) => {
+		loading.value = true
+		promise(params).then(res => {
+			result.value = res
+		}).catch(err => {
+			error.value = err
+		}).finally(() => {
+			loading.value = false
+		})
+	}
+	return {
+		loading, execute, result, error
+	}
+}
+```
+:star: 这个`useLoading`API可支持到按钮级别的loading以及数据加载、异常处理、类型提示，还可以支持到表格类型的loading，甚至于其他任何具备loading状态的，只要传递的类型参数是对应的目标类型即可！
+
+:cowboy_hat_face: 针对上述的例子，对应的使用方式如下：
+```typescript
+	//publishOrEdit这里是一个请求数据的函数引用， 这里的loading可直接绑定到vue组件中　
+	const { loading, execute } = useLoading(publishOrEdit)
+	const onClick = () => {
+		// params是上面的publishOrEdit所需的参数
+		execute(params)
+	}
+
+```
+
 ### 关于项目的图标
 > 项目中采用`xicons`图标库作为整体项目的图标，使用时，可借助于[官方xicons站点](https://www.xicons.org/#/)进行具体的查询操作，然后在项目中通过 :point_down: 的方式来使用
 ```typescript

@@ -45,7 +45,8 @@ export interface OrderType extends BasicParams {
 	orderAmount: number,
 	payAmount: number,
 	orderStatus: OrderStatusType,
-	productList: Array<OrderProductType>
+	productList: Array<OrderProductType>,
+	writeOffId?: string
 }
 
 export interface OrderDetailType extends OrderType {

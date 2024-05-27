@@ -40,7 +40,7 @@ export default [
         meta: {
           title: '订单打印',
         },
-        component: () => import('@/views/order/write-off/index.vue'),
+        component: () => import('@/views/order/print/index.vue'),
 			}
     ],
   },

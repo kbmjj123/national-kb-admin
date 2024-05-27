@@ -17,6 +17,8 @@
     @on-success="emits('on-success')"></InputLogisticsNoModal>
 	<!-- 查看快递物流轨迹的对话框 -->
 	<LogisticsTrackModal v-model="showLogisticsTrackFlag" :id="orderItem.id"></LogisticsTrackModal>
+	<!-- 浏览核销历史 -->
+	<WriteOffHistoryModal v-model="showWriteOffFlag" :id="orderItem.id"></WriteOffHistoryModal>
 </template>
 
 <script setup lang="ts">
@@ -48,6 +50,8 @@ const emits = defineEmits<{
 const showInputLogisticsInfoFlag = ref(false)
 // 查看快读物流轨迹的对话框
 const showLogisticsTrackFlag = ref(false)
+// 查看核销历史
+const showWriteOffFlag = ref(false)
 
 const BUTTON_OPT_MAG = [
   {
@@ -101,9 +105,9 @@ const BUTTON_OPT_MAG = [
       // 取消订单
       dialog.warning({
         title: '温馨提示',
-        content: `您确定要删除订单(单号: ${orderItem.orderNo})吗?`,
+        content: `您确定要取消订单(单号: ${orderItem.orderNo})吗?`,
         negativeText: '我再想想',
-        positiveText: '确定删除',
+        positiveText: '确定取消',
         onPositiveClick: async () => {
           await cancelOrder({
             id: orderItem.id
@@ -121,7 +125,7 @@ const BUTTON_OPT_MAG = [
     sort: 6,
     clickActoin: () => {
       // 查看物流轨迹 --> 通过第三方内嵌的网页去进行查询
-
+			showLogisticsTrackFlag.value = true
     },
     optList: [OrderStatusType.WAIT_TO_RECEIVE, OrderStatusType.FINISH],
   },
@@ -131,15 +135,35 @@ const BUTTON_OPT_MAG = [
     ghost: false,
     sort: 6,
     clickAction: () => {
-      //TODO 打印
+      // 打印
+			router.push({
+				name: 'order_print',
+				params: {
+					id: orderItem.id
+				}
+			})
     },
     optList: [OrderStatusType.WAIT_TO_DELIVERY, OrderStatusType.WAIT_TO_RECEIVE, OrderStatusType.FINISH],
   },
+	{
+		name: '核销历史',
+		type: 'primary',
+		ghost: false,
+		sort: 5,
+		dynamicExist: () => {
+			return orderItem.orderStatus && orderItem.writeOffId
+		},
+		clickAction: () => {
+			// 核销历史
+			showWriteOffFlag.value = true
+		},
+		optList: [OrderStatusType.FINISH]
+	}
 ]
 
 const buttonList = computed(() => {
   return BUTTON_OPT_MAG.filter((item) => {
-    return item.optList.includes(orderItem.orderStatus) || (!isDetail && item.optList[0] === 999)
+    return item.optList?.includes(orderItem.orderStatus) || (!isDetail && item.optList[0] === 999)
   }).map((item) => ({
     ...item,
     ghost: !isDetail,
