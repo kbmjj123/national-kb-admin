@@ -27,7 +27,7 @@ watch(model, async (newVal) => {
 
 const kuaidiQueryLink = computed(
   () => `
-		https://www.kuaidi100.com/chaxun?com=[${company}]&nu=[${logisticsNo}]
+		https://www.kuaidi100.com/chaxun?com=${company.value}&nu=${logisticsNo.value}
 	`,
 )
 </script>

@@ -76,8 +76,8 @@ export default [
 		url: `${ORDER_TARGET}/:id/logistics`,
 		method: 'post',
 		response: () => resultSuccess({
-			logisticsNo: `sf${mockjs.Random.string('number', 8)}`,
-			company: '顺丰快递'
+			logisticsNo: `773288606910430`,
+			company: 'shentong'
 		})
 	}
 ] as MockMethod[]

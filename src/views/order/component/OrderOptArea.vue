@@ -121,7 +121,7 @@ const BUTTON_OPT_MAG = [
     type: 'primary',
     ghost: false,
     sort: 6,
-    clickActoin: () => {
+    clickAction: () => {
       // 查看物流轨迹 --> 通过第三方内嵌的网页去进行查询
 			showLogisticsTrackFlag.value = true
     },
