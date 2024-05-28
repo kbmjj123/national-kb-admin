@@ -14,15 +14,15 @@
 
 <script setup lang="ts">
 import { ref, onMounted, h } from 'vue'
-import { useRoute } from 'vue-router'
 import { OrderStatusType, OrderDetailType, getOrderDetail } from '@/api/order/order.ts'
 import { ObjectResponseModel } from '@/api/types.ts'
 import { useLoading } from '@/hooks/web/useLoading.ts'
-import { NImage, RowData } from 'naive-ui'
+import { NImage } from 'naive-ui'
 
-const route = useRoute()
 const { loading, result, execute } = useLoading<ObjectResponseModel<OrderDetailType>>(getOrderDetail)
-
+const { id } = defineProps<{
+	id: string
+}>()
 const productColumns = [
   {
     title: '序号',
@@ -32,7 +32,7 @@ const productColumns = [
   {
     title: '商品图片',
     key: 'masterPicture',
-    render: (rowData: RowData) =>
+    render: (rowData) =>
       h(NImage, {
         src: rowData.masterPicture,
         width: 40,
@@ -49,14 +49,14 @@ const productColumns = [
   {
     title: '商品slug',
     key: 'slug',
-    render: (rowData: RowData) => h('span', `${rowData.slugTarget}-${rowData.slug}`),
+    render: (rowData) => h('span', `${rowData.slugTarget}-${rowData.slug}`),
   },
   {
     title: '价格',
     key: 'price',
   },
 ]
-const productSummary = (pageData: RowData[]) => {
+const productSummary = (pageData) => {
   return {
 		index: {
       value: h('span', '汇总: ' + pageData.reduce((productPrice, row) => productPrice + row.price, 0)),
@@ -66,6 +66,6 @@ const productSummary = (pageData: RowData[]) => {
 }
 
 onMounted(() => {
-  route.params.id && execute && execute(route.params.id)
+  id && execute && execute(id)
 })
 </script>

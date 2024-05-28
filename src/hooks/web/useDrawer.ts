@@ -1,27 +1,33 @@
 import { ref, defineComponent, h } from 'vue'
-import { useLoadingBar, NDrawer } from 'naive-ui'
-import DrawerArea from '@/components/DrawerArea'
+import { NDrawer, NDrawerContent } from 'naive-ui'
+const showDrawerFlag = ref(false)
+const component = ref(null)
+const props = ref<ComponentProps>({
+	title: ''
+})
+const componentMap = new Map()
+
+type ComponentProps = {
+	title: string,
+	[index: string]: any
+}
 
 export const useDrawer = () => {
-	const showDrawerFlag = ref(false)
-	const component = ref(null)
-	const props = ref({})
-	// const loadingBar = useLoadingBar()
-
-	const showDetail = async (componentPath: string, componentProps: Record<string, any>) => {
+	const showDetail = async (componentPath: string, componentProps: ComponentProps) => {
 		try {
-			// loadingBar.start()
-			const resolvedComponentPath = componentPath.startsWith('@')
-        ? componentPath.replace('@', '/src')
-        : componentPath;
-			component.value = (await import(resolvedComponentPath)).default
+			if (componentMap.has(componentPath)) {
+				component.value = componentMap.get(componentPath)
+			} else {
+				const resolvedComponentPath = componentPath.startsWith('@')
+					? componentPath.replace('@', '/src')
+					: componentPath;
+				component.value = (await import(resolvedComponentPath)).default
+				componentMap.set(componentPath, component.value)
+			}
 			props.value = componentProps
 			showDrawerFlag.value = true
-			console.log('Component loaded and drawer state updated', showDrawerFlag.value); // 调试信息
-			// loadingBar.finish()
 		} catch (error) {
 			console.error(error)
-			// loadingBar.error()
 		}
 	}
 	const hideDetail = () => {
@@ -29,15 +35,21 @@ export const useDrawer = () => {
 	}
 	const DrawerWrapper = defineComponent({
 		setup() {
-			return () => h(DrawerArea, {
+			return () => h(NDrawer, {
 				show: showDrawerFlag.value,
+				defaultWidth: window.innerWidth * 2 / 3,
+				resizable: true,
+				closeOnEsc: true,
 				'onUpdate:show': (value) => {
-					console.info(value)
 					showDrawerFlag.value = value
-				},
-				title: '标题'
+				}
 			}, {
-				default: () => component.value ? h(component.value, { ...props.value, hideDetail }) : null
+				default: () => h(NDrawerContent, {
+					title: props.value.title,
+					closable: true
+				}, {
+					default: () => component.value ? h(component.value, { ...props.value, hideDetail }) : null
+				})
 			})
 		}
 	})

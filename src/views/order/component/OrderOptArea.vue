@@ -63,13 +63,7 @@ const BUTTON_OPT_MAG = [
     ghost: true,
     sort: 10,
     clickAction: () => {
-      // showDetail('@/views/order/detail/index.vue', {})
-			router.push({
-				name: 'order_detail',
-				params: {
-					id: orderItem.id
-				}
-			})
+      showDetail('@/views/order/detail/index.vue', { title: '订单详情', id: orderItem.id})
     },
     optList: [999],
   },
