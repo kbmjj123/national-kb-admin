@@ -11,10 +11,11 @@ export const useLoading = <T>(promise: (params: any) => Promise<T>): LoadingResu
 	const loading = ref(false)
 	const result = ref<T>() as Ref<T>
 	const error = ref()
-	const execute = (params: any) => {
+	const execute = (params: any, appendUpdate) => {
 		loading.value = true
 		promise(params).then(res => {
 			result.value = res
+			appendUpdate && appendUpdate(res)
 		}).catch(err => {
 			error.value = err
 		}).finally(() => {

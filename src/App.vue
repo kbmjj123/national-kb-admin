@@ -19,4 +19,7 @@ const { DrawerWrapper } = useDrawer()
 
 <style lang="less">
 @import 'styles/index.less';
+html, body{
+	height: 100%;
+}
 </style>
