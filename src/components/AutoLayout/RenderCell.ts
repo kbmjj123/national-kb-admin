@@ -1,6 +1,6 @@
 import { defineComponent, h } from 'vue'
 import { NFlex, NText } from 'naive-ui'
-import { CellType } from './AutoLayout.vue'
+import { CellType } from './types.ts'
 
 export default defineComponent({
 	name: 'RenderCell',

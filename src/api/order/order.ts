@@ -5,6 +5,7 @@ import { ProductType } from '@/api/product/product.ts'
 export type ReceiverType = {
 	id: string,
 	receiver: string,
+	phone: string,
 	provinceName: string,
 	provinceCode: string,
 	cityName: string,
@@ -40,8 +41,8 @@ export interface OrderType extends BasicParams {
 	id: string,
 	orderNo: string,
 	createTime: string,
-	buyer: BuyerType,
-	receiver: ReceiverType,
+	buyerInfo: BuyerType,
+	receiveInfo: ReceiverType,
 	orderAmount: number,
 	payAmount: number,
 	orderStatus: OrderStatusType,
@@ -58,7 +59,13 @@ export interface OrderDetailType extends OrderType {
 	writeOffTime?: string,
 	deliveryInfo: LogisticsType
 }
-
+export const OrderStatusMap = {
+	1: '待付款',
+	2: '待发货',
+	3: '待收货',
+	4: '已完成',
+	5: '已取消'
+}
 export enum OrderStatusType {
 	WAIT_TO_PAY = 1,			// 待付款
 	WAIT_TO_DELIVERY = 2,	// 待发货

@@ -20,7 +20,7 @@ const generateOrder = (detailFlag?: boolean) => {
 		buyerInfo: {
 			id: mockjs.Random.guid(),
 			name: mockjs.Random.cword(2, 4),
-			avatar: mockjs.Random.image('300x300', mockjs.Random.color(), mockjs.Random.color(), 'png', mockjs.Random.cword(2, 4))
+			avatar: mockjs.Random.image('300x300', mockjs.Random.color(), mockjs.Random.color(), 'png', mockjs.Random.cword(2, 4)),
 		}
 	}
 	if(detailFlag){
@@ -30,6 +30,20 @@ const generateOrder = (detailFlag?: boolean) => {
 		orderInfo['finishTime'] = mockjs.Random.datetime()
 		orderInfo['writeOffTime'] = mockjs.Random.datetime()
 		orderInfo['deliveryInfo'] = logisticsTrack
+		orderInfo['receiveInfo'] = {
+			id: mockjs.Random.guid(),
+			receiver: mockjs.Random.cword(2, 4),
+			phone: '13728009642',
+			provinceName: '广东省',
+			provinceCode: '',
+			cityName: '广州市',
+			cityCode: '',
+			areaName: '天河区',
+			areaCode: '',
+			streetName: '五山街道',
+			streetCode: '',
+			address: '龙怡路117号银汇大厦26楼'
+		}
 	}
 	return orderInfo
 }

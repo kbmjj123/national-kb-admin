@@ -1,5 +1,5 @@
 <template>
-	<n-grid responsive="screen">
+	<n-grid responsive="screen" :cols="cols" class="p-5" :x-gap="12" :y-gap="12">
 		<n-grid-item v-for="(item, index) in cells" :key="index" :span="item.span || 1">
 			<RenderCell :item="item"></RenderCell>
 		</n-grid-item>
@@ -7,24 +7,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
 import RenderCell from './RenderCell'
-
-export type CellType = {
-	label?: string,
-	value?: string,
-	render?: Function,
-	itemClass?: string,
-	labelClass?: string,
-	valueClass?: string,
-	span: number
-}
+import { CellType } from './types.ts'
 
 const { cells, cols } = withDefaults(defineProps<{
 	cells: CellType[],
 	cols?: string
 }>(), {
-	cols: '2 s:3 m:4 l:5 xl:6 2xl:7'
+	cols: '2 s:2 m:3 l:3 xl:4 2xl:4'
 })
 
 </script>

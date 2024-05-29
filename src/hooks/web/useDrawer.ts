@@ -1,7 +1,7 @@
-import { ref, defineComponent, h } from 'vue'
+import { ref, shallowRef, defineComponent, h, onMounted, onUnmounted } from 'vue'
 import { NDrawer, NDrawerContent } from 'naive-ui'
 const showDrawerFlag = ref(false)
-const component = ref(null)
+const component = shallowRef(null)
 const props = ref<ComponentProps>({
 	title: ''
 })
@@ -35,10 +35,20 @@ export const useDrawer = () => {
 	}
 	const DrawerWrapper = defineComponent({
 		setup() {
-			const drawerWidth = window.innerWidth <= 1024 ? window.innerWidth * 0.8 : window.innerWidth * 0.65
+			const drawerWidth = ref(window.innerWidth * 0.8)
+			const handleResize = () => {
+				drawerWidth.value = window.innerWidth * 0.8
+			}
+			onMounted(() => {
+				window.addEventListener('resize', handleResize)
+			})
+			onUnmounted(() => {
+				window.removeEventListener('resize', handleResize)
+			})
 			return () => h(NDrawer, {
 				show: showDrawerFlag.value,
-				defaultWidth: drawerWidth,
+				defaultWidth: drawerWidth.value,
+				width: drawerWidth.value,
 				resizable: true,
 				closeOnEsc: true,
 				'onUpdate:show': (value) => {

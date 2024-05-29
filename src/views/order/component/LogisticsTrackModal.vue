@@ -1,12 +1,20 @@
 <template>
-  <n-modal v-model:show="model" title="物流轨迹">
-    <iframe :src="kuaidiQueryLink" width="100%" height="100%"></iframe>
+  <n-modal v-model:show="model" title="物流轨迹" preset="dialog" content-class="h-[60vh]">
+    <n-spin :show="loading">
+			<n-scrollbar class="h-[60vh]">
+      <LogisticsTrackView :id="id" :logistics-info="result?.data"></LogisticsTrackView>
+		</n-scrollbar>
+    </n-spin>
   </n-modal>
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from 'vue'
-import { browseOrderLogistics } from '@/api/order/order.ts'
+import { watch } from 'vue'
+import LogisticsTrackView from './LogisticsTrackView.vue'
+import { useLoading } from '@/hooks/web/useLoading.ts'
+import { browseOrderLogistics, LogisticsType } from '@/api/order/order.ts'
+import { ObjectResponseModel } from '@/api/types.ts'
+
 const model = defineModel({
   required: true,
   type: Boolean,
@@ -14,20 +22,11 @@ const model = defineModel({
 const { id } = defineProps<{
   id: string
 }>()
-const company = ref('')
-const logisticsNo = ref('')
+const { loading, execute, result } = useLoading<ObjectResponseModel<LogisticsType>>(browseOrderLogistics)
 
-watch(model, async (newVal) => {
-	if(newVal && id) {
-		const res = await browseOrderLogistics(id)
-		company.value = res.data.company
-		logisticsNo.value = res.data.logisticsNo
-	}
+watch(model, (newVal) => {
+  if (newVal) {
+    execute && execute(id)
+  }
 })
-
-const kuaidiQueryLink = computed(
-  () => `
-		https://www.kuaidi100.com/chaxun?com=${company.value}&nu=${logisticsNo.value}
-	`,
-)
 </script>

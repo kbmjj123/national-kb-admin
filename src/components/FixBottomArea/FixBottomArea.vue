@@ -24,6 +24,10 @@ const getContainerWidth = () => {
 	}
 }
 
+defineExpose({
+	getContainerWidth
+})
+
 onMounted(() => {
 	getContainerWidth()
 	window.addEventListener('resize', getContainerWidth)

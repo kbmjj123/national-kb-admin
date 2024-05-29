@@ -1,24 +1,26 @@
 <template>
-  <n-flex :vertical="vertical" justify="center">
-    <n-button
-      v-for="(item, index) in buttonList"
-      :key="index"
-      @click="item.clickAction && item.clickAction()"
-      :type="item.type"
-      :ghost="item.ghost"
-      :text="item.text"
-      >{{ item.name }}</n-button
-    >
-  </n-flex>
-	<!-- 录入快递单号信息的对话框 -->
-  <InputLogisticsNoModal
-    v-model="showInputLogisticsInfoFlag"
-    :id="orderItem.id"
-    @on-success="emits('on-success')"></InputLogisticsNoModal>
-	<!-- 查看快递物流轨迹的对话框 -->
-	<LogisticsTrackModal v-model="showLogisticsTrackFlag" :id="orderItem.id"></LogisticsTrackModal>
-	<!-- 浏览核销历史 -->
-	<WriteOffHistoryModal v-model="showWriteOffFlag" :id="orderItem.id"></WriteOffHistoryModal>
+  <div v-if="orderItem">
+    <n-flex :vertical="vertical" justify="center">
+      <n-button
+        v-for="(item, index) in buttonList"
+        :key="index"
+        @click="item.clickAction && item.clickAction()"
+        :type="item.type"
+        :ghost="item.ghost"
+        :text="item.text"
+        >{{ item.name }}</n-button
+      >
+    </n-flex>
+    <!-- 录入快递单号信息的对话框 -->
+    <InputLogisticsNoModal
+      v-model="showInputLogisticsInfoFlag"
+      :id="orderItem?.id"
+      @on-success="emits('on-success')"></InputLogisticsNoModal>
+    <!-- 查看快递物流轨迹的对话框 -->
+    <LogisticsTrackModal v-model="showLogisticsTrackFlag" :id="orderItem?.id"></LogisticsTrackModal>
+    <!-- 浏览核销历史 -->
+    <WriteOffHistoryModal v-model="showWriteOffFlag" :id="orderItem?.id"></WriteOffHistoryModal>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -57,22 +59,23 @@ const showLogisticsTrackFlag = ref(false)
 const showWriteOffFlag = ref(false)
 
 const BUTTON_OPT_MAG = [
-	{
-		name: '返回',
-		type: 'primary',
-		ghost: true,
-		sort: 11,
-		clickAction: () => {
-			hideDetail()
-		}
-	},
+  {
+    name: '返回',
+    type: 'primary',
+    ghost: true,
+    sort: 11,
+    clickAction: () => {
+      hideDetail()
+    },
+    optList: [998],
+  },
   {
     name: '详情',
     type: 'primary',
     ghost: true,
     sort: 10,
     clickAction: () => {
-      showDetail('@/views/order/detail/index.vue', { title: '订单详情', id: orderItem.id})
+      showDetail('@/views/order/detail/index.vue', { title: '订单详情', id: orderItem.id })
     },
     optList: [999],
   },
@@ -94,12 +97,12 @@ const BUTTON_OPT_MAG = [
     sort: 8,
     clickAction: () => {
       // 核销动作，进入统一核销页面
-			router.push({
-				name: 'order_write_off',
-				params: {
-					id: orderItem.id
-				}
-			})
+      router.push({
+        name: 'order_write_off',
+        params: {
+          id: orderItem.id,
+        },
+      })
     },
     optList: [OrderStatusType.WAIT_TO_DELIVERY],
   },
@@ -117,9 +120,9 @@ const BUTTON_OPT_MAG = [
         positiveText: '确定取消',
         onPositiveClick: async () => {
           await cancelOrder({
-            id: orderItem.id
+            id: orderItem.id,
           })
-					emits('on-success')
+          emits('on-success')
         },
       })
     },
@@ -132,7 +135,7 @@ const BUTTON_OPT_MAG = [
     sort: 6,
     clickAction: () => {
       // 查看物流轨迹 --> 通过第三方内嵌的网页去进行查询
-			showLogisticsTrackFlag.value = true
+      showLogisticsTrackFlag.value = true
     },
     optList: [OrderStatusType.WAIT_TO_RECEIVE, OrderStatusType.FINISH],
   },
@@ -143,34 +146,39 @@ const BUTTON_OPT_MAG = [
     sort: 6,
     clickAction: () => {
       // 打印
-			router.push({
-				name: 'order_print',
-				params: {
-					id: orderItem.id
-				}
-			})
+      router.push({
+        name: 'order_print',
+        params: {
+          id: orderItem.id,
+        },
+      })
     },
     optList: [OrderStatusType.WAIT_TO_DELIVERY, OrderStatusType.WAIT_TO_RECEIVE, OrderStatusType.FINISH],
   },
-	{
-		name: '核销历史',
-		type: 'primary',
-		ghost: false,
-		sort: 5,
-		dynamicExist: () => {
-			return orderItem.orderStatus && orderItem.writeOffId
-		},
-		clickAction: () => {
-			// 核销历史
-			showWriteOffFlag.value = true
-		},
-		optList: [OrderStatusType.FINISH]
-	}
+  {
+    name: '核销历史',
+    type: 'primary',
+    ghost: false,
+    sort: 5,
+    dynamicExist: () => {
+      return orderItem.orderStatus && orderItem.writeOffId
+    },
+    clickAction: () => {
+      // 核销历史
+      showWriteOffFlag.value = true
+    },
+    optList: [OrderStatusType.FINISH],
+  },
 ]
 
 const buttonList = computed(() => {
   return BUTTON_OPT_MAG.filter((item) => {
-    return item.optList?.includes(orderItem.orderStatus) || (!isDetail && item.optList[0] === 999)
+    if (!isDetail) {
+      // 列表
+      return item.optList?.includes(orderItem?.orderStatus) || item.optList[0] === 999
+    } else {
+      return item.optList?.includes(orderItem?.orderStatus) || item.optList[0] === 998
+    }
   }).map((item) => ({
     ...item,
     ghost: !isDetail,
