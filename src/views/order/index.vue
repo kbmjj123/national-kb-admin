@@ -1,5 +1,5 @@
 <template>
-  <n-form label-placement="left" label-width="auto" :model="orderForm" inline>
+  <n-form label-placement="left" label-width="auto" :model="orderForm" inline class="flex-wrap">
     <n-form-item label="单号: ">
       <n-input placeholder="请输入订单号" v-model:value="orderForm.orderNo"></n-input>
     </n-form-item>
@@ -27,14 +27,15 @@
     :single-line="false"
     :loading="loading"
     :data="result?.data?.list"
-    :columns="orderColumns"></n-data-table>
+    :columns="orderColumns"
+		:pagination="pagination"></n-data-table>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, toRaw, onMounted, h } from 'vue'
 import { OrderStatusType, OrderType, getOrderList } from '@/api/order/order.ts'
 import { useLoading } from '@/hooks/web/useLoading.ts'
-import { type DataTableColumns } from 'naive-ui'
+import { type DataTableColumns, type PaginationInfo } from 'naive-ui'
 import ProductView from './component/ProductView.vue'
 import OrderOptArea from './component/OrderOptArea.vue'
 
@@ -124,11 +125,36 @@ const orderColumns: DataTableColumns<OrderType> = [
 	
 ]
 const { loading, execute, result } = useLoading(getOrderList)
-
-onMounted(() => {
-	execute && execute(orderForm)
+const pagination = reactive({
+	page: 1,
+	pageSize: 20,
+	pageCount: result.value?.data?.total / 20,
+	showSizePicker: true,
+	pageSizes: [10, 20, 50, 100],
+	itemCount: result.value?.data?.total || 0,
+	onUpdatePageSize: (pageSize: number) => {
+		pagination.pageSize = pageSize
+		pagination.page = 1
+		executeAction()
+	},
+	onUpdatePage: (currentPage: number) => {
+		pagination.page = currentPage
+		executeAction()
+	},
+	prefix: (info: PaginationInfo) => {
+		return `共 ${info.itemCount} 条`
+	}
 })
 
+onMounted(() => {
+	executeAction()
+})
+const executeAction = () => {
+	execute && execute(orderForm, (res) => {
+		pagination.itemCount = res.data.total
+		pagination.pageCount = res.data.total / pagination.pageSize
+	})
+}
 const onSearch = () => {
 	execute && execute(orderForm)
 }

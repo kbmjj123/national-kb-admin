@@ -35,9 +35,10 @@ export const useDrawer = () => {
 	}
 	const DrawerWrapper = defineComponent({
 		setup() {
+			const drawerWidth = window.innerWidth <= 1024 ? window.innerWidth * 0.8 : window.innerWidth * 0.65
 			return () => h(NDrawer, {
 				show: showDrawerFlag.value,
-				defaultWidth: window.innerWidth * 2 / 3,
+				defaultWidth: drawerWidth,
 				resizable: true,
 				closeOnEsc: true,
 				'onUpdate:show': (value) => {

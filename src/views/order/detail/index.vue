@@ -41,7 +41,7 @@ const productColumns = [
   {
     title: '序号',
     key: 'index',
-    render: (_, index) => h('span', `${index + 1}`),
+    render: (_, index: number) => h('span', `${index + 1}`),
   },
   {
     title: '商品图片',
@@ -77,10 +77,12 @@ const productColumns = [
 const productSummary = (pageData) => {
   return {
 		index: {
-			value: h('div', [
-				h('span', '总计: '),
-				h('span', pageData.reduce((productPrice, row) => productPrice + row.price, 0))
-			]),
+      value: h('div', {
+				style: {
+					'font-weight': 'bold',
+					'text-align': 'right'
+				}
+			},'汇总: ' + pageData.reduce((productPrice, row) => productPrice + row.price, 0).toFixed(2)),
       colSpan: 5
     }
 	}
