@@ -88,5 +88,11 @@ export default [
 		url: `${ORDER_TARGET}/:id/logistics`,
 		method: 'post',
 		response: () => resultSuccess(logisticsTrack)
+	},
+	// 获取可待核销的订单列表
+	{
+		url: `${ORDER_TARGET}/write-off/list`,
+		method: 'get',
+		response: () => resultListSuccess(generateOrderList(2), 2, 1)
 	}
 ] as MockMethod[]

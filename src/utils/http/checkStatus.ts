@@ -13,7 +13,8 @@ const STATUS_MSG_MAP = {
 }
 // 对外提供的统一网络状态检测方法
 export function checkStatus(status: number, message: string): void {
-  const $message = window['$message']
+  debugger
+	const $message = window['$message']
   if (400 === status) {
     $message.error(message)
   } else {

@@ -27,7 +27,7 @@ export default [
         component: () => import('@/views/order/detail/index.vue'),
       },
 			{
-        path: 'write-off/:id',
+        path: 'write-off',
         name: 'order_write_off',
         meta: {
           title: '订单核销',

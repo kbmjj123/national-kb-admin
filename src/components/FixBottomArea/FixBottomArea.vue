@@ -1,7 +1,7 @@
 <template>
 	<div ref="areaContainer" class="h-[50px]"></div>
-  <n-flex class="fixed bottom-0 bg-white p-2" justify="center" 
-	:style="{ 'box-shadow': themeVars.boxShadow1, left: left + 'px', right: right + 'px' }">
+  <n-flex class="fixed bottom-0 p-2" justify="center" 
+	:style="{ 'background-color': themeVars.baseColor, 'box-shadow': themeVars.boxShadow1, left: left + 'px', right: right + 'px' }">
     <slot></slot>
   </n-flex>
 </template>

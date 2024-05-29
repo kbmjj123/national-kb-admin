@@ -124,7 +124,7 @@ export function cancelOrder(params: BasicParams): Promise<StringOrBooleanRespons
 export function getWaitToWriteOffOrderList(params: BasicParams): Promise<WrapArrayResponseModel<OrderType>> {
 	return http.request({
 		url: '/order/write-off/list',
-		method: 'post',
+		method: 'get',
 		data: params
 	})
 }
