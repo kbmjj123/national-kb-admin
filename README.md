@@ -92,7 +92,7 @@
 #### 自定义组合函数
 > 本章节主要记录关于在项目过程中的自定义组合函数，提升编码效率
 
-#### useLoading: 再也不用每个需要loading的组件去定义变量以及在接口响应后进行控制了
+##### useLoading: 再也不用每个需要loading的组件去定义变量以及在接口响应后进行控制了
 > 以前在编写项目，需要控制按钮的时候，都需要编写一个变量loading，然后在按钮点击发起动作的时候，设置loading为true，然后接口响应之后，再将loading设置为false，每次都需要编写这样子的代码
 > :thinking: 因此，想把loading的赋值，以及在拿到数据之后，对数据进行返回，还有，想要随时能够控制到是否需要执行接口请求动作，以及我还想让这个组合函数是带编码提示的，因此，设计了 :point_down: 的一个 `useLoading`组合函数
 ```typescript
@@ -135,7 +135,7 @@ export const useLoading = <T>(promise: (params: any) => Promise<T>): LoadingResu
 
 ```
 
-#### useDrawer: 自定义全局drawer作为详情页面的加载，通过函数式的方式展示抽屉，减少页面来回频繁刷新
+##### useDrawer: 自定义全局drawer作为详情页面的加载，通过函数式的方式展示抽屉，减少页面来回频繁刷新
 > :star2: 由于需要在项目中通过一个函数的方式，传入一个组件，以及组件对应的参数，然后就在抽屉组件中展示对应的组件内的效果，因此，自定义这样子的一个API
 > 在实现的过程中 :u6709: 一个需要注意的关键点：这里的这个抽屉容器组件，应该是一个全局共用的，因此，关于这个API有一点点特殊，就是要将响应式变量定义到组合函数的外部，如下代码所示：
 ```typescript
@@ -176,12 +176,20 @@ export const useLoading = <T>(promise: (params: any) => Promise<T>): LoadingResu
 ```
 :trollface: 这里通过采用`defineComponent`来创建一个函数式组件，然后将加载到的component怼到drawer的内容中，然后将drawer的响应式依赖于这个`showDetail`方法，这样子即可实现**全局**的抽屉
 
-### 关于项目的图标
+#### 关于项目的图标
 > 项目中采用`xicons`图标库作为整体项目的图标，使用时，可借助于[官方xicons站点](https://www.xicons.org/#/)进行具体的查询操作，然后在项目中通过 :point_down: 的方式来使用
 ```typescript
 	import { SettingOutlined } from '@vicons/antd'
 ```
 :star: 上述的`SettingOutlined`来源于[官方xicons站点](https://www.xicons.org/#/)上的查询操作！
+
+#### 踩坑记录
+
+##### component存储采用变量或者shallowRef来进行存储
+> 在项目过程中，如果 :u6709: 使用到动态组件component并且需要将这个component缓存到一个变量上的话，要记住这个鼻梁不能是一个ref变量，而必须是一个普通的变量或者是一个`shallowRef`的变量
+> :thinking: 因为这里如果使用一个ref变量的话，意味着这component中的任意一个属性发生变化，都将会引起所在视图的重新绘制，比较影响性能，下面是对应的使用ref的提示
+![component使用ref变量引用的截图.png](./assets/component使用ref变量引用的截图.png)
+
 
 ### 知识查漏补缺
 > 在项目coding过程中，由于是初次接触`ts`以及`vue3+`，因此这里将coding过程中未遇见过的相关知识给记录出来，以便于自己后续查阅

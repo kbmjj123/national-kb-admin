@@ -26,7 +26,7 @@ const generateOrder = (detailFlag?: boolean) => {
 	if(detailFlag){
 		orderInfo['cancelTime'] = mockjs.Random.datetime()
 		orderInfo['payTime'] = mockjs.Random.datetime()
-		orderInfo['deleveryTime'] = mockjs.Random.datetime()
+		orderInfo['deliveryTime'] = mockjs.Random.datetime()
 		orderInfo['finishTime'] = mockjs.Random.datetime()
 		orderInfo['writeOffTime'] = mockjs.Random.datetime()
 		orderInfo['deliveryInfo'] = logisticsTrack

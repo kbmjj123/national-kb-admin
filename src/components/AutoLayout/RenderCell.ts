@@ -10,8 +10,8 @@ export default defineComponent({
 	setup({ item }: { item: CellType }) {
 		return () => item?.render ? item?.render(item) : h(NFlex, {
 			class: item?.itemClass
-		}, [
-			h(NText, { class: item?.labelClass }, () => item?.label),
+		}, () => [
+			h(NText, { class: item?.labelClass }, () => item?.labelRender ? item?.labelRender() : item?.label),
 			h(NText, { class: item?.valueClass }, () => item?.value)
 		])
 	}
