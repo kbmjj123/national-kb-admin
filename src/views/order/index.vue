@@ -21,7 +21,6 @@
 			<n-tab v-for="(item, index) in orderStatusList" :key="index" :name="item.status">{{ item.name }}</n-tab>
 		</n-tabs>
 	</n-affix>
-  
   <n-data-table
     striped
     bordered

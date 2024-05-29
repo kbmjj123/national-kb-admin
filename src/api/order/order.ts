@@ -1,5 +1,5 @@
 import { http } from '@/utils/http'
-import type { BasicParams, BasicPageParams, StringOrBooleanResponseModel, ArrayResponseModel, ObjectResponseModel } from '../types'
+import type { BasicParams, BasicPageParams, StringOrBooleanResponseModel, ArrayResponseModel, ObjectResponseModel, WrapArrayResponseModel } from '../types'
 import { ProductType } from '@/api/product/product.ts'
 
 export type ReceiverType = {
@@ -111,6 +111,15 @@ export function cancelOrder(params: BasicParams): Promise<StringOrBooleanRespons
 		method: 'post',
 		data: params
 	}, { isShowSuccessMessage: true })
+}
+
+// 通过核销码/会员码查询可待核销的订单列表
+export function getWaitToWriteOffOrderList(params: BasicParams): Promise<WrapArrayResponseModel<OrderType>> {
+	return http.request({
+		url: '/order/write-off/list',
+		method: 'post',
+		data: params
+	})
 }
 
 // 订单核销

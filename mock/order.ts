@@ -2,6 +2,7 @@ import mockjs from 'mockjs'
 import { resultSuccess, resultListSuccess } from './_util'
 import { MockMethod } from 'vite-plugin-mock'
 import { generateProduct } from './product'
+import logisticsTrack from './logistics_track.json'
 
 const ORDER_TARGET = '/api/order'
 
@@ -28,10 +29,7 @@ const generateOrder = (detailFlag?: boolean) => {
 		orderInfo['deleveryTime'] = mockjs.Random.datetime()
 		orderInfo['finishTime'] = mockjs.Random.datetime()
 		orderInfo['writeOffTime'] = mockjs.Random.datetime()
-		orderInfo['deliveryInfo'] = {
-			deliveryCompany: mockjs.Random.cword(2, 6),
-			deliveryNo: mockjs.Random.string('upper', 2) + mockjs.Random.integer(100000000, 9999999999)
-		}
+		orderInfo['deliveryInfo'] = logisticsTrack
 	}
 	return orderInfo
 }
@@ -75,9 +73,6 @@ export default [
 	{
 		url: `${ORDER_TARGET}/:id/logistics`,
 		method: 'post',
-		response: () => resultSuccess({
-			logisticsNo: `773288606910430`,
-			company: 'shentong'
-		})
+		response: () => resultSuccess(logisticsTrack)
 	}
 ] as MockMethod[]

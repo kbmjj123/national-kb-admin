@@ -135,6 +135,47 @@ export const useLoading = <T>(promise: (params: any) => Promise<T>): LoadingResu
 
 ```
 
+#### useDrawer: 自定义全局drawer作为详情页面的加载，通过函数式的方式展示抽屉，减少页面来回频繁刷新
+> :star2: 由于需要在项目中通过一个函数的方式，传入一个组件，以及组件对应的参数，然后就在抽屉组件中展示对应的组件内的效果，因此，自定义这样子的一个API
+> 在实现的过程中 :u6709: 一个需要注意的关键点：这里的这个抽屉容器组件，应该是一个全局共用的，因此，关于这个API有一点点特殊，就是要将响应式变量定义到组合函数的外部，如下代码所示：
+```typescript
+	const showDrawerFlag = ref(false)
+	const component = ref(null)
+	const props = ref<ComponentProps>({
+		title: ''
+	})
+	export const useDrawer = () => {
+		const showDetail = async (componentPath: string, componentProps: ComponentProps) => {}
+		const hideDetail = () => {
+			showDrawerFlag.value = false
+		}
+		const DrawerWrapper = defineComponent({
+			setup() {
+				return () => h(NDrawer, {
+					show: showDrawerFlag.value,
+					defaultWidth: window.innerWidth * 2 / 3,
+					resizable: true,
+					closeOnEsc: true,
+					'onUpdate:show': (value) => {
+						showDrawerFlag.value = value
+					}
+				}, {
+					default: () => h(NDrawerContent, {
+						title: props.value.title,
+						closable: true
+					}, {
+						default: () => component.value ? h(component.value, { ...props.value, hideDetail }) : null
+					})
+				})
+			}
+		})
+		return {
+			showDetail, hideDetail, DrawerWrapper
+		}
+	}
+```
+:trollface: 这里通过采用`defineComponent`来创建一个函数式组件，然后将加载到的component怼到drawer的内容中，然后将drawer的响应式依赖于这个`showDetail`方法，这样子即可实现**全局**的抽屉
+
 ### 关于项目的图标
 > 项目中采用`xicons`图标库作为整体项目的图标，使用时，可借助于[官方xicons站点](https://www.xicons.org/#/)进行具体的查询操作，然后在项目中通过 :point_down: 的方式来使用
 ```typescript

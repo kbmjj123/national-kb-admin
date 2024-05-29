@@ -33,7 +33,7 @@ import { useDrawer } from '@/hooks/web/useDrawer.ts'
 
 const router = useRouter()
 const dialog = useDialog()
-const { showDetail } = useDrawer()
+const { showDetail, hideDetail } = useDrawer()
 const { vertical, orderItem, isDetail } = withDefaults(
   defineProps<{
     vertical: boolean
@@ -57,6 +57,15 @@ const showLogisticsTrackFlag = ref(false)
 const showWriteOffFlag = ref(false)
 
 const BUTTON_OPT_MAG = [
+	{
+		name: '返回',
+		type: 'primary',
+		ghost: true,
+		sort: 11,
+		clickAction: () => {
+			hideDetail()
+		}
+	},
   {
     name: '详情',
     type: 'primary',

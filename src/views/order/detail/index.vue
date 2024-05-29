@@ -1,23 +1,37 @@
 <template>
-  <KArea title="订单信息"> </KArea>
-  <KArea title="商品清单">
-    <n-data-table
-      striped
-      bordered
-      :single-line="false"
-      :loading="loading"
-      :data="result?.data?.productList"
-      :columns="productColumns"
-      :summary="productSummary"></n-data-table>
-  </KArea>
+	<n-spin :show="loading">
+		<KArea title="订单信息">
+			<AutoLayout>
+			</AutoLayout>
+		</KArea>
+		<KArea title="买家信息"></KArea>
+		<KArea title="核销信息"></KArea>
+		<KArea title="物流轨迹">
+			<LogisticsTrackView :logistics-info="result.data.logisticsInfo"></LogisticsTrackView>
+		</KArea>
+		<KArea title="商品清单">
+			<n-data-table
+				striped
+				bordered
+				:single-line="false"
+				:data="result?.data?.productList"
+				:columns="productColumns"
+				:summary="productSummary"></n-data-table>
+		</KArea>
+		<FixBottomArea>
+			<OrderOptArea is-detail :order-item="result.data"></OrderOptArea>
+		</FixBottomArea>
+	</n-spin>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, h } from 'vue'
-import { OrderStatusType, OrderDetailType, getOrderDetail } from '@/api/order/order.ts'
+import { onMounted, h } from 'vue'
+import { OrderDetailType, getOrderDetail } from '@/api/order/order.ts'
 import { ObjectResponseModel } from '@/api/types.ts'
 import { useLoading } from '@/hooks/web/useLoading.ts'
 import { NImage } from 'naive-ui'
+import OrderOptArea from '../component/OrderOptArea.vue'
+import LogisticsTrackView from '../component/LogisticsTrackView.vue'
 
 const { loading, result, execute } = useLoading<ObjectResponseModel<OrderDetailType>>(getOrderDetail)
 const { id } = defineProps<{
@@ -55,11 +69,18 @@ const productColumns = [
     title: '价格',
     key: 'price',
   },
+	{
+    title: '小计',
+    key: 'price',
+  },
 ]
 const productSummary = (pageData) => {
   return {
 		index: {
-      value: h('span', '汇总: ' + pageData.reduce((productPrice, row) => productPrice + row.price, 0)),
+			value: h('div', [
+				h('span', '总计: '),
+				h('span', pageData.reduce((productPrice, row) => productPrice + row.price, 0))
+			]),
       colSpan: 5
     }
 	}
