@@ -3,13 +3,15 @@ import { Axios } from './Axios'
 import { AxiosTransform } from './AxiosTransform'
 import { CreateAxiosOptions, RequestOptions } from './types'
 import { deepMerge, isUrl } from '@/utils/index'
-import { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
+import { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig, AxiosError } from 'axios'
 import { PageEnum } from '@/enums/pageEnum'
 import router from '@/router'
 import { useGlobSetting } from '@/hooks/setting'
 import { isString } from '../is'
 import { formatRequestDate, joinTimestamp } from './helper'
 import { setObjToUrlParams } from '../urlUtils'
+import { useUser } from '@/store/modules/user'
+import { checkStatus } from './checkStatus'
 
 const globSetting = useGlobSetting()
 const urlPrefix = globSetting.urlPrefix || ''
@@ -79,6 +81,8 @@ const transform: AxiosTransform = {
           maskClosable: false,
           onPositiveClick: () => {
             //TODO 清除本地存储相关
+						const useUserStore = useUser()
+						useUserStore.logout()
             window.location.href = PageEnum.BASE_LOGIN
           },
         })
@@ -140,7 +144,16 @@ const transform: AxiosTransform = {
   ): InternalAxiosRequestConfig => {
     return config
   },
-  responseInterceptorsCatch: (e: Error) => {},
+	//! 响应追加处理动作
+	responseInterceptors: (res: AxiosResponse<any>): AxiosResponse<any> => {
+		console.info('我是公共的响应处理动作')
+		console.info(res)
+		return res
+	},
+  responseInterceptorsCatch: (e: AxiosError) => {
+		console.error('我是捕获到的异常')
+		checkStatus(e.response?.status as number, '网络或服务器异常，请稍后重试!')
+	},
 }
 
 function createAxios(opt?: Partial<CreateAxiosOptions>) {

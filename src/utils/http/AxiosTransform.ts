@@ -1,7 +1,7 @@
 /**
  * 当前项目的数据处理类
  */
-import type { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
+import type { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig, AxiosError } from 'axios'
 import type { RequestOptions } from './types'
 
 export abstract class AxiosTransform {
@@ -21,5 +21,5 @@ export abstract class AxiosTransform {
   // 请求之前的拦截器错误处理
   requestInterceptorsCatch?: (e: Error) => void
   // 响应后的拦截器错误处理
-  responseInterceptorsCatch?: (e: Error) => void
+  responseInterceptorsCatch?: (e: AxiosError) => void
 }

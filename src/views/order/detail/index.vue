@@ -7,9 +7,6 @@
       <KArea title="买家信息">
         <AutoLayout :cells="buyerInfoCells"></AutoLayout>
       </KArea>
-      <KArea title="核销信息">
-				<AutoLayout :cells="writeOffInfoCells"></AutoLayout>
-			</KArea>
       <KArea title="物流轨迹">
         <n-layout class="pl-5">
           <n-collapse arrow-placement="right" display-directive="show">
@@ -104,11 +101,6 @@ watchEffect(() => {
 			span: 6
     },
   ]
-	writeOffInfoCells.value = [
-		{
-			label: ''
-		}
-	]
 })
 const productColumns = [
   {

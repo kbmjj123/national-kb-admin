@@ -34,10 +34,11 @@ import { ref, reactive, onMounted, h } from 'vue'
 import { useRoute } from 'vue-router'
 import { Search } from '@vicons/ionicons5'
 import { useLoading } from '@/hooks/web/useLoading.ts'
-import { OrderType, getWaitToWriteOffOrderList } from '@/api/order/order.ts'
-import { type DataTableColumns, NButton } from 'naive-ui'
+import { OrderType, getWriteOffOrderList, writeOffOrder } from '@/api/order/order.ts'
+import { type DataTableColumns, NButton, useDialog } from 'naive-ui'
 
 const route = useRoute()
+const dialog = useDialog()
 const queryForm = reactive({
   key: route.query?.id || '',
 })
@@ -45,7 +46,7 @@ const queryRules = {
   key: [{ required: true, trigger: 'blur', message: '请输入会员码或核销码或订单号' }],
 }
 const queryFormRef = ref()
-const { loading, execute, result } = useLoading(getWaitToWriteOffOrderList)
+const { loading, execute, result } = useLoading(getWriteOffOrderList)
 const id = route.query?.id
 
 const orderColumns: DataTableColumns<OrderType> = [
@@ -75,8 +76,24 @@ const orderColumns: DataTableColumns<OrderType> = [
 onMounted(() => {
   id && execute(id)
 })
-
-const writeOffAction = (id) => {}
+// 核销动作
+const writeOffAction = (id) => {
+	const writeOffing = ref(false)
+	dialog.warning({
+		title: '温馨提示',
+		content: `您确定要对该订单进行核销吗？`,
+		negativeText: '取消',
+		positiveText: '确定',
+		positiveButtonProps: {
+			loading: writeOffing.value
+		},
+		onPositiveClick: async () => {
+			writeOffing.value = true
+			await writeOffOrder({id})
+			writeOffing.value = false
+		}
+	})
+}
 
 const queryAction = () => {
   queryFormRef.value?.validate((errors) => {
