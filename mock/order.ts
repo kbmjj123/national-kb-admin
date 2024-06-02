@@ -16,7 +16,13 @@ const generateOrder = (detailFlag?: boolean) => {
 		amount: mockjs.Random.float(1, 10000, 0, 2),
 		quantity: mockjs.Random.natural(1, 10),
 		orderStatus: mockjs.Random.natural(1, 5),
-		productList: Array.from({ length: mockjs.Random.natural(1, 5) }, () => generateProduct(false)),
+		productList: Array.from({ length: mockjs.Random.natural(1, 5) }, () => {
+			return {
+				...generateProduct(false),
+				quantity: mockjs.Random.natural(1, 10),
+				subTotal: mockjs.Random.float(1, 10000, 0, 2)
+			}
+		}),
 		buyerInfo: {
 			id: mockjs.Random.guid(),
 			name: mockjs.Random.cword(2, 4),

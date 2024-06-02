@@ -4,7 +4,7 @@
       <n-form ref="queryFormRef" :model="queryForm" :rules="queryRules" :show-label="false" class="w-[50%] m-auto mb-5">
         <n-form-item path="key">
           <n-input-group>
-            <n-input placeholder="请输入会员码或核销码或订单号" v-model:value="queryForm.key"></n-input>
+            <n-input placeholder="请输入会员码或核销码或订单号" v-model:value="queryForm.key as string"></n-input>
             <n-button type="primary" @click="queryAction" :loading="loading">
               <template #icon>
                 <n-icon>
@@ -35,7 +35,8 @@ import { useRoute } from 'vue-router'
 import { Search } from '@vicons/ionicons5'
 import { useLoading } from '@/hooks/web/useLoading.ts'
 import { OrderType, getWriteOffOrderList, writeOffOrder } from '@/api/order/order.ts'
-import { type DataTableColumns, NButton, useDialog } from 'naive-ui'
+import { productColumns } from '../component/productConstants.ts'
+import { type DataTableColumns, NButton, useDialog, NDataTable } from 'naive-ui'
 
 const route = useRoute()
 const dialog = useDialog()
@@ -57,9 +58,22 @@ const orderColumns: DataTableColumns<OrderType> = [
     title: '订单号',
     key: 'orderNo',
   },
+	{
+		type: 'expand',
+		expandable: (rowData: OrderType) => rowData.productList?.length > 0,
+		renderExpand: (rowData: OrderType) => {
+			return h(NDataTable, {
+				data: rowData.productList,
+				bordered: true,
+				singleLine: false,
+				columns: productColumns
+			})
+		}
+	},
   {
     title: '提货人',
-    key: '',
+    key: 'buyerInfo',
+		render: (rowData: OrderType) => h('span', rowData.buyerInfo.name)
   },
 	{
     title: '预约提货时间',
@@ -69,7 +83,7 @@ const orderColumns: DataTableColumns<OrderType> = [
     title: '操作',
     key: 'action',
     render: (rowData: OrderType) =>
-      h(NButton, { text: true, type: 'primary', onClick: writeOffAction(rowData.id) }, () => '核销'),
+      h(NButton, { text: true, type: 'primary', onClick: () => writeOffAction(rowData.id) }, () => '核销'),
   },
 ]
 

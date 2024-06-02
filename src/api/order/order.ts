@@ -121,7 +121,7 @@ export function cancelOrder(params: BasicParams): Promise<StringOrBooleanRespons
 }
 
 // 通过核销码/会员码查询可待核销的订单列表
-export function getWriteOffOrderList(params: BasicParams): Promise<WrapArrayResponseModel<OrderType>> {
+export function getWriteOffOrderList(params: BasicParams): Promise<ArrayResponseModel<OrderType>> {
 	return http.request({
 		url: '/order/write-off/list',
 		method: 'get',

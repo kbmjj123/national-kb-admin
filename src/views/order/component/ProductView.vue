@@ -14,40 +14,14 @@
 </template>
 
 <script setup lang="ts">
-import { h } from 'vue'
+
 import { MoreOutlined } from '@vicons/antd'
-import { type DataTableColumns, NImage } from 'naive-ui'
 import { type OrderProductType } from '@/api/order/order.ts'
+import { productColumns } from './productConstants'
 
 const { productList } = defineProps<{
   productList: Array<OrderProductType>
 }>()
 const firstItem: OrderProductType = productList[0]
-const productColumns: DataTableColumns = [
-  {
-    title: '商品编码',
-    key: 'slug',
-		align: 'center'
-  },
-  {
-    title: '商品名称',
-    key: 'name',
-  },
-	{
-		title: '商品图片',
-		key: 'masterPic',
-		render: (rowData, index) => {
-			return h(NImage, { src: rowData.masterPicture, width: '60px', height: '60px' })
-		}
-	},
-	{
-		title: '购买数量',
-		key: 'quantity',
-		align: 'center'
-	},
-  {
-    title: '小计',
-    key: 'subTotal',
-  },
-]
+
 </script>

@@ -35,6 +35,14 @@ export default [
         component: () => import('@/views/order/write-off/index.vue'),
       },
 			{
+        path: 'write-off_history',
+        name: 'write_off_history',
+        meta: {
+          title: '核销历史',
+        },
+        component: () => import('@/views/order/write-off/history/index.vue'),
+      },
+			{
 				path: 'print/:id',
         name: 'order_print',
         meta: {

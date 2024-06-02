@@ -1,9 +1,7 @@
 <template>
   <n-form label-placement="left" label-width="auto" :model="queryForm" inline class="flex-wrap">
 		<n-form-item label="订单状态: ">
-			<n-select :options="orderStatusList">
-				
-			</n-select>
+			<n-select v-model:value="queryForm.orderStatus" style="width: 100px;" :options="orderStatusList"/>
 		</n-form-item>
     <n-form-item label="订单号: ">
       <n-input placeholder="请输入订单号" v-model:value="queryForm.orderNo"></n-input>
@@ -31,17 +29,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref, h, reactive, markRaw } from 'vue'
+import { ref, h, reactive, markRaw, onMounted } from 'vue'
 import { useLoading } from '@/hooks/web/useLoading.ts'
-import { getWriteOffOrderList, OrderStatusMap } from '@/api/order/order.ts'
+import { type OrderType, getWriteOffOrderList, OrderStatusMap } from '@/api/order/order.ts'
+import { type DataTableColumns, NDataTable } from 'naive-ui'
+import { productColumns } from '../../component/productConstants'
 
 const { loading, execute, result } = useLoading(getWriteOffOrderList)
 
-const orderStatusList = ref(Object.entries(OrderStatusMap).map(([key, value])) => {
-	return { key, value }
+const tempOrderStatusList = Object.entries(OrderStatusMap).map(([key, value]) => {
+	return { value: key, label: value }
 })
+tempOrderStatusList.push({
+	value: '-1',
+	label: '全部'
+})
+const orderStatusList = ref(tempOrderStatusList)
 
 const queryForm = reactive({
+	orderStatus: '-1',
 	orderNo: '',
   buyer: '',
   startTime: '',
@@ -49,19 +55,33 @@ const queryForm = reactive({
   time: [1183135260000, Date.now()],
 })
 const originalForm = markRaw(queryForm)
-const orderColumns = [
+const orderColumns: DataTableColumns<OrderType> = [
 	{
 		title: '序号',
 		key: 'index',
-		render: (_, index: number) => h('span', `${index} + 1`)
+		align: 'center',
+		render: (_, index: number) => h('span', index + 1)
 	},
 	{
 		title: '订单号',
 		key: 'orderNo'
 	},
 	{
+		type: 'expand',
+		expandable: (rowData: OrderType) => rowData.productList?.length > 0,
+		renderExpand: (rowData: OrderType) => {
+			return h(NDataTable, {
+				data: rowData.productList,
+				bordered: true,
+				singleLine: false,
+				columns: productColumns
+			})
+		}
+	},
+	{
 		title: '提货人',
-		key: ''
+		key: 'buyerInfo',
+		render: (rowData) => h('span', rowData.buyerInfo.name)
 	},
 	{
 		title: '提货时间',
@@ -74,4 +94,7 @@ const onSearch = () => {
 const onReset = () => {
 	Object.assign(queryForm, originalForm)
 }
+onMounted(() => {
+	execute && execute(queryForm)
+})
 </script>
