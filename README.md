@@ -630,3 +630,8 @@ export function getUserInfo(): Promise<IUserState> {
 ```typescript
 	h(NButton, { type: 'primary', text: true, onClick: () => onEditBrand(row) }, () => '编辑')
 ```
+
+#### 动态变量的import
+> 在项目中，我将详情页面给统一采用`useDrawer`的自定义组合式API的方式来加载目标组件，采用传递的目标组件路径的方式来使用，通过`import`一个变量的方式来传递，而已这里我采用的是绝对路径，并结合`@`占位符的方式来传递使用，但是会有 :point_down: 的一个提示：
+![动态的import注意事项](动态的import注意事项.png)
+:star: 这个机制是`dynamic-import-vars`三方库所提供的，具体见[官方库的描述](https://github.com/rollup/plugins/tree/master/packages/dynamic-import-vars#limitations)，目前暂时无更好的解决方案，只能是根据提示，在相应的导入动作变量之前，添加对应的一个`/* @vite-ignore */`来让`vite`忽略它！

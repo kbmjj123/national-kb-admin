@@ -1,5 +1,6 @@
 import { ref, shallowRef, defineComponent, h, onMounted, onUnmounted } from 'vue'
 import { NDrawer, NDrawerContent } from 'naive-ui'
+import COMPONENT_ARRAY from './detailMap.json'
 const showDrawerFlag = ref(false)
 const component = shallowRef(null)
 const props = ref<ComponentProps>({
@@ -13,16 +14,18 @@ type ComponentProps = {
 }
 
 export const useDrawer = () => {
-	const showDetail = async (componentPath: string, componentProps: ComponentProps) => {
+	const showDetail = async (componentName: string, componentProps: ComponentProps) => {
 		try {
-			if (componentMap.has(componentPath)) {
-				component.value = componentMap.get(componentPath)
+			if (componentMap.has(componentName)) {
+				component.value = componentMap.get(componentName)
 			} else {
-				const resolvedComponentPath = componentPath.startsWith('@')
-					? componentPath.replace('@', '/src')
-					: componentPath;
-				component.value = (await import(resolvedComponentPath)).default
-				componentMap.set(componentPath, component.value)
+				const targetItem = COMPONENT_ARRAY.find(item => item.name === componentName)
+				const resolvedComponentPath = targetItem?.path.startsWith('@')
+					? targetItem?.path.replace('@', '/src')
+					: targetItem?.path;
+				
+				component.value = (await import(/* @vite-ignore */resolvedComponentPath as string)).default
+				componentMap.set(componentName, component.value)
 			}
 			props.value = componentProps
 			showDrawerFlag.value = true
