@@ -1,7 +1,8 @@
 <template>
-  <div>我是控制台首页</div>
+  <n-grid item-responsive responsive="screen">
+		<n-grid-item></n-grid-item>
+	</n-grid>
 </template>
 <script setup lang="ts">
-	import { useRouter } from 'vue-router'
-	const router = useRouter()
+	
 </script>

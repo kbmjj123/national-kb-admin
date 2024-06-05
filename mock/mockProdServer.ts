@@ -13,6 +13,7 @@ import category from './category'
 import stock from './stock'
 import file from './file'
 import resources from './resources'
+import statistics from './statistics'
 
 export function setupProdMockServer() {
   createProdMockServer([
@@ -25,6 +26,7 @@ export function setupProdMockServer() {
 		...category,
 		...stock,
 		...file,
-		...resources
+		...resources,
+		...statistics
 	])
 }
