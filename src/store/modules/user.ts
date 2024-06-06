@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { store } from '@/store'
 import { ACCESS_TOKEN, CURRENT_USER, IS_SCREENLOCKED } from '../mutation-types'
-import { login, getUserInfo, logout } from '@/api/account/account'
+import { login, getUserInfo, logout } from '@/api/system/user'
 
 import { storage } from '@/utils/Storage'
 

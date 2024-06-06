@@ -1,37 +1,47 @@
 import { http } from '@/utils/http'
-import { BasicParams, ObjectResponseModel } from '../types'
-import type { IUserState } from '@/store/modules/user'
+import { BasicParams, BasicPageParams, ArrayResponseModel, StringOrBooleanResponseModel } from '../types'
 
-// 获取当前登录用户信息
-export function getUserInfo(): Promise<ObjectResponseModel<IUserState>> {
+export enum AccountStatus {
+	ENABLED = 1,
+	DISABLED = 2,
+	CANCELED = 3
+}
+
+export type AccountType = {
+	id: string,
+	account: string,
+	name: string,
+	avatar: string,
+	area: string,
+	createTime: string,
+	lastLoginTime: string,
+	lastLoginIp: string,
+	accountStatus: AccountStatus
+}
+
+// 获取账号列表
+export function getAccountListList(params: BasicPageParams): Promise<ArrayResponseModel<AccountType>>{
 	return http.request({
-		url: '/user/info',
-		method: 'GET'
+		url: '/account/list',
+		method: 'get',
+		data: params
 	})
 }
 
-// 登录动作
-export function login(params: BasicParams): Promise<ObjectResponseModel<{token: string}>> {
-  return http.request({
-    url: '/user/login',
-    method: 'POST',
-    params,
-  })
-}
-
-// 修改登录密码
-export function changePassword(params: BasicParams) {
+// 禁用账号
+export function disabledAccount(params: BasicParams): Promise<StringOrBooleanResponseModel>{
 	return http.request({
-		url: '/user/changepwd',
-		method: 'POST',
-		params
+		url: `/account/disabled/${params['id']}`,
+		method: 'post',
+		data: params
 	})
 }
 
-// 退出登录
-export function logout() {
+// 启用账号
+export function enabledAccount(params: BasicParams): Promise<StringOrBooleanResponseModel>{
 	return http.request({
-		url: '/user/logout',
-		method: 'POST'
+		url: `/account/enabled/${params['id']}`,
+		method: 'post',
+		data: params
 	})
 }
