@@ -1,18 +1,22 @@
 import { http } from '@/utils/http'
-import type { WrapArrayResponseModel, ObjectResponseModel, BasicParams } from '../types'
+import type { WrapArrayResponseModel, BasicParams } from '../types'
 
-interface StasticsItemType {
-	total: number,
-	dayPercentage: string,
-	dayLiftingType: number,
-	weekPercentage: string,
-	weekLiftingType: number,
-	statisticalDimensions: string,
-	monthPercentage: string,
-	monthLiftingType: number,
-	quarterPercentage: string,
-	quarterLiftingType: number,
-	todayValue: number
+export interface StasticsItemType {
+	key: string,
+	values: {
+		total: number,
+		dayPercentage: string,
+		dayLiftingType: number,
+		weekPercentage: string,
+		weekLiftingType: number,
+		statisticalDimensions: string,
+		monthPercentage: string,
+		monthLiftingType: number,
+		quarterPercentage: string,
+		quarterLiftingType: number,
+		todayValue: number,
+		[index: string]: any
+	}
 }
 
 type DuringTimeStatisticsItem = {

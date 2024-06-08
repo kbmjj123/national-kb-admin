@@ -19,14 +19,14 @@
       <AsideMenu v-model:collapsed="collapsed" location="left" />
     </n-layout-sider>
     <!-- 右侧容器 -->
-    <n-layout :inverted="inverted">
+    <n-layout :inverted="inverted" :native-scrollbar="false">
       <!-- 头部视图组件 -->
       <n-layout-header :inverted="getHeaderInverted" :position="fixedMenu">
 				<PageHeader v-model:collapsed="collapsed" :inverted="getHeaderInverted"/>
 			</n-layout-header>
       <!-- 各个页面所在的layout组件 -->
-      <n-layout-content class="layout-content">
-				<div class="layout-content-main layout-content-main-fix">
+      <n-layout-content class="layout-content" :content-style="{'background-color': '#f5f7f9'}">
+				<div class="layout-content-main layout-content-main-fix" :style="{'background-color': themeVars.baseColor}">
 					<TagsView :collapsed="collapsed"/>
 					<div class="main-view main-view-fix m-3">
 						<MainView />
@@ -44,7 +44,9 @@ import { AsideMenu } from './components/AsideMenu'
 import { MainView } from './components/MainView'
 import { PageHeader } from './components/PageHeader'
 import { TagsView } from './components/TagsView'
+import { useThemeVars } from 'naive-ui'
 
+const themeVars = useThemeVars()
 const { navMode, navTheme, headerSetting, menuSetting, multiTabsSetting } = useProjectSetting()
 
 const collapsed = ref<boolean>(false)
@@ -130,9 +132,11 @@ const leftMenuWidth = computed(() => {
 }
 
 .layout-content-main {
-  margin: 0 10px 10px;
+  margin: 0 10px 10px 10px;
   position: relative;
   padding-top: 64px;
+	padding-bottom: 1px;
+	border-radius: 4px;
 }
 
 .layout-content-main-fix {

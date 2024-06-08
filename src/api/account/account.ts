@@ -2,6 +2,7 @@ import { http } from '@/utils/http'
 import { BasicParams, BasicPageParams, ArrayResponseModel, StringOrBooleanResponseModel } from '../types'
 
 export enum AccountStatus {
+	ALL = 0,
 	ENABLED = 1,
 	DISABLED = 2,
 	CANCELED = 3
