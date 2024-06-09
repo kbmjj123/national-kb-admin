@@ -1,21 +1,23 @@
 <template>
-  <n-grid item-responsive cols="1 s:2 m:2 l:4 xl:4 2xl:4" :x-gap="12" :y-gap="12" responsive="screen">
-    <n-grid-item v-for="(item, index) in finalStasticsInfo" :key="index">
-      <TotalStasticsItem :stasticsInfo="item"></TotalStasticsItem>
-    </n-grid-item>
-  </n-grid>
-  <n-grid class="mt-3" item-responsive cols="1 s:4 m:4 l:8 xl:8 2xl:8" :x-gap="12" :y-gap="12" responsive="screen">
-    <n-grid-item v-for="(item, index) in navigateList" :key="index">
-      <n-card content-style="padding-top: 0;" size="small" :bordered="false" content-class="p-4">
-        <n-flex vertical align="center" justify="center">
-          <n-icon :color="item.color" @click="item.clickAction" :size="24">
-            <component :is="item.icon" />
-          </n-icon>
-          <n-text>{{ item.title }}</n-text>
-        </n-flex>
-      </n-card>
-    </n-grid-item>
-  </n-grid>
+  <n-layout content-class="bg-[#f5f7f9]">
+    <n-grid item-responsive cols="1 s:2 m:2 l:4 xl:4 2xl:4" :x-gap="12" :y-gap="12" responsive="screen">
+      <n-grid-item v-for="(item, index) in finalStasticsInfo" :key="index">
+        <TotalStasticsItem :stasticsInfo="item"></TotalStasticsItem>
+      </n-grid-item>
+    </n-grid>
+    <n-grid class="mt-3" item-responsive cols="1 s:4 m:4 l:8 xl:8 2xl:8" :x-gap="12" :y-gap="12" responsive="screen">
+      <n-grid-item v-for="(item, index) in navigateList" :key="index">
+        <n-card content-class="p-4 cursor-pointer rounded hover:bg-sky-700" size="small" :bordered="false">
+          <n-flex vertical align="center" justify="center">
+            <n-icon :color="item.color" @click="item.clickAction" :size="24">
+              <component :is="item.icon" />
+            </n-icon>
+            <n-text>{{ item.title }}</n-text>
+          </n-flex>
+        </n-card>
+      </n-grid-item>
+    </n-grid>
+  </n-layout>
 </template>
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'

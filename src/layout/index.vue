@@ -28,7 +28,7 @@
       <n-layout-content class="layout-content" :content-style="{'background-color': '#f5f7f9'}">
 				<div class="layout-content-main layout-content-main-fix" :style="{'background-color': themeVars.baseColor}">
 					<TagsView :collapsed="collapsed"/>
-					<div class="main-view main-view-fix m-3">
+					<div class="main-view main-view-fix">
 						<MainView />
 					</div>
 				</div>
