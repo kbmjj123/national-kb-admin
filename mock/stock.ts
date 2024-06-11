@@ -21,14 +21,6 @@ const generateStockList = (num: number) => {
 }
 
 export default [
-	// 获取库存汇总信息
-	{
-		url: `${TARGET_STOCK}/summary`,
-		method: 'get',
-		response: () => resultSuccess({
-
-		})
-	},
 	// 获取商品库存列表信息
 	{
 		url: `${TARGET_STOCK}/list`,
