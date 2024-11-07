@@ -1,73 +1,67 @@
 import { defineStore } from 'pinia'
 import { store } from '@/store'
-import { ACCESS_TOKEN, CURRENT_USER, IS_SCREENLOCKED } from '../mutation-types'
+import { ACCESS_TOKEN, CURRENT_USER, IS_SCREENLOCKED, REFRESH_TOKEN } from '../mutation-types'
 import { login, getUserInfo, logout } from '@/api/system/user'
 
 import { storage } from '@/utils/Storage'
 
-export type UserInfoType = {
-  name: string
-  email: string
-  phone: string
-}
 
 export interface IUserState {
-  token: string
-  username: string
+  refreshToken: string
+	accessToken: string
+  account: string
   avatar: string
-  info: UserInfoType | null
+  nickName: string
+  email: string
+  phone: string,
+	role: 'user' | 'admin' | ''
 }
-
+const INIT_USER_INFO: IUserState = {
+	refreshToken: storage.get(REFRESH_TOKEN),
+	accessToken: storage.getCookie(ACCESS_TOKEN),
+	account: '',
+	avatar: '',
+	nickName: '',
+	email: '',
+	phone: '',
+	role: ''
+}
 export const useUserStore = defineStore({
   id: 'app-user',
-  state: ():IUserState => ({
-    token: storage.getCookie(ACCESS_TOKEN),
-    username: '',
-    avatar: '',
-    info: storage.get(CURRENT_USER, {}),
+  state: () => ({
+		userInfo: INIT_USER_INFO,
+		accessToken: ''
   }),
   getters: {
-		showUserName: state => state.info?.name
+		showUserName: state => state.userInfo.nickName,
+		isLogin: state => !!state.accessToken
 	},
   actions: {
-    setToken(token: string) {
-      this.token = token
-    },
-    setAvatar(avatar: string) {
-      this.avatar = avatar
-    },
-		setUsername(username: string) {
-			this.username = username
-		},
-    setUserInfo(info: UserInfoType | null) {
-      this.info = info
-    },
-		getUserInfo(){
-			return this.info
+		setUserInfo(userInfo: IUserState){
+			this.userInfo = userInfo
+			this.accessToken = userInfo.accessToken
 		},
     // 用户登录动作
     async login(params: any) {
       const res = await login(params)
-			this.setToken(res.data.token)
-			storage.setCookie(ACCESS_TOKEN, res.data.token)
+			this.setUserInfo(res.data)
+			storage.set(REFRESH_TOKEN, res.data.refreshToken)
+			storage.setCookie(ACCESS_TOKEN, res.data.accessToken)
 			await this.getCurrentUserInfo()
 			return res
 		},
     // 获取当前登录用户信息
     async getCurrentUserInfo() {
 			const res = await getUserInfo()
-			this.setAvatar(res.data.avatar)
-			this.setUserInfo(res.data.info)
-			this.setUsername(res.data.username)
+			this.setUserInfo(res.data)
 			storage.set(CURRENT_USER, res.data)
 		},
     // 退出登录动作
     async logout() {
 			await logout()
-      this.setToken('')
-      this.setAvatar('')
-			this.setUserInfo(null)
+			this.setUserInfo(INIT_USER_INFO)
       storage.removeCookie(ACCESS_TOKEN)
+			storage.remove(REFRESH_TOKEN)
       storage.remove(CURRENT_USER)
     },
   },

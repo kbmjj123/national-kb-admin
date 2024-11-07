@@ -12,6 +12,8 @@ import { formatRequestDate, joinTimestamp } from './helper'
 import { setObjToUrlParams } from '../urlUtils'
 import { useUser } from '@/store/modules/user'
 import { checkStatus } from './checkStatus'
+import { storage } from '@/utils/Storage'
+import { ACCESS_TOKEN } from '@/store/mutation-types'
 
 const globSetting = useGlobSetting()
 const urlPrefix = globSetting.urlPrefix || ''
@@ -142,11 +144,13 @@ const transform: AxiosTransform = {
     config: InternalAxiosRequestConfig,
     options: RequestOptions,
   ): InternalAxiosRequestConfig => {
+		if(storage.getCookie(ACCESS_TOKEN)){
+			config.headers['authorization'] = `Bearer ${storage.getCookie(ACCESS_TOKEN)}`
+		}
     return config
   },
 	//! 响应追加处理动作
 	responseInterceptors: (res: AxiosResponse<any>): AxiosResponse<any> => {
-		console.info('我是公共的响应处理动作')
 		console.info(res)
 		return res
 	},

@@ -15,7 +15,7 @@ export function createRouterGuards(router: Router) {
 		const useUserStore = useUser()
 		if(to.meta?.needLogin){
 			// 访问的目标页面需要登录
-			if(useUserStore.token){
+			if(useUserStore.accessToken){
 				// 本地cookie中已存储对应的token，则直接进入
 				next()
 			}else{

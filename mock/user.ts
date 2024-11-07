@@ -20,11 +20,9 @@ export default [
 		response: () => resultSuccess({
 			username: 'kbmjj123',
 			avatar: Mock.Random.image('200x200', '#02adea', 'Koby'),
-			info: {
-				name: 'Koby',
-  			email: 'kbmjj123@gmail.com',
-  			phone: '13728009642'
-			}
+			name: 'Koby',
+			email: 'kbmjj123@gmail.com',
+			phone: '13728009642'
 		})
 	},
 	{

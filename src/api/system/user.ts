@@ -1,6 +1,7 @@
 import { http } from '@/utils/http'
 import { BasicParams, ObjectResponseModel } from '../types'
 import type { IUserState } from '@/store/modules/user'
+import md5 from 'md5'
 
 // 获取当前登录用户信息
 export function getUserInfo(): Promise<ObjectResponseModel<IUserState>> {
@@ -11,11 +12,14 @@ export function getUserInfo(): Promise<ObjectResponseModel<IUserState>> {
 }
 
 // 登录动作
-export function login(params: BasicParams): Promise<ObjectResponseModel<{token: string}>> {
+export function login(params: BasicParams): Promise<ObjectResponseModel<IUserState>> {
   return http.request({
     url: '/user/login',
     method: 'POST',
-    params,
+    params: {
+			...params,
+			password: md5(params['password'])
+		},
   })
 }
 

@@ -15,8 +15,8 @@
           size="large"
           :model="formInline"
           :rules="rules">
-          <n-form-item path="username">
-            <n-input v-model:value="formInline.username" placeholder="请输入用户名">
+          <n-form-item path="email">
+            <n-input v-model:value="formInline.email" placeholder="请输入用户名">
               <template #prefix>
                 <n-icon size="18" color="#808695">
                   <PersonOutline />
@@ -95,21 +95,21 @@ const loading = ref(false)
 const autoLogin = ref(true)
 
 const formInline = reactive({
-  username: 'admin',
-  password: '123456',
+  email: '569751680@qq.com',
+  password: 'abc123!@#$',
   isCaptcha: true,
 })
 const rules = {
-  username: { required: true, message: '请输入用户名', trigger: 'blur' },
+  email: { required: true, message: '请输入邮箱', trigger: 'blur' },
   password: { required: true, message: '请输入密码', trigger: 'blur' },
 }
 const handleSubmit = async (e: Event) => {
   e.preventDefault()
-  const { username, password } = formInline
+  const { email, password } = formInline
 	const useUserStore = useUser()
 	loading.value = true
 	await useUserStore.login({
-    username,
+    email,
     password,
   })
 	message.success('登录成功，即将进入系统')
