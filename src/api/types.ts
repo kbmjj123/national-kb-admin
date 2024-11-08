@@ -31,7 +31,7 @@ export interface ArrayResponseModel<T> extends BasicResponseModel {
 export interface BasicPageParams {
   pageIndex: number
   pageSize: number
-  total: number,
+  total?: number,
 	[index: string]: any
 }
 

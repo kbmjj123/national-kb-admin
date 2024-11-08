@@ -32,6 +32,17 @@ export function changePassword(params: BasicParams) {
 	})
 }
 
+/**
+ * 刷新accessToken
+*/
+export const refreshAccessToken = (params: BasicParams): Promise<ObjectResponseModel<{accessToken:string, refreshToken: string}>> => {
+	return http.request({
+		url: '/user/refreshToken',
+		method: 'PATCH',
+		params
+	})
+}
+
 // 退出登录
 export function logout() {
 	return http.request({

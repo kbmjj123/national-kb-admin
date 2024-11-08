@@ -45,9 +45,10 @@ export function getProductInfo(id: string): Promise<ObjectResponseModel<ProductT
 
 // 分页获取商品列表
 export function getProductList(params: BasicPageParams): Promise<ArrayResponseModel<ProductType>> {
+	debugger
 	return http.request({
 		url: '/product/list',
-		data: params,
+		params,
 		method: 'get'
 	})
 }

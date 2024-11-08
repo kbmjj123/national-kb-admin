@@ -30,7 +30,7 @@ export const useUserStore = defineStore({
   id: 'app-user',
   state: () => ({
 		userInfo: INIT_USER_INFO,
-		accessToken: ''
+		accessToken: storage.getCookie(ACCESS_TOKEN) || ''
   }),
   getters: {
 		showUserName: state => state.userInfo.nickName,
@@ -55,6 +55,10 @@ export const useUserStore = defineStore({
 			const res = await getUserInfo()
 			this.setUserInfo(res.data)
 			storage.set(CURRENT_USER, res.data)
+		},
+		// 缓存accessToken
+		setAccessToken(accessToken){
+			this.accessToken = accessToken
 		},
     // 退出登录动作
     async logout() {

@@ -104,7 +104,10 @@ const upOrDownShelf = async (row: ProductType) => {
 }
 const getProductListAction = async () => {
   loading.value = true
-  const res = await getProductList(filterForm)
+  const res = await getProductList({
+		pageIndex: 1,
+		pageSize: 20
+	})
   productList.value = res.data.list.map((item) => ({
     ...item,
     price: `${item.price}`,

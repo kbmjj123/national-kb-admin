@@ -13,7 +13,8 @@ import { setObjToUrlParams } from '../urlUtils'
 import { useUser } from '@/store/modules/user'
 import { checkStatus } from './checkStatus'
 import { storage } from '@/utils/Storage'
-import { ACCESS_TOKEN } from '@/store/mutation-types'
+import { ACCESS_TOKEN, REFRESH_TOKEN } from '@/store/mutation-types'
+import { refreshAccessToken } from '@/api/system/user'
 
 const globSetting = useGlobSetting()
 const urlPrefix = globSetting.urlPrefix || ''
@@ -155,8 +156,18 @@ const transform: AxiosTransform = {
 		return res
 	},
   responseInterceptorsCatch: (e: AxiosError) => {
-		console.error('我是捕获到的异常')
-		checkStatus(e.response?.status as number, '网络或服务器异常，请稍后重试!')
+		checkStatus(e.response?.status as number, '网络或服务器异常，请稍后重试!', async () => {
+			const res = await refreshAccessToken({
+				refreshToken: storage.getCookie(ACCESS_TOKEN)
+			})
+			if(res.status === ResultEnum.SUCCESS){
+				const { accessToken, refreshToken } = res.data
+				const useUserStore = useUser()
+				useUserStore.setAccessToken(accessToken)
+				storage.setCookie(ACCESS_TOKEN, accessToken)
+				storage.set(REFRESH_TOKEN, refreshToken)
+			}
+		})
 	},
 }
 
@@ -164,8 +175,8 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
   return new Axios(
     deepMerge(
       {
-        timeout: 10 * 1000,
-        // 接口前缀
+        timeout: 10 * 3000,
+        // 默认接口前缀
         prefixUrl: '/api',
         headers: { 'Content-Type': ContentTypeEnum.JSON },
         // 数据处理方式

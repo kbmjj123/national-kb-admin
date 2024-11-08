@@ -37,7 +37,6 @@ export function createRouterGuards(router: Router) {
 		}
 		// 动态添加可访问路由
 		const routes = await asyncRouteStore.generateRoutes()
-		console.info(routes)
 		//! 添加404页面，记住这里需要将其放置在所有路由定义的最后面，用于其他路由没有匹配到时才匹配
 		const notFoundIndex = router.getRoutes().findIndex((item) => item.name === NotFoundName)
 		if(-1 === notFoundIndex){
