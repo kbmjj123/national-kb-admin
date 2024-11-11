@@ -33,6 +33,7 @@
 <script setup lang="ts">
 	import { ref, reactive, onMounted, h, Ref, toValue } from 'vue'
 	import { type DataTableColumns, useDialog, NSpace, NButton } from 'naive-ui'
+	import KImage from '@/components/global/KImage/KImage.vue';
 	import { BrandType, getBrandList, deleteBrand } from '@/api/product/brand'
 	import EditBrandModal from './component/EditBrandModal.vue';
 
@@ -40,9 +41,15 @@
 		key: ''
 	})
 
-	const columns: Ref<DataTableColumns> = ref([
+	const columns: DataTableColumns<BrandType> = [
 		{
-			title: '品牌名称',
+			title: '图标',
+			key: 'icon',
+			align: 'center',
+			render: (row) => h(KImage, { src: row.icon, alt: row.name, width: '60px', lazy: true })
+		},
+		{
+			title: '名称',
 			key: 'name',
 			align: 'center'
 		},
@@ -54,7 +61,7 @@
 				h(NButton, { type: 'warning', text: true, onClick: () => onDeleteBrand(row) }, () => '删除'),
 			])
 		}
-	])
+	]
 
 	let brandList: Ref<Array<BrandType>> = ref([])
 

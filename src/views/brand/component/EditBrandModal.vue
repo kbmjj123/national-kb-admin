@@ -6,19 +6,20 @@
     negative-text="取消"
     positive-text="确定"
     @positive-click="onAddOrEditAction">
-    <n-form
-      inline
-      label-placement="left"
-      label-width="auto"
-      ref="editBrandForm"
-      :model="brandForm"
-      :rules="brandFormRules">
+    <n-form label-placement="left" label-width="auto" ref="editBrandForm" :model="brandForm" :rules="brandFormRules">
       <n-form-item label="品牌名称: " path="name">
         <n-input v-model:value="brandForm.name" placeholder="请输入品牌名称"></n-input>
       </n-form-item>
-			<n-form-item label="品牌图标: " path="icon">
-				<Uploaders v-model="icons" :options="{uploadDragger: 'single', listType: 'image'}"></Uploaders>
-			</n-form-item>
+      <n-form-item label="品牌图标: " path="icon">
+        <Uploader
+          v-model:file="brandForm.icon"
+          :options="{
+            uploadDragger: 'single',
+            listType: 'image-card',
+            multiple: false,
+            uploadPath: 'brand',
+          }"></Uploader>
+      </n-form-item>
     </n-form>
   </n-modal>
 </template>
@@ -40,7 +41,7 @@ const model = defineModel({ type: Boolean })
 const brandForm = reactive<BrandType>({
   id: '',
   name: '',
-	icon: ''
+  icon: '',
 })
 const icons = ref([])
 const editBrandForm = ref()
@@ -60,20 +61,24 @@ watch(model, (newVal) => {
 
 // 新增或者编辑操作
 const onAddOrEditAction = () => {
-	return new Promise(resolve => {
-		editBrandForm.value?.validate(async (errors) => {
-			if (!errors) {
-				if (brandForm.id) {
-					await editBrand(brandForm)
-				} else {
-					await addBrand(brandForm)
-				}
-				emit('on-success')
-				resolve(true)
-			}else{
-				resolve(false)
-			}
-		})
-	})
+  return new Promise((resolve) => {
+    editBrandForm.value?.validate(async (errors) => {
+      if (!errors) {
+        let brandParams = { ...brandForm }
+        if (icons.value && icons.value.length > 0) {
+          brandParams['icon'] = icons.value[0]
+        }
+        if (brandForm.id) {
+          await editBrand(brandForm)
+        } else {
+          await addBrand(brandParams)
+        }
+        emit('on-success')
+        resolve(true)
+      } else {
+        resolve(false)
+      }
+    })
+  })
 }
 </script>

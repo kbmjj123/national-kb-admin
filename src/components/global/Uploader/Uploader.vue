@@ -15,15 +15,16 @@
 		:showFileList="computedOptions.showFileList"
 		:showPreviewButton="computedOptions.showPreviewButton"
 		@download="onDownload"
-		:file-list="fileList"
+		:file-list="list"
 		@update:file-list="onChange"
+		@finish="onFinish"
 		>
-    <n-upload-dragger v-if="'single' === computedOptions.uploadDragger" class="w-[300px] inline-block">
+    <n-upload-dragger v-if="'single' === computedOptions.uploadDragger" class="w-[300px]">
       <n-flex vertical align="center">
         <n-icon size="48" :depth="3">
           <ArchiveOutline></ArchiveOutline>
         </n-icon>
-				<n-text class="text-xs">点击或者拖动文件到该区域来上传</n-text>
+				<n-text class="text-xs" v-if="'image-card' !== computedOptions.listType">点击或者拖动文件到该区域来上传</n-text>
       </n-flex>
     </n-upload-dragger>
     <n-upload-dragger v-else-if="'normal' === computedOptions.uploadDragger">
@@ -44,6 +45,8 @@ import { storage } from '@/utils/Storage';
 import { ACCESS_TOKEN } from '@/store/mutation-types';
 const globSetting = useGlobSetting()
 
+export type UploadPathType = 'brand' | 'cate' | 'product/master' | 'product/desc' | 'images'
+
 export type UploadOptions = {
   action?: string
   headers?: Record<string, string>
@@ -61,11 +64,12 @@ export type UploadOptions = {
   showFileList?: boolean // 是否显示文件列表
   showPreviewButton?: boolean // 是否在文件列表显示预览按钮
   uploadDragger?: string // 上传拖动器的样式：single、normal、custom，默认是normal
+	uploadPath?: UploadPathType	// 限定文件的上传路径，根据业务具体定义
 	[index: string]: any
 }
 
 const defaultOptions: UploadOptions = {
-  action: `${globSetting.uploadUrl}/file/uploadFile`,
+  action: `${globSetting.uploadUrl}/file/uploadFile?type=images`,
   headers: {},
   data: {},
 	method: 'put',
@@ -79,30 +83,30 @@ const defaultOptions: UploadOptions = {
   showRemoveButton: true,
   showFileList: true,
   showPreviewButton: true,
-  uploadDragger: 'single'
+  uploadDragger: 'single',
+	uploadPath: 'images'
 }
 
 let { options } = defineProps<{
   options: UploadOptions
 }>()
 const uploadRef = ref()
-const fileList = defineModel<UploadFileInfo[]>({
-	required: true
-})
+const list = ref([])
+
+const fileList = defineModel<string[]>('fileList')
+const file = defineModel<string>('file')
+
 
 const computedOptions = computed(() => ({
   ...defaultOptions,
   ...options,
 	...{
+		action: `${globSetting.uploadUrl}/file/uploadFile?type=${options.uploadPath || 'images'}`,
 		headers: {
 			authorization: `Bearer ${storage.getCookie(ACCESS_TOKEN)}`
 		}
 	}
 }))
-
-const emit = defineEmits<{
-	'on-upload': [filieList: []]
-}>()
 
 // 文件下载动作
 const onDownload = (file: UploadFileInfo) => {
@@ -110,9 +114,22 @@ const onDownload = (file: UploadFileInfo) => {
 }
 // 上传了文件动作
 const onChange = (data) => {
-	console.info('onChange')
-	console.info(data)
-	fileList.value = data
+	list.value = data
+}
+
+const onFinish = ({ event }: { event?: ProgressEvent, file: UploadFileInfo }) => {
+	console.info(event)
+	//@ts-ignore
+	const response = event?.target?.response
+	if(response){
+		const res = JSON.parse(response)
+		const remoteUrl = res.data
+		if(options.uploadDragger === 'single'){
+			file.value = remoteUrl
+		}else {
+			fileList.value?.push(remoteUrl)
+		}
+	}
 }
 
 </script>

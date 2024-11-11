@@ -11,7 +11,7 @@ export interface BrandType extends BasicParams {
 export function addBrand(params: BrandType): Promise<StringOrBooleanResponseModel>{
 	return http.request({
 		url: '/brand',
-		method: 'post',
+		method: 'put',
 		data: params
 	}, { isShowSuccessMessage: true })
 }
