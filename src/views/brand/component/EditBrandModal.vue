@@ -16,6 +16,9 @@
       <n-form-item label="品牌名称: " path="name">
         <n-input v-model:value="brandForm.name" placeholder="请输入品牌名称"></n-input>
       </n-form-item>
+			<n-form-item label="品牌图标: " path="icon">
+				<Uploaders v-model="icons" :options="{uploadDragger: 'single', listType: 'image'}"></Uploaders>
+			</n-form-item>
     </n-form>
   </n-modal>
 </template>
@@ -37,7 +40,9 @@ const model = defineModel({ type: Boolean })
 const brandForm = reactive<BrandType>({
   id: '',
   name: '',
+	icon: ''
 })
+const icons = ref([])
 const editBrandForm = ref()
 const brandFormRules = {
   name: {

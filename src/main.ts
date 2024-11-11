@@ -4,6 +4,7 @@ import App from './App.vue'
 import { setupStore } from './store'
 import { setupDirectives } from './plugins/directives'
 import { setupNaiveDiscreteApi } from './plugins/naiveDiscreteApi'
+import { setupGlobalComponents } from './components/global'
 import router, { setupRouter } from './router'
 
 async function bootstrap() {
@@ -12,6 +13,8 @@ async function bootstrap() {
   setupStore(app)
 	// 注册相关的指令
   setupDirectives(app)
+	// 注册全局组件
+	setupGlobalComponents(app)
 	// 设置全局可调用的组件
 	setupNaiveDiscreteApi()
 	// 设置项目的路由

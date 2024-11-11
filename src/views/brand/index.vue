@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-	import { ref, reactive, onMounted, h, Ref } from 'vue'
+	import { ref, reactive, onMounted, h, Ref, toValue } from 'vue'
 	import { type DataTableColumns, useDialog, NSpace, NButton } from 'naive-ui'
 	import { BrandType, getBrandList, deleteBrand } from '@/api/product/brand'
 	import EditBrandModal from './component/EditBrandModal.vue';
@@ -61,12 +61,13 @@
 	const showBrand = ref(false)
 	let currentBrand = reactive<BrandType>({
 		id: '',
-		name: ''
+		name: '',
+		icon: ''
 	})
 
 	const loading = ref(false)
 	const params = reactive({
-		pageIndex: 0,
+		pageIndex: 1,
 		pageSize: 20,
 		total: 0,
 		key: ''
@@ -92,7 +93,7 @@
 	// 获取分类列表数据
 	const getBrandListAction = async () => {
 		loading.value = true
-		const res = await getBrandList(params)
+		const res = await getBrandList(toValue(params))
 		loading.value = false
 		brandList.value = res.data.list
 		params.total = res.data.total

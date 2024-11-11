@@ -3,7 +3,7 @@ import type { BasicParams, ObjectResponseModel, StringOrBooleanResponseModel, Wr
 
 export interface CateType extends BasicParams{
 	id: string,
-	name: string,
+	title: string,
 	level: number,
 	parentId?: string,
 }
@@ -15,7 +15,7 @@ export interface ParamType extends CateType{
 // 获取所有的分类列表
 export function getCategoryList(): Promise<WrapArrayResponseModel<CateType>> {
 	return http.request({
-		url: '/category/list',
+		url: '/cate/list',
 		method: 'get'
 	})
 }
@@ -23,7 +23,7 @@ export function getCategoryList(): Promise<WrapArrayResponseModel<CateType>> {
 // 新增分类
 export function addCate(params: CateType): Promise<ObjectResponseModel<CateType>> {
 	return http.request({
-		url: '/category',
+		url: '/cate',
 		method: 'post',
 		data: params
 	}, { isShowSuccessMessage: true })
@@ -32,7 +32,7 @@ export function addCate(params: CateType): Promise<ObjectResponseModel<CateType>
 // 编辑分类
 export function editCate(params: CateType): Promise<ObjectResponseModel<CateType>> {
 	return http.request({
-		url: '/category/:id',
+		url: '/cate/:id',
 		method: 'post',
 		data: params
 	}, { isShowSuccessMessage: true })
@@ -41,7 +41,7 @@ export function editCate(params: CateType): Promise<ObjectResponseModel<CateType
 // 删除分类
 export function deleteCate(id: string): Promise<StringOrBooleanResponseModel> {
 	return http.request({
-		url: '/category/:id',
+		url: '/cate/:id',
 		method: 'delete',
 		data: {id}
 	})
@@ -50,7 +50,7 @@ export function deleteCate(id: string): Promise<StringOrBooleanResponseModel> {
 // 调整分类顺序
 export function changeSort(params): Promise<StringOrBooleanResponseModel> {
 	return http.request({
-		url: '/category/sort',
+		url: '/cate/sort',
 		method: 'post',
 		data: params
 	})
@@ -59,7 +59,7 @@ export function changeSort(params): Promise<StringOrBooleanResponseModel> {
 // 获取分类下的属性集合
 export function getCategoryParams(params): Promise<WrapArrayResponseModel<ParamType>> {
 	return http.request({
-		url: '/category/params',
+		url: '/cate/params',
 		method: 'get',
 		data: params
 	})

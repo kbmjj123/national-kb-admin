@@ -16,8 +16,8 @@
       <n-form-item label="上级分类:" v-if="parentCate">
 				<n-input readonly></n-input>
 			</n-form-item>
-			<n-form-item label="分类名称:" path="name">
-				<n-input clearable autofocus placeholder="请输入分类名称" v-model:value="cateForm.name"></n-input>
+			<n-form-item label="分类名称:" path="title">
+				<n-input clearable autofocus placeholder="请输入分类名称" v-model:value="cateForm.title"></n-input>
 			</n-form-item>
     </n-form>
   </n-modal>
@@ -40,7 +40,7 @@ const model = defineModel({
   type: Boolean,
 })
 const cateFormRules = {
-  name: {
+  title: {
     required: true,
     message: '请输入分类名称',
     trigger: 'blur',
@@ -51,7 +51,7 @@ watch(model, (newVal) => {
   if (newVal) {
 		if(itemInfo){
 			cateForm.id = itemInfo.id
-			cateForm.name = itemInfo.name
+			cateForm.title = itemInfo.title
 		}
   }
 })
@@ -59,7 +59,7 @@ watch(model, (newVal) => {
 const editCateForm = ref()
 const cateForm = reactive<CateType>({
   id: '',
-  name: '',
+  title: '',
 	level: 0,
 	parentId: ''
 })

@@ -59,7 +59,7 @@ const toAddCate = () => {
 	router.push({
 		name: 'category_manage',
 		query: {
-			showAutoAdd: true
+			showAutoAdd: 'true'
 		}
 	})
 }

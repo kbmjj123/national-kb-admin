@@ -1,6 +1,6 @@
 <template>
   <div class="p-12 bg-white border-b">
-    {{ itemInfo.name }}
+    {{ itemInfo.title }}
     <n-space>
       <n-button text type="primary" @click="onAddCate">新增</n-button>
       <n-button text type="primary" @click="onEditCate">编辑</n-button>
@@ -35,7 +35,7 @@ const onEditCate = () => {
 const onDeleteCate = () => {
   dialog.create({
     title: `温馨提示`,
-    content: `您确定要删除分类：${itemInfo.name}吗？`,
+    content: `您确定要删除分类：${itemInfo.title}吗？`,
     negativeText: '我再想想',
     positiveText: '确定',
     onPositiveClick: () => {

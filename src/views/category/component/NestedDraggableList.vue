@@ -14,7 +14,7 @@
 								:class="['arrow-icon', element.isExpand ? 'arrow-icon-rotate' : '']">
 								<ChevronForwardCircleOutline></ChevronForwardCircleOutline>
 							</n-icon>
-							{{ element.name }} - {{ element.level }}
+							{{ element.title }} - {{ element.level }}
 						</n-flex>
 						<n-flex>
 							<n-button text type="primary" v-if="element.level < 3" @click.stop="onAddCate">新增</n-button>
@@ -23,7 +23,7 @@
 							<n-button text type="error" @click.stop="onDeleteCate(element)">删除</n-button>
 						</n-flex>
 					</n-flex>
-					<Transition name="fade">
+					<Transition title="fade">
 						<section v-show="element.isExpand">
 							<NestedDraggableList
 								:item-key="itemKey"
@@ -61,7 +61,7 @@ const model = defineModel({
 const showCateFlag = ref(false)
 const currentCateInfo = reactive<CateType>({
   id: '',
-  name: '',
+  title: '',
 	level: 0,
 	children: []
 })
@@ -79,7 +79,7 @@ const onAddCate = () => {
 
 const onEditCate = (row: CateType) => {
 	currentCateInfo.id = row.id
-	currentCateInfo.name = row.name
+	currentCateInfo.title = row.title
 	currentCateInfo.level = row.level
 	currentCateInfo.children = row.children
 	showCateFlag.value = true
@@ -96,7 +96,7 @@ const onDeleteCate = (row: CateType) => {
 	}
   dialog.warning({
     title: `温馨提示`,
-    content: `您确定要删除分类：${row.name}吗？`,
+    content: `您确定要删除分类：${row.title}吗？`,
     negativeText: '我再想想',
     positiveText: '确定',
     onPositiveClick: async () => {

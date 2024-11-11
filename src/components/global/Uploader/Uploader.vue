@@ -1,5 +1,6 @@
 <template>
   <n-upload 
+		ref="uploadRef"
 		:action="computedOptions.action"
 		:headers="computedOptions.headers"
 		:listType="computedOptions.listType"
@@ -38,6 +39,10 @@
 import { computed } from 'vue'
 import { UploadFileInfo } from 'naive-ui'
 import { ArchiveOutline } from '@vicons/ionicons5'
+import { useGlobSetting } from '@/hooks/setting'
+import { storage } from '@/utils/Storage';
+import { ACCESS_TOKEN } from '@/store/mutation-types';
+const globSetting = useGlobSetting()
 
 export type UploadOptions = {
   action?: string
@@ -60,7 +65,7 @@ export type UploadOptions = {
 }
 
 const defaultOptions: UploadOptions = {
-  action: 'http://localhost:8001/api/file/upload',
+  action: `${globSetting.uploadUrl}/file/uploadFile`,
   headers: {},
   data: {},
 	method: 'put',
@@ -68,7 +73,7 @@ const defaultOptions: UploadOptions = {
   defaultUpload: true,
   max: 9,
   multiple: true,
-  name: 'files',
+  name: 'file',
   showCancelButton: true,
   showDownloadButton: true,
   showRemoveButton: true,
@@ -80,6 +85,7 @@ const defaultOptions: UploadOptions = {
 let { options } = defineProps<{
   options: UploadOptions
 }>()
+const uploadRef = ref()
 const fileList = defineModel<UploadFileInfo[]>({
 	required: true
 })
@@ -87,6 +93,11 @@ const fileList = defineModel<UploadFileInfo[]>({
 const computedOptions = computed(() => ({
   ...defaultOptions,
   ...options,
+	...{
+		headers: {
+			authorization: `Bearer ${storage.getCookie(ACCESS_TOKEN)}`
+		}
+	}
 }))
 
 const emit = defineEmits<{
@@ -99,6 +110,8 @@ const onDownload = (file: UploadFileInfo) => {
 }
 // 上传了文件动作
 const onChange = (data) => {
+	console.info('onChange')
+	console.info(data)
 	fileList.value = data
 }
 

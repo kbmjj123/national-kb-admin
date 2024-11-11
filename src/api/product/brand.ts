@@ -3,7 +3,8 @@ import type { BasicParams, BasicPageParams, StringOrBooleanResponseModel, ArrayR
 
 export interface BrandType extends BasicParams {
 	id?: string,
-	name: string
+	name: string,
+	icon: string
 }
 
 // 新增品牌
@@ -27,7 +28,7 @@ export function getBrandList(params: BasicPageParams): Promise<ArrayResponseMode
 	return http.request({
 		url: '/brand/list',
 		method: 'get',
-		data: params
+		params: params
 	})
 }
 

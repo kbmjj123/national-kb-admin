@@ -5,7 +5,7 @@
         <n-flex vertical>
           <n-flex vertical v-for="(item, index) in categoryArray" :key="index">
             <n-text class="mt-1 flex items-center" type="primary"
-              >{{ item.name }}<n-icon><ChevronDownCircleOutline /></n-icon
+              >{{ item.title }}<n-icon><ChevronDownCircleOutline /></n-icon
             ></n-text>
             <n-dynamic-tags v-model:value="item.params"></n-dynamic-tags>
           </n-flex>
@@ -17,7 +17,7 @@
             v-for="(item, index) in tagList"
             :key="index"
             :type="item.cateId === categoryId ? 'default' : 'primary'"
-            >{{ item.name }}</n-tag
+            >{{ item.title }}</n-tag
           >
         </n-flex>
       </n-form-item>
@@ -38,12 +38,12 @@ const { categoryId } = defineProps<{
 }>()
 const categoryArray = ref<Array<ParamType>>([])
 const tagList = computed(() => {
-  let tagList: { name: string; cateId: string }[] = []
+  let tagList: { title: string; cateId: string }[] = []
   categoryArray.value.forEach((item: ParamType) => {
     item.params.forEach((cItem: string) => {
       tagList.push({
         cateId: item.id,
-        name: cItem,
+        title: cItem,
       })
     })
   })

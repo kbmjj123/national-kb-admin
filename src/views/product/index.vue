@@ -48,9 +48,9 @@ const productColumns: DataTableColumns<ProductType> = [
     align: 'center',
     key: 'masterPicture',
     width: 90,
-    render: (row: ProductType) => h(NImage, { src: row.masterPicture, alt: row.name, lazy: true }),
+    render: (row: ProductType) => h(NImage, { src: row.masterPicture, alt: row.productName, lazy: true }),
   },
-  { title: '商品名称', key: 'name', minWidth: 150 },
+  { title: '商品名称', key: 'productName', minWidth: 150 },
   { title: '所属分类', align: 'center', width: 140, key: 'category' },
   { title: '商品slug', align: 'center', width: 100, key: 'slug' },
   {
@@ -91,7 +91,7 @@ const toDetail = (row: ProductType): void => {
 const upOrDownShelf = async (row: ProductType) => {
   dialog.warning({
     title: '温馨提示',
-    content: `您确定要下架"${row.name}"吗？`,
+    content: `您确定要下架"${row.productName}"吗？`,
     negativeText: '我再想想🤔',
     positiveText: '确定',
     onPositiveClick: async () => {

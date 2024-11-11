@@ -4,7 +4,7 @@
 			<CategoryView :item-info="productInfo"></CategoryView>
 			<BrandView></BrandView>
 			<n-form-item label="商品名称: " path="name" ref="name">
-				<n-input placeholder="请输入商品名称" clearable v-model:value="productInfo.name"></n-input>
+				<n-input placeholder="请输入商品名称" clearable v-model:value="productInfo.productName"></n-input>
 			</n-form-item>
 			<SlugView :item-info="productInfo"></SlugView>
 			<n-form-item label="商品价格: " path="price" ref="price">
@@ -62,7 +62,7 @@ const productForm = ref()
 // 当前页面的商品信息对象
 const productInfo = reactive<ProductType>({
 	id: '',
-	name: '',
+	productName: '',
 	slug: '',
 	slugTarget: '',
 	category: '',
@@ -77,7 +77,7 @@ const productInfo = reactive<ProductType>({
 // 缓存当前页面的表单校验规则
 const productRules = {
 	category: [{ required: true, message: '请选择分类', trigger: 'blur' }],
-	name: [{ required: true, message: '请输入商品名称', trigger: 'blur' }],
+	productName: [{ required: true, message: '请输入商品名称', trigger: 'blur' }],
 	slug: [{ required: true, message: '请输入slug', trigger: 'blur' }],
 	price: [{ required: true, message: '请输入商品价格', trigger: 'blur' }],
 	descPic: [{ required: true, message: '请上传商品图片', trigger: 'blur' }]
@@ -89,11 +89,11 @@ const registerItemRef = (prop: string, el: HTMLElement) => {
 }
 provide('registerItemRef', registerItemRef)
 
-const name = ref()
+const productName = ref()
 const price = ref()
 const descPic = ref()
 onMounted(() => {
-	registerItemRef('name', name.value?.$el)
+	registerItemRef('name', productName.value?.$el)
 	registerItemRef('price', price.value?.$el)
 	registerItemRef('descPic', descPic.value?.$el)
 	getProductInfoAction()

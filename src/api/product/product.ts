@@ -5,14 +5,14 @@ export type ProductParams = {
 	key: string,
 	values: {
 		id?: string,
-		name: string,
+		productName: string,
 		categoryId?: string
 	}[]
 }
 
 export type ProductType = {
 	id: string,
-	name: string,
+	productName: string,
 	slug: string,
 	slugTarget?: string,
 	category: string,
@@ -37,8 +37,7 @@ export function publishOrEdit(params: ProductType): Promise<StringOrBooleanRespo
 // 获取商品信息
 export function getProductInfo(id: string): Promise<ObjectResponseModel<ProductType>>{
 	return http.request({
-		url: '/product/:id',
-		data: {id},
+		url: `product/${id}`,
 		method: 'get'
 	})
 }
