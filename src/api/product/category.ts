@@ -2,7 +2,7 @@ import { http } from '@/utils/http'
 import type { BasicParams, ObjectResponseModel, StringOrBooleanResponseModel, WrapArrayResponseModel } from '../types'
 
 export interface CateType extends BasicParams{
-	id: string,
+	id?: string,
 	title: string,
 	level: number,
 	parentId?: string,
@@ -24,7 +24,7 @@ export function getCategoryList(): Promise<WrapArrayResponseModel<CateType>> {
 export function addCate(params: CateType): Promise<ObjectResponseModel<CateType>> {
 	return http.request({
 		url: '/cate',
-		method: 'post',
+		method: 'put',
 		data: params
 	}, { isShowSuccessMessage: true })
 }
@@ -48,7 +48,7 @@ export function deleteCate(id: string): Promise<StringOrBooleanResponseModel> {
 }
 
 // 调整分类顺序
-export function changeSort(params): Promise<StringOrBooleanResponseModel> {
+export function changeSort(params: BasicParams): Promise<StringOrBooleanResponseModel> {
 	return http.request({
 		url: '/cate/sort',
 		method: 'post',
@@ -57,7 +57,7 @@ export function changeSort(params): Promise<StringOrBooleanResponseModel> {
 }
 
 // 获取分类下的属性集合
-export function getCategoryParams(params): Promise<WrapArrayResponseModel<ParamType>> {
+export function getCategoryParams(params: BasicParams): Promise<WrapArrayResponseModel<ParamType>> {
 	return http.request({
 		url: '/cate/params',
 		method: 'get',

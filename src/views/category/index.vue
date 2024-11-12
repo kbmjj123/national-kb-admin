@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="m-2">
 		<n-button type="primary" @click="onAddFirstCate">新增类目</n-button>
 	</div>
 	<NestedDraggableList item-key="id" v-model="categoryList" @on-success="getCategoryAction"></NestedDraggableList>

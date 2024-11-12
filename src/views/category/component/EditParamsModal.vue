@@ -42,7 +42,7 @@ const tagList = computed(() => {
   categoryArray.value.forEach((item: ParamType) => {
     item.params.forEach((cItem: string) => {
       tagList.push({
-        cateId: item.id,
+        cateId: item.id as string,
         title: cItem,
       })
     })

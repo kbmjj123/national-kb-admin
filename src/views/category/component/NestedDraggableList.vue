@@ -100,7 +100,7 @@ const onDeleteCate = (row: CateType) => {
     negativeText: '我再想想',
     positiveText: '确定',
     onPositiveClick: async () => {
-			const res = await deleteCate(row.id)
+			const res = await deleteCate(row.id as string)
 			message.success(res.message)
 			emit('on-success')
 		},
@@ -110,7 +110,7 @@ const onDeleteCate = (row: CateType) => {
 const showEditParamFlag = ref(false)
 const showEditParamCateId = ref('')
 const onEditParam = (row: CateType) => {
-	showEditParamCateId.value = row.id
+	showEditParamCateId.value = row.id as string
 	showEditParamFlag.value = true
 }
 </script>

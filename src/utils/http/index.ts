@@ -19,6 +19,22 @@ import { refreshAccessToken } from '@/api/system/user'
 const globSetting = useGlobSetting()
 const urlPrefix = globSetting.urlPrefix || ''
 
+/**
+ * 过滤掉空对象以及空字符串的请求参数
+*/
+const filterEmptyParams = (params) => {
+  if (params && typeof params === 'object') {
+    return Object.entries(params).reduce((acc, [key, value]) => {
+      if (value !== '' && value !== null && value !== undefined && !(typeof value === 'object' && Object.keys(value).length === 0)) {
+        acc[key] = value;
+      }
+      return acc;
+    }, {});
+  }
+  return params;
+}
+
+
 const transform: AxiosTransform = {
   //! 请求参数进行处理
   transformRequestData: (res: AxiosResponse<any>, options: RequestOptions) => {
@@ -106,7 +122,7 @@ const transform: AxiosTransform = {
       config.url = `${apiUrl}${config.url}`
     }
     const params = config.params || {}
-    const data = config.data || false
+    const data = filterEmptyParams(config.data || false)
     if (config.method?.toUpperCase() === RequestEnum.GET) {
       if (!isString(params)) {
         // 给 get 请求加上时间戳参数，避免从缓存中拿数据。
