@@ -6,6 +6,7 @@ export interface CateType extends BasicParams{
 	title: string,
 	level: number,
 	parentId?: string,
+	paramsList?: Array<{key: string, values: string}>
 }
 
 export interface ParamType extends CateType{

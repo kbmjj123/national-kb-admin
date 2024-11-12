@@ -14,12 +14,11 @@
 								:class="['arrow-icon', element.isExpand ? 'arrow-icon-rotate' : '']">
 								<ChevronForwardCircleOutline></ChevronForwardCircleOutline>
 							</n-icon>
-							{{ element.title }} - {{ element.level }}
+							{{ element.title }}
 						</n-flex>
 						<n-flex>
-							<n-button text type="primary" v-if="element.level < 3" @click.stop="onAddCate">新增</n-button>
+							<n-button text type="primary" v-if="element.level < 3" @click.stop="onAddChildCate(element)">新增</n-button>
 							<n-button text type="primary" @click.stop="onEditCate(element)">编辑</n-button>
-							<n-button text type="primary" @click.stop="onEditParam(element)">商品属性</n-button>
 							<n-button text type="error" @click.stop="onDeleteCate(element)">删除</n-button>
 						</n-flex>
 					</n-flex>
@@ -34,20 +33,15 @@
 				</n-flex>
 			</template>
 		</Draggable>
-		<!-- 新增/编辑分类的视图 -->
-		<EditCateModal v-model="showCateFlag" :item-info="currentCateInfo"></EditCateModal>
-		<!-- 编辑分类下的商品属性视图 -->
-		<EditParamsModal v-model="showEditParamFlag" :category-id="showEditParamCateId"></EditParamsModal>
 	</div>
 </template>
 
 <script setup lang="ts">
+import { inject } from 'vue'
 import Draggable from 'vuedraggable'
 import { useDialog, useMessage } from 'naive-ui'
 import { CateType, deleteCate } from '@/api/product/category'
-import EditCateModal from './EditCateModal.vue'
 import { ChevronForwardCircleOutline } from '@vicons/ionicons5'
-import EditParamsModal from './EditParamsModal.vue'
 const dialog = useDialog()
 const message = useMessage()
 const { itemKey } = defineProps<{
@@ -57,32 +51,28 @@ const model = defineModel({
   required: true,
   type: Array,
 })
-// 新增与编辑相关的Modal视图
-const showCateFlag = ref(false)
-const currentCateInfo = reactive<CateType>({
-  id: '',
-  title: '',
-	level: 0,
-	children: []
-})
 const emit = defineEmits<{
 	'on-success': []
 }>()
+const addOrEditCate = inject<Function>('addOrEditCate')
 // 切换子元素的显隐状态
 const toggleItem = (element: CateType) => {
   element.isExpand = !element.isExpand
 }
-
-const onAddCate = () => {
-	showCateFlag.value = true
+/**
+ * 添加子分类
+*/
+const onAddChildCate = (element: CateType) => {
+	const childElm = {
+		parentId: element.id,
+		parentName: element.title,
+		level: element.level + 1,
+	}
+	addOrEditCate && addOrEditCate(childElm)
 }
 
 const onEditCate = (row: CateType) => {
-	currentCateInfo.id = row.id
-	currentCateInfo.title = row.title
-	currentCateInfo.level = row.level
-	currentCateInfo.children = row.children
-	showCateFlag.value = true
+	addOrEditCate && addOrEditCate(row)
 }
 
 const onDeleteCate = (row: CateType) => {
@@ -106,13 +96,7 @@ const onDeleteCate = (row: CateType) => {
 		},
   })
 }
-// 编辑分类下关联的商品属性
-const showEditParamFlag = ref(false)
-const showEditParamCateId = ref('')
-const onEditParam = (row: CateType) => {
-	showEditParamCateId.value = row.id as string
-	showEditParamFlag.value = true
-}
+
 </script>
 
 <style scoped>
