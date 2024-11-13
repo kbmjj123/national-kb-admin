@@ -41,7 +41,7 @@ import { OrderDetailType, getOrderDetail, OrderStatusMap } from '@/api/order/ord
 import { ObjectResponseModel } from '@/api/types.ts'
 import { useLoading } from '@/hooks/web/useLoading.ts'
 import { NImage } from 'naive-ui'
-import { type CellType } from '@/components/AutoLayout/types.ts'
+import { type CellType } from '@/components/global/AutoLayout/types.ts'
 import OrderOptArea from '../component/OrderOptArea.vue'
 import LogisticsTrackView from '../component/LogisticsTrackView.vue'
 

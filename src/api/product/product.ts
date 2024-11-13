@@ -15,7 +15,7 @@ export type ProductType = {
 	productName: string,
 	slug: string,
 	slugTarget?: string,
-	category: string,
+	cates: string[],
 	masterPicture: string,
 	descPic: string[],
 	params: ProductParams[],
@@ -37,14 +37,13 @@ export function publishOrEdit(params: ProductType): Promise<StringOrBooleanRespo
 // 获取商品信息
 export function getProductInfo(id: string): Promise<ObjectResponseModel<ProductType>>{
 	return http.request({
-		url: `product/${id}`,
+		url: `/product/${id}`,
 		method: 'get'
 	})
 }
 
 // 分页获取商品列表
 export function getProductList(params: BasicPageParams): Promise<ArrayResponseModel<ProductType>> {
-	debugger
 	return http.request({
 		url: '/product/list',
 		params,
@@ -67,5 +66,8 @@ export function detectionUniqueness(slug: string): Promise<StringOrBooleanRespon
 		url: '/product/slug/check',
 		data: { slug },
 		method: 'post'
+	}, {
+		isShowSuccessMessage: true,
+		isShowErrorMessage: true
 	})
 }

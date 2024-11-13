@@ -1,5 +1,5 @@
 import { http } from '@/utils/http'
-import type { BasicParams, BasicPageParams, StringOrBooleanResponseModel, ArrayResponseModel } from '../types'
+import type { BasicParams, BasicPageParams, StringOrBooleanResponseModel, ArrayResponseModel, WrapArrayResponseModel } from '../types'
 
 export interface BrandType extends BasicParams {
 	id?: string,
@@ -23,7 +23,17 @@ export function editBrand(params: BrandType): Promise<StringOrBooleanResponseMod
 		data: params
 	}, { isShowSuccessMessage: true })
 }
-// 获取品牌列表
+/**
+ * 获取全量的品牌列表 
+*/
+export const getAllBrandList = (): Promise<WrapArrayResponseModel<BrandType>> => {
+	return http.request({
+		url: '/brand/allList',
+		method: 'get'
+	})
+}
+
+// 分页获取品牌列表
 export function getBrandList(params: BasicPageParams): Promise<ArrayResponseModel<BrandType>>{
 	return http.request({
 		url: '/brand/list',

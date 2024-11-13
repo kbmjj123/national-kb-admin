@@ -99,7 +99,7 @@ export class Axios {
     }
     return this.request({
       ...config,
-      method: 'POST',
+      method: 'put',
       data: formData,
       headers: {
         'Content-Type': ContentTypeEnum.FORM_DATA,

@@ -1,13 +1,14 @@
 <template>
-	<n-form-item label="分类: " path="category" ref="category">
+	<n-form-item label="分类" path="cates" ref="cates">
 		<n-flex class="w-[100%]">
 			<n-cascader
 				placeholder="请选择商品分类"
-				label-field="name"
+				label-field="title"
 				value-field="id"
 				children-filed="children"
 				expand-trigger="click"
 				:options="useCategoryStore.getCategoryList"
+				v-model:value="itemInfo.cates"
 				clearable
 				check-strategy="parent"
 				show-path
@@ -40,11 +41,11 @@ const useCategoryStore = useCategory()
 const { itemInfo } = defineProps<{
   itemInfo: ProductType
 }>()
-const category = ref()
+const cates = ref()
 const registerItemRef = inject('registerItemRef') as (prop: string, el: HTMLElement) => void
 onMounted(async () => {
-	if(category.value){
-		registerItemRef('category', category.value.$el)
+	if(cates.value){
+		registerItemRef('cates', cates.value.$el)
 	}
 	await useCategoryStore.getCategoryListAction()
 })

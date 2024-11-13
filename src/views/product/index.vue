@@ -9,6 +9,7 @@
     <n-form-item :label-width="0">
       <n-button class="mr-2" type="primary" @click="onSearch">搜索</n-button>
       <n-button @click="onReset">重置</n-button>
+			<n-button class="ml-2" @click="onPublishProduct" type="primary" ghost>发布商品</n-button>
     </n-form-item>
   </n-form>
   <n-data-table
@@ -123,5 +124,11 @@ const onSearch = () => {
 const onReset = () => {
   filterForm = Object.assign(filterForm, originalFilter)
   getProductListAction()
+}
+// 发布商品
+const onPublishProduct = () => {
+	router.push({
+		name: 'product_edit'
+	})
 }
 </script>

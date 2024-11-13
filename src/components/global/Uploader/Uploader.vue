@@ -22,7 +22,7 @@
     <n-upload-dragger v-if="'single' === computedOptions.uploadDragger" class="w-[300px]">
       <n-flex vertical align="center">
         <n-icon size="48" :depth="3">
-          <ArchiveOutline></ArchiveOutline>
+          <ImageOutline></ImageOutline>
         </n-icon>
 				<n-text class="text-xs" v-if="'image-card' !== computedOptions.listType">点击或者拖动文件到该区域来上传</n-text>
       </n-flex>
@@ -39,7 +39,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { UploadFileInfo } from 'naive-ui'
-import { ArchiveOutline } from '@vicons/ionicons5'
+import { ImageOutline } from '@vicons/ionicons5'
 import { useGlobSetting } from '@/hooks/setting'
 import { storage } from '@/utils/Storage';
 import { ACCESS_TOKEN } from '@/store/mutation-types';
