@@ -61,3 +61,10 @@
 > 在项目过程中，如果 :u6709: 使用到动态组件component并且需要将这个component缓存到一个变量上的话，要记住这个鼻梁不能是一个ref变量，而必须是一个普通的变量或者是一个`shallowRef`的变量
 > :thinking: 因为这里如果使用一个ref变量的话，意味着这component中的任意一个属性发生变化，都将会引起所在视图的重新绘制，比较影响性能，下面是对应的使用ref的提示
 ![component使用ref变量引用的截图.png](./assets/component使用ref变量引用的截图.png)
+
+#### reactive对象采用`Object.assign()`空赋值操作会被跳过
+> 在项目中，如果需要对一个`reactive`对象进行各个属性的替换操作，**不能单纯地使用`Object.assing()`方法来赋值，因为这样子的话，如果源对象中的空字符串也要正常赋值的话，将无法正常赋值**， :point_right: 因为在`vue3`中，它认为这个是一个无效的赋值，讲直接跳过空字符串的操作！
+> 因此，如果想要实现两个对象属性的完整覆盖替换操作的话，可以借助于`Object.keys()`的方式来手动一个个替换，具体实现如下：
+```typescript
+Object.keys(source)
+```

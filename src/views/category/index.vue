@@ -25,6 +25,7 @@ const INIT_CATE_INFO = {
 	level: 0,
 	parentId: '',
 	parentName: '',
+	paramsList: [],
 	children: []
 }
 const currentCateInfo = reactive<CateType & {parentName: string}>(INIT_CATE_INFO)
@@ -59,7 +60,13 @@ const getCategoryAction = async () => {
 
 // 新增分类
 const onAddFirstCate = () => {
-	Object.assign(currentCateInfo, INIT_CATE_INFO)
+	Object.keys(INIT_CATE_INFO).forEach(key => {
+		currentCateInfo[key] = INIT_CATE_INFO[key]
+	})
+	currentCateInfo.paramsList = [{
+		key: '', values: ''
+	}]
+	console.info(toValue(currentCateInfo))
 	showCateFlag.value = true
 }
 

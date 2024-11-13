@@ -13,10 +13,10 @@
               :class="['arrow-icon', element.isExpand ? 'arrow-icon-rotate' : '']">
               <ChevronForwardCircleOutline></ChevronForwardCircleOutline>
             </n-icon>
-            {{ element.title }}
+            {{ element.title }} - {{ element.level }}
           </n-flex>
           <n-flex>
-            <n-button text type="primary" v-if="element.level < 3" @click.stop="onAddChildCate(element)">新增</n-button>
+            <n-button text type="primary" v-if="element.level < 2" @click.stop="onAddChildCate(element)">新增</n-button>
             <n-button text type="primary" @click.stop="onEditCate(element, index)">编辑</n-button>
             <n-button text type="error" @click.stop="onDeleteCate(element)">删除</n-button>
           </n-flex>
@@ -68,13 +68,17 @@ const onAddChildCate = (element: CateType) => {
   }
   addOrEditCate && addOrEditCate(childElm)
 }
-
+/**
+ * 编辑一分类
+*/
 const onEditCate = (row: CateType, index: number) => {
 	console.info(model.value, index)
   row.parentName = ''
   addOrEditCate && addOrEditCate(row)
 }
-
+/**
+ * 删除一分类
+*/
 const onDeleteCate = (row: CateType) => {
   if (row.children && row.children.length > 0) {
     dialog.warning({
@@ -84,13 +88,15 @@ const onDeleteCate = (row: CateType) => {
     })
     return
   }
-  dialog.warning({
+  const d = dialog.warning({
     title: `温馨提示`,
     content: `您确定要删除分类：${row.title}吗？`,
     negativeText: '我再想想',
     positiveText: '确定',
     onPositiveClick: async () => {
+			d.loading = true
       const res = await deleteCate(row.id as string)
+			d.loading = false
       message.success(res.message)
       emit('on-success')
     },

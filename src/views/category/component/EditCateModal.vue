@@ -3,6 +3,7 @@
     v-model:show="model"
     preset="dialog"
     :title="cateForm && cateForm.id ? '编辑分类' : '新增分类'"
+		:loading="submiting"
     negative-text="取消"
     positive-text="确定"
     @positive-click="onAddOrEditAction">
@@ -60,7 +61,7 @@ const cateFormRules = {
 }
 
 const editCateForm = ref()
-
+const submiting = ref(false)
 
 /**
  * 新增属性标签
@@ -84,12 +85,14 @@ const onAddOrEditAction = () => {
   return new Promise((resolve) => {
     editCateForm.value?.validate(async (errors) => {
       if (!errors) {
+				submiting.value = true
         let res: any
         if (cateForm.value.id) {
           res = await editCate(cateForm.value)
         } else {
           res = await addCate(cateForm.value)
         }
+				submiting.value = false
         emit('on-success', res?.data)
         resolve(true)
       } else {

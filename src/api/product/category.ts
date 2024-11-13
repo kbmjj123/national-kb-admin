@@ -42,7 +42,7 @@ export function editCate(params: CateType): Promise<ObjectResponseModel<CateType
 // 删除分类
 export function deleteCate(id: string): Promise<StringOrBooleanResponseModel> {
 	return http.request({
-		url: '/cate/:id',
+		url: `/cate/${id}`,
 		method: 'delete',
 		data: {id}
 	})
