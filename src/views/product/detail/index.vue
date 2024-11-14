@@ -36,7 +36,7 @@
 				<ProductParamsView :item-info="productInfo"></ProductParamsView>
 			</n-form-item>
 		<KArea title="图文详情">
-			<!-- <KEditor ></KEditor> -->
+			<KEditor ></KEditor>
 		</KArea>
 	</n-form>
 	<FixBottomArea>
@@ -76,14 +76,7 @@ const INIT_PRODUCT = {
 }
 // 当前页面的商品信息对象
 const productInfo = reactive<ProductType>(INIT_PRODUCT)
-const computedProductInfo = computed({
-	get(){
-		return productInfo
-	},
-	set(value){
-		Object.assign(productInfo, value)
-	}
-})
+
 // 缓存当前页面的表单校验规则
 const productRules = {
 	cates: [{ required: true, message: '请选择分类', trigger: 'blur' }],
