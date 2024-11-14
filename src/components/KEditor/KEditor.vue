@@ -1,39 +1,190 @@
 <template>
-  <quill-editor
-    v-model:value="content"
-  />
+  <section ref="editor"></section>
 </template>
 
-<script lang="ts" setup>
-import { quillEditor, Quill } from 'vue3-quill'
-import '@vueup/vue-quill/dist/vue-quill.snow.css'
-import { ref } from 'vue'
+<script>
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
+import Quill from 'quill'
 
 import ImageUploader from 'quill-image-uploader'
 import 'quill-image-uploader/dist/quill.imageUploader.min.css'
-Quill.register("modules/imageUploader", ImageUploader)
-
+Quill.register('modules/imageUploader', ImageUploader)
 import { manualUploadFile } from '@/api/system/resources'
 import { ResultEnum } from '@/enums/httpEnum'
+import { useGlobSetting } from '@/hooks/setting'
+const globSetting = useGlobSetting()
 
-import * as Emoji from 'quill-emoji'
-import 'quill-emoji/dist/quill-emoji.css'
+import { onMounted, ref, watch, onUnmounted, onBeforeUnmount } from 'vue'
 
-const content = ref('')
-const modules = ref([
-  {
-    name: 'imageUploader',
-    module: ImageUploader,
-    options: {
-      upload: async (file: File) => {
+const defaultOptions = {
+  theme: 'snow',
+  boundary: document.body,
+  modules: {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+      ['blockquote', 'code-block'],
+      [{ header: 1 }, { header: 2 }],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ script: 'sub' }, { script: 'super' }],
+      [{ indent: '-1' }, { indent: '+1' }],
+      [{ direction: 'rtl' }],
+      [{ size: ['small', false, 'large', 'huge'] }],
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      [{ color: [] }, { background: [] }],
+      [{ font: [] }],
+      [{ align: [] }],
+      ['clean'],
+      ['link', 'image', 'video']
+    ],
+		imageUploader: {
+      upload: async (file) => {
         const res = await manualUploadFile('images', file)
         if (res.status === ResultEnum.SUCCESS) {
-          return res.data
+          return `${globSetting.imgUrl}${res.data}`
         } else {
           return '上传失败'
         }
       },
     },
+  },
+  placeholder: '请输入图文详情',
+  readOnly: false
+}
+export default {
+  name: 'quill-editor',
+  props: {
+    content: String,
+    value: String,
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    options: {
+      type: Object,
+      required: false,
+      default: () => ({})
+    }
+  },
+  emits: ['ready', 'change', 'input', 'blur', 'focus', 'update:value'],
+  setup(props, context) {
+    const state = {
+      editorOption: {},
+      quill: null
+    }
+
+    let _content = ''
+
+    watch(
+      () => props.value,
+      val => {
+        if (state.quill) {
+          if (val && val !== _content) {
+            _content = val
+            state.quill.pasteHTML(val)
+          } else if (!val) {
+            state.quill.setText('')
+          }
+        }
+      }
+    )
+
+    watch(
+      () => props.content,
+      val => {
+        if (state.quill) {
+          if (val && val !== _content) {
+            _content = val
+            state.quill.pasteHTML(val)
+          } else if (!val) {
+            state.quill.setText('')
+          }
+        }
+      }
+    )
+
+    watch(
+      () => props.disabled,
+      val => {
+        if (state.quill) {
+          state.quill.enable(!val)
+        }
+      }
+    )
+
+    const editor = ref(null)
+
+    const mergeOptions = (def, custom) => {
+      for (const key in custom) {
+        if (!def[key] || key !== 'modules') {
+          def[key] = custom[key]
+        } else {
+          mergeOptions(def[key], custom[key])
+        }
+      }
+      return def
+    }
+
+    const initialize = () => {
+      if (editor.value) {
+        // Options
+        state.editorOption = mergeOptions(defaultOptions, props.options)
+        state.editorOption.readOnly = props.disabled ? true : false
+        // Instance
+        state.quill = new Quill(editor.value, state.editorOption)
+
+        // Set editor content
+        if (props.value) {
+          state.quill.pasteHTML(props.value)
+        }
+
+        // Mark model as touched if editor lost focus
+        state.quill.on('selection-change', range => {
+          if (!range) {
+            context.emit('blur', state.quill)
+          } else {
+            context.emit('focus', state.quill)
+          }
+        })
+        // Update model if text changes
+        state.quill.on('text-change', () => {
+          // diabled editor after content initialized
+          if (props.disabled) {
+            state.quill.enable(false)
+          }
+          let html = editor.value.children[0].innerHTML
+          const quill = state.quill
+          const text = state.quill.getText()
+          if (html === '<p><br></p>') html = ''
+          _content = html
+          context.emit('update:value', _content)
+          context.emit('change', { html, text, quill })
+        })
+
+        // Emit ready event
+        context.emit('ready', state.quill)
+      }
+    }
+
+    onBeforeUnmount(() => {
+      const editorToolbar = editor.value.previousSibling
+      if (editorToolbar && editorToolbar.nodeType === 1 && editorToolbar.className.indexOf('ql-toolbar') > -1) {
+        editorToolbar.parentNode.removeChild(editorToolbar)
+      }
+    })
+
+    onMounted(() => {
+      initialize()
+    })
+
+    onUnmounted(() => {
+      state.quill = null
+    })
+
+    return { editor }
   }
-])
+}
 </script>
+

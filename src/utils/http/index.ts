@@ -23,14 +23,18 @@ const urlPrefix = globSetting.urlPrefix || ''
  * 过滤掉空对象以及空字符串的请求参数
 */
 const filterEmptyParams = (params) => {
-  if (params && typeof params === 'object') {
-    return Object.entries(params).reduce((acc, [key, value]) => {
-      if (value !== '' && value !== null && value !== undefined && !(typeof value === 'object' && Object.keys(value).length === 0)) {
-        acc[key] = value;
-      }
-      return acc;
-    }, {});
-  }
+	if(params){
+		if(params instanceof FormData){
+			return params
+		}else if(typeof params === 'object'){
+			return Object.entries(params).reduce((acc, [key, value]) => {
+				if (value !== '' && value !== null && value !== undefined && !(typeof value === 'object' && Object.keys(value).length === 0)) {
+					acc[key] = value;
+				}
+				return acc;
+			}, {});
+		}
+	}
   return params;
 }
 
@@ -111,7 +115,7 @@ const transform: AxiosTransform = {
   },
   //! 请求之前处理config
   beforeRequestHook: (config: AxiosRequestConfig, options: RequestOptions): AxiosRequestConfig => {
-    const { apiUrl, joinPrefix, joinParamsToUrl, formatDate, joinTime = true, urlPrefix } = options
+		const { apiUrl, joinPrefix, joinParamsToUrl, formatDate, joinTime = true, urlPrefix } = options
     const isUrlStr = isUrl(config.url as string)
 
     if (!isUrlStr && joinPrefix) {
@@ -135,13 +139,21 @@ const transform: AxiosTransform = {
     } else {
       if (!isString(params)) {
         formatDate && formatRequestDate(params)
-        if (Reflect.has(config, 'data') && config.data && Object.keys(config.data).length > 0) {
-          config.data = data
-          config.params = params
-        } else {
-          config.data = params
-          config.params = undefined
-        }
+				if(Reflect.has(config, 'data') && config.data){
+					if(config.data instanceof FormData){
+						config.data = data
+						config.params = params
+					}else if(Object.keys(config.data).length > 0){
+						config.data = data
+						config.params = params
+					}else {
+						config.data = params
+						config.params = undefined
+					}
+				}else {
+					config.data = params
+					config.params = undefined
+				}
         if (joinParamsToUrl) {
           config.url = setObjToUrlParams(
             config.url as string,

@@ -36,7 +36,7 @@
 				<ProductParamsView :item-info="productInfo"></ProductParamsView>
 			</n-form-item>
 		<KArea title="图文详情">
-			<KEditor ></KEditor>
+			<KEditor v-model:value="productInfo.detailContent"></KEditor>
 		</KArea>
 	</n-form>
 	<FixBottomArea>
@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, provide, computed, onMounted } from 'vue'
+import { ref, reactive, provide, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { ProductType, getProductInfo, publishOrEdit } from '@/api/product/product.ts'
 import CategoryView from '../component/CategoryView.vue'
