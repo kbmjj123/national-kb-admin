@@ -2,6 +2,9 @@
 	<n-form ref="productForm" :model="productInfo" :label-width="100" label-placement="left" :rules="productRules" class="position">
 		<KArea title="商品信息">
 			<CategoryView :item-info="productInfo"></CategoryView>
+			<n-form-item label="商品属性">
+				<ProductParamsView :item-info="productInfo"></ProductParamsView>
+			</n-form-item>
 			<BrandView></BrandView>
 			<n-form-item label="商品名称" path="productName" ref="productName">
 				<n-input placeholder="请输入商品名称" class="w-[50%]" clearable v-model:value="productInfo.productName"></n-input>
@@ -31,10 +34,6 @@
 				<Uploader v-model="productInfo.descPic" :options="{uploadDragger: 'single', listType: 'image'}"></Uploader>
 			</n-form-item>
 		</KArea>
-		<KArea title="商品属性"></KArea>
-			<n-form-item label="商品属性">
-				<ProductParamsView :item-info="productInfo"></ProductParamsView>
-			</n-form-item>
 		<KArea title="图文详情">
 			<KEditor v-model:value="productInfo.detailContent"></KEditor>
 		</KArea>
@@ -47,7 +46,7 @@
 
 <script lang="ts" setup>
 import { ref, reactive, provide, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { ProductType, getProductInfo, publishOrEdit } from '@/api/product/product.ts'
 import CategoryView from '../component/CategoryView.vue'
 import BrandView from '../component/BrandView.vue'
@@ -59,6 +58,7 @@ import { useLoading } from '@/hooks/web/useLoading.ts'
 import KEditor from '@/components/KEditor'
 
 const route = useRoute()
+const router = useRouter()
 const productForm = ref()
 const INIT_PRODUCT = {
 	id: '',
@@ -68,7 +68,7 @@ const INIT_PRODUCT = {
 	cates: [],
 	masterPicture: '',
 	descPic: ['','','','',''],
-	params: [],
+	paramsList: [],
 	detailContent: '',
 	price: '',
 	marketPrice: '',
@@ -119,7 +119,10 @@ const onSaveProductInfo = () => {
 				itemRefsMap[field].scrollIntoView({ behavior: 'smooth' })
 			}
 		}else{
-			execute && execute(productInfo)
+			execute && execute(productInfo, null, () => {
+				//? 操作成功
+				router.back()
+			})
 		}
 	})
 }

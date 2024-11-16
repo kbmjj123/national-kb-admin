@@ -64,7 +64,7 @@ const onAddFirstCate = () => {
 		currentCateInfo[key] = INIT_CATE_INFO[key]
 	})
 	currentCateInfo.paramsList = [{
-		key: '', values: ''
+		key: '', values: []
 	}]
 	console.info(toValue(currentCateInfo))
 	showCateFlag.value = true

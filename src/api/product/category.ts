@@ -1,12 +1,13 @@
 import { http } from '@/utils/http'
 import type { BasicParams, ObjectResponseModel, StringOrBooleanResponseModel, WrapArrayResponseModel } from '../types'
+import { ProductParams } from './product'
 
 export interface CateType extends BasicParams{
 	id?: string,
 	title: string,
 	level: number,
 	parentId?: string,
-	paramsList?: Array<{key: string, values: string}>
+	paramsList?: Array<ProductParams>
 }
 
 export interface ParamType extends CateType{

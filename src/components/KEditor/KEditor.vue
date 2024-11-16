@@ -1,5 +1,7 @@
 <template>
-  <section ref="editor"></section>
+	<div class="p-2">
+		<section ref="editor" class="h-[300px]"></section>
+	</div>
 </template>
 
 <script>

@@ -14,6 +14,7 @@
 		:showRemoveButton="computedOptions.showRemoveButton"
 		:showFileList="computedOptions.showFileList"
 		:showPreviewButton="computedOptions.showPreviewButton"
+		:showTrigger="computedShowTrigger"
 		@download="onDownload"
 		:file-list="list"
 		@update:file-list="onChange"
@@ -96,7 +97,6 @@ const list = ref([])
 const fileList = defineModel<string[]>('fileList')
 const file = defineModel<string>('file')
 
-
 const computedOptions = computed(() => ({
   ...defaultOptions,
   ...options,
@@ -107,6 +107,20 @@ const computedOptions = computed(() => ({
 		}
 	}
 }))
+/**
+ * 是否需要展示上传触发器
+*/
+const computedShowTrigger = computed(() => {
+	if(!computedOptions.value.multiple){
+		// 单图上传
+		if(1 === fileList.value?.length){
+			// 已上传一张，则隐藏触发器
+			return false
+		}
+	}else{
+		return true
+	}
+})
 
 // 文件下载动作
 const onDownload = (file: UploadFileInfo) => {
@@ -118,7 +132,6 @@ const onChange = (data) => {
 }
 
 const onFinish = ({ event }: { event?: ProgressEvent, file: UploadFileInfo }) => {
-	console.info(event)
 	//@ts-ignore
 	const response = event?.target?.response
 	if(response){

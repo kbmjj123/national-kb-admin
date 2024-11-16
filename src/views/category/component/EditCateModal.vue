@@ -16,7 +16,7 @@
       </n-form-item>
       <n-form-item label="对应属性: ">
         <n-flex vertical>
-          <n-input-group v-for="(item, index) in cateForm.paramsList" :key="index">
+          <!-- <n-input-group v-for="(item, index) in cateForm.paramsList" :key="index">
             <n-input class="w-[40%]" placeholder="属性名" v-model:value="item.key"></n-input>
             <n-input placeholder="属性值，多个以逗号分割" v-model:value="item.values"></n-input>
             <n-button @click="onAddNewTag" ghost type="primary" v-if="index === cateForm.paramsList!.length - 1">
@@ -29,7 +29,13 @@
 								<n-icon><CloseCircle/></n-icon>
 							</template>
 						</n-button>
-          </n-input-group>
+          </n-input-group> -->
+					<n-input-group class="gap-3 items-center" v-for="(item, index) in cateForm.paramsList" :key="index">
+						<n-input placeholder="属性名称" class="w-[100px]" v-model:value="item.key"></n-input>
+						<n-dynamic-tags placeholder="属性值" v-model:value="item.values"></n-dynamic-tags>
+						<n-button text type="primary" @click="onAddNewTag">新增</n-button>
+						<n-button text type="error" @click="onDeleteTag(index)">删除</n-button>
+					</n-input-group>
         </n-flex>
       </n-form-item>
     </n-form>
@@ -69,7 +75,7 @@ const submiting = ref(false)
 const onAddNewTag = () => {
   cateForm.value?.paramsList?.push({
     key: '',
-    values: '',
+    values: [],
   })
 }
 

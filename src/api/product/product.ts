@@ -3,11 +3,7 @@ import { BasicParams, BasicPageParams, StringOrBooleanResponseModel, ArrayRespon
 
 export type ProductParams = {
 	key: string,
-	values: {
-		id?: string,
-		productName: string,
-		categoryId?: string
-	}[]
+	values: string[]
 }
 
 export type ProductType = {
@@ -18,7 +14,7 @@ export type ProductType = {
 	cates: string[],
 	masterPicture: string,
 	descPic: string[],
-	params: ProductParams[],
+	paramsList: ProductParams[],
 	detailContent: string,
 	price: string,
 	marketPrice: string,
@@ -29,7 +25,7 @@ export type ProductType = {
 export function publishOrEdit(params: ProductType): Promise<StringOrBooleanResponseModel>{
 	return http.request({
 		url: '/product/publish',
-		method: 'post',
+		method: 'put',
 		data: params
 	}, { isShowSuccessMessage: true })
 }
