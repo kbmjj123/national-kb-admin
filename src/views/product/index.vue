@@ -28,6 +28,7 @@ import { useRouter } from 'vue-router'
 import { ProductType, getProductList, upOrDownShelves } from '@/api/product/product.ts'
 import { type DataTableColumns, NImage, NFlex, NButton, useMessage, useDialog } from 'naive-ui'
 import QuickEditPriceView from './component/QuickEditPriceView.vue'
+import KImage from '@/components/global/KImage'
 
 const router = useRouter()
 const message = useMessage()
@@ -43,16 +44,16 @@ const originalFilter = toRaw(filterForm) // 原始过滤器
 const loading = ref(false)
 const productList = ref<Array<ProductType>>([])
 const productColumns: DataTableColumns<ProductType> = [
-  { title: '序号', width: 60, key: 'index', render: (row, index: number) => h('span', index + 1) },
+  { title: '序号', width: 60, key: 'index', align: 'center', render: (row, index: number) => h('span', index + 1) },
   {
     title: '商品图片',
     align: 'center',
     key: 'masterPicture',
     width: 90,
-    render: (row: ProductType) => h(NImage, { src: row.masterPicture, alt: row.productName, lazy: true }),
+    render: (row: ProductType) => h(KImage, { src: row.masterPicture, alt: row.productName, lazy: true }),
   },
   { title: '商品名称', key: 'productName', minWidth: 150 },
-  { title: '所属分类', align: 'center', width: 140, key: 'category' },
+  { title: '所属分类', align: 'center', width: 140, key: 'cates' },
   { title: '商品slug', align: 'center', width: 100, key: 'slug' },
   {
     title: '价格(¥)',

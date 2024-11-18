@@ -15,49 +15,56 @@
   </n-form>
   <n-data-table
     striped
-		:single-line="false"
+    :single-line="false"
     :columns="columns"
     :loading="loading"
     :data="result?.data?.list"
-    :pagination="pagination"
-    />
+    :pagination="pagination" />
+	<AccountInfoModal v-model="showAccountInfoFlag" :id="currentAccountId"></AccountInfoModal>
 </template>
 
 <script setup lang="ts">
-import { h, reactive, onMounted, markRaw, type Ref } from 'vue'
-import { NImage, NText, NButton, useDialog, type DataTableColumns } from 'naive-ui'
+import { h, reactive, onMounted, markRaw, toValue } from 'vue'
+import { NImage, NText, NButton, NFlex, useDialog, type DataTableColumns } from 'naive-ui'
 import { useLoading } from '@/hooks/web/useLoading.ts'
-import {
-  getAccountListList,
-  disabledAccount,
-  enabledAccount,
-  type AccountType,
-  AccountStatus,
-} from '@/api/account/account.ts'
+import { getAccountList, toggleAccountState, type AccountType, AccountStatus } from '@/api/account/account.ts'
+import AccountInfoModal from './components/AccountInfoModal.vue'
 
 const dialog = useDialog()
-const { loading, execute, result } = useLoading(getAccountListList)
+const { loading, execute, result } = useLoading(getAccountList)
 const filterForm = reactive({
   accountStatus: 0,
   account: '',
+	pageIndex: 1,
+	pageSize: 20
 })
 const originalFilter = markRaw(filterForm)
-const columns: Ref<DataTableColumns> = [
-  { title: '序号', width: 60, align: 'center', key: 'index', render: (_: AccountType, index: number) => h('span', index + 1) },
+
+const showAccountInfoFlag = ref(false)
+const currentAccountId = ref('')
+
+const columns: DataTableColumns<AccountType> = [
+  {
+    title: '序号',
+    width: 60,
+    align: 'center',
+    key: 'index',
+    render: (_: AccountType, index: number) => h('span', index + 1),
+  },
   { title: '账号', minWidth: 120, align: 'center', key: 'account' },
   {
     title: '头像',
     width: 80,
-		align: 'center',
+    align: 'center',
     key: 'avatar',
     render: (row: AccountType) => h(NImage, { src: row.avatar, width: 50, height: 50 }),
   },
   {
     title: '状态',
     width: 100,
-		align: 'center',
+    align: 'center',
     key: 'accountStatus',
-    render: (row: AccountType) => h(NText, {}, () => (row.accountStatus === AccountStatus.ENABLED ? '使用中' : '禁用')),
+    render: (row: AccountType) => h(NText, {}, () => (row.state === AccountStatus.ENABLED ? '使用中' : '禁用')),
   },
   { title: '创建时间', width: 120, key: 'createTime', align: 'center' },
   { title: '最近登录时间', minWidth: 150, key: 'lastLoginTime' },
@@ -65,21 +72,33 @@ const columns: Ref<DataTableColumns> = [
   {
     title: '操作',
     minWidth: 150,
-		fixed: 'right',
-		align: 'center',
+    fixed: 'right',
+    align: 'center',
     key: 'action',
     render: (row: AccountType) =>
-      h(
-        NButton,
-        {
-          text: true,
-          type: AccountStatus.ENABLED === row.accountStatus ? 'error' : 'primary',
-          onClick: () => {
-            AccountStatus.ENABLED === row.accountStatus ? disabledAction(row) : enabledAction(row)
+      h(NFlex, {
+				justify: 'center'
+			},[
+        h(
+          NButton,
+          {
+            text: true,
+            type: AccountStatus.ENABLED === row.state ? 'error' : 'primary',
+            onClick: () => {
+              AccountStatus.ENABLED === row.state ? disabledAction(row) : enabledAction(row)
+            },
           },
-        },
-        () => (AccountStatus.ENABLED === row.accountStatus ? '禁用' : '启用'),
-      ),
+          () => (AccountStatus.ENABLED === row.state ? '禁用' : '启用'),
+        ),
+				h(NButton, {
+					text: true,
+					type: 'primary',
+					onClick: () => {
+						showAccountInfoFlag.value = true
+						currentAccountId.value = row.id
+					}
+				}, () => '详情')
+      ]),
   },
 ]
 const All_ACCOUNT_STATUS = [
@@ -100,7 +119,10 @@ const All_ACCOUNT_STATUS = [
     value: 3,
   },
 ]
-const pagination = reactive({})
+const pagination = reactive({
+	pageSize: 20,
+	page: filterForm.pageIndex
+})
 // 启用账号
 const enabledAction = (row: AccountType) => {
   dialog.warning({
@@ -109,7 +131,7 @@ const enabledAction = (row: AccountType) => {
     positiveText: '确定',
     negativeText: '我再想想',
     onPositiveClick: async () => {
-      await enabledAccount({ id: row.id })
+      await toggleAccountState(row.id, { state: '' })
       queryAction()
     },
   })
@@ -122,13 +144,13 @@ const disabledAction = (row: AccountType) => {
     positiveText: '确定',
     negativeText: '我再想想',
     onPositiveClick: async () => {
-      await disabledAccount({ id: row.id })
+      await toggleAccountState(row.id, { state: '' })
       queryAction()
     },
   })
 }
 const queryAction = () => {
-  execute && execute(filterForm)
+  execute && execute(toValue(filterForm))
 }
 const onReset = () => {
   Object.assign(filterForm, originalFilter)

@@ -5,7 +5,7 @@
 			<n-form-item label="商品属性">
 				<ProductParamsView :item-info="productInfo"></ProductParamsView>
 			</n-form-item>
-			<BrandView></BrandView>
+			<BrandView :item-info="productInfo"></BrandView>
 			<n-form-item label="商品名称" path="productName" ref="productName">
 				<n-input placeholder="请输入商品名称" class="w-[50%]" clearable v-model:value="productInfo.productName"></n-input>
 			</n-form-item>
@@ -29,7 +29,7 @@
 			</n-form-item>
 		</KArea>
 		<KArea title="媒体信息">
-			<ProductPictureView :item-info="productInfo"></ProductPictureView>
+			<ProductPictureView :item-info="productInfo" ref="descPic"></ProductPictureView>
 			<n-form-item label="商品视频">
 				<Uploader v-model="productInfo.descPic" :options="{uploadDragger: 'single', listType: 'image'}"></Uploader>
 			</n-form-item>
@@ -66,6 +66,7 @@ const INIT_PRODUCT = {
 	slug: '',
 	slugTarget: 'pro-',
 	cates: [],
+	brandId: '',
 	masterPicture: '',
 	descPic: ['','','','',''],
 	paramsList: [],
@@ -83,7 +84,7 @@ const productRules = {
 	productName: [{ required: true, message: '请输入商品名称', trigger: 'blur' }],
 	slug: [{ required: true, message: '请输入slug', trigger: 'blur' }],
 	price: [{ required: true, message: '请输入商品价格', trigger: 'blur' }],
-	descPic: [{ required: true, message: '请上传商品图片', trigger: 'blur' }]
+	// descPic: [{ required: true, message: '请上传商品图片', trigger: 'blur' }]
 }
 // 对子组件提供的注册el动作，用于实现输入异常时，自动滚动到对应的位置
 const itemRefsMap = reactive({})
@@ -119,7 +120,15 @@ const onSaveProductInfo = () => {
 				itemRefsMap[field].scrollIntoView({ behavior: 'smooth' })
 			}
 		}else{
-			execute && execute(productInfo, null, () => {
+			const targetDescPic = productInfo.descPic.filter(item => !!item)
+			const params = {
+				...productInfo,
+				cates: typeof productInfo.cates === 'string' ? [productInfo.cates] : productInfo.cates,
+				masterPicture: productInfo.masterPicture ? productInfo.masterPicture : targetDescPic[0],
+				descPic: targetDescPic,
+				activityPrice: productInfo.price
+			}
+			execute && execute(params, null, () => {
 				//? 操作成功
 				router.back()
 			})

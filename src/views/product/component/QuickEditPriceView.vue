@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import { EditTwotone } from '@vicons/antd'
-import { ProductType, publishOrEdit } from '@/api/product/product.ts'
+import { ProductType, quicklyEditPrice } from '@/api/product/product.ts'
 import { ref } from 'vue';
 import { useMessage } from 'naive-ui'
 
@@ -37,10 +37,10 @@ const priceRules = {
 const loading = ref(false)
 // 触发编辑商品价格动作
 const onFinishEditPrice = () => {
-	priceForm?.value.validate(async errors => {
+	priceForm?.value.validate(async (errors: any) => {
 		if(!errors){
 			loading.value = true
-			const res = await publishOrEdit(itemInfo)
+			const res = await quicklyEditPrice(itemInfo.id, itemInfo)
 			message.success(res.message)
 			loading.value = false
 		}

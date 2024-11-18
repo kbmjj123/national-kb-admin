@@ -28,7 +28,7 @@ export function editBrand(params: BrandType): Promise<StringOrBooleanResponseMod
 */
 export const getAllBrandList = (): Promise<WrapArrayResponseModel<BrandType>> => {
 	return http.request({
-		url: '/brand/allList',
+		url: '/brand/allBrand',
 		method: 'get'
 	})
 }

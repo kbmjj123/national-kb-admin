@@ -1,11 +1,11 @@
 import { http } from '@/utils/http'
-import { BasicParams, BasicPageParams, ArrayResponseModel, StringOrBooleanResponseModel } from '../types'
+import { BasicParams, BasicPageParams, ArrayResponseModel, StringOrBooleanResponseModel, ObjectResponseModel } from '../types'
 
 export enum AccountStatus {
-	ALL = 0,
-	ENABLED = 1,
-	DISABLED = 2,
-	CANCELED = 3
+	ALL = '',
+	ENABLED = 'in-used',
+	DISABLED = 'forbidden',
+	CANCELED = 'cancel'
 }
 
 export type AccountType = {
@@ -17,31 +17,33 @@ export type AccountType = {
 	createTime: string,
 	lastLoginTime: string,
 	lastLoginIp: string,
-	accountStatus: AccountStatus
+	state: AccountStatus
 }
 
 // 获取账号列表
-export function getAccountListList(params: BasicPageParams): Promise<ArrayResponseModel<AccountType>>{
+export function getAccountList(params: BasicPageParams): Promise<ArrayResponseModel<AccountType>>{
 	return http.request({
 		url: '/account/list',
 		method: 'get',
-		data: params
+		params: params
 	})
 }
 
-// 禁用账号
-export function disabledAccount(params: BasicParams): Promise<StringOrBooleanResponseModel>{
+/**
+ * 获取用户信息
+*/
+export const getAccountInfo = (id: string): Promise<ObjectResponseModel<AccountType>> => {
 	return http.request({
-		url: `/account/disabled/${params['id']}`,
-		method: 'post',
-		data: params
+		url: `/account/info/${id}`,
+		method: 'get'
 	})
 }
-
-// 启用账号
-export function enabledAccount(params: BasicParams): Promise<StringOrBooleanResponseModel>{
+/**
+ * 切换账号状态
+*/
+export function toggleAccountState(id: string, params: BasicParams): Promise<ObjectResponseModel<AccountType>>{
 	return http.request({
-		url: `/account/enabled/${params['id']}`,
+		url: `/account/${id}/toggleAccountState`,
 		method: 'post',
 		data: params
 	})

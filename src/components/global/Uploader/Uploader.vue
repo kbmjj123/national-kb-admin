@@ -66,6 +66,7 @@ export type UploadOptions = {
   showPreviewButton?: boolean // 是否在文件列表显示预览按钮
   uploadDragger?: string // 上传拖动器的样式：single、normal、custom，默认是normal
 	uploadPath?: UploadPathType	// 限定文件的上传路径，根据业务具体定义
+	index?: number
 	[index: string]: any
 }
 
@@ -85,7 +86,8 @@ const defaultOptions: UploadOptions = {
   showFileList: true,
   showPreviewButton: true,
   uploadDragger: 'single',
-	uploadPath: 'images'
+	uploadPath: 'images',
+	index: -1
 }
 
 let { options } = defineProps<{
@@ -96,6 +98,11 @@ const list = ref([])
 
 const fileList = defineModel<string[]>('fileList')
 const file = defineModel<string>('file')
+
+const emit = defineEmits<{
+	'update:file': [params: {file: string, index: number}],
+	'update:list': []
+}>()
 
 const computedOptions = computed(() => ({
   ...defaultOptions,
@@ -139,6 +146,10 @@ const onFinish = ({ event }: { event?: ProgressEvent, file: UploadFileInfo }) =>
 		const remoteUrl = res.data
 		if(options.uploadDragger === 'single'){
 			file.value = remoteUrl
+			emit('update:file', {
+				file: remoteUrl,
+				index: computedOptions.value.index!
+			})
 		}else {
 			fileList.value?.push(remoteUrl)
 		}

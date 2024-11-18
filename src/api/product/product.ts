@@ -12,6 +12,7 @@ export type ProductType = {
 	slug: string,
 	slugTarget?: string,
 	cates: string[],
+	brandId: string,
 	masterPicture: string,
 	descPic: string[],
 	paramsList: ProductParams[],
@@ -27,7 +28,18 @@ export function publishOrEdit(params: ProductType): Promise<StringOrBooleanRespo
 		url: '/product/publish',
 		method: 'put',
 		data: params
-	}, { isShowSuccessMessage: true })
+	}, { isShowSuccessMessage: true, isShowErrorMessage: true, errorMessageMode: 'modal' })
+}
+
+/**
+ * 快速编辑商品价格
+*/
+export function quicklyEditPrice(id: string, params: BasicParams): Promise<ObjectResponseModel<ProductType>> {
+	return http.request({
+		url: `/product/${id}`,
+		method: 'post',
+		data: params
+	})
 }
 
 // 获取商品信息
@@ -50,7 +62,7 @@ export function getProductList(params: BasicPageParams): Promise<ArrayResponseMo
 // 商品上下架
 export function upOrDownShelves(params: BasicParams): Promise<StringOrBooleanResponseModel>{
 	return http.request({
-		url: '/product/upOrDownShelves',
+		url: `/product/${params.id}/upOrDownShelves`,
 		data: params,
 		method: 'post'
 	})

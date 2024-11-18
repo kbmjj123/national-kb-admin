@@ -8,6 +8,7 @@
         class="w-[50%]"
         label-field="name"
         value-field="id"
+				v-model:value="itemInfo.brandId"
 				:loading="loading"
         :options="result?.data">
         <template #empty>
@@ -26,9 +27,14 @@ import { type Ref, ref, onMounted, inject } from 'vue'
 import { ChevronForwardCircleOutline } from '@vicons/ionicons5'
 import { BrandType, getAllBrandList } from '@/api/product/brand'
 import { useLoading } from '@/hooks/web/useLoading'
+import { ProductType } from '@/api/product/product';
 const { result, execute, loading } = useLoading(getAllBrandList)
 
 const onAddBrand = () => {}
+
+const { itemInfo } = defineProps<{
+  itemInfo: ProductType
+}>()
 
 const brand = ref()
 const registerItemRef = inject('registerItemRef') as (prop: string, el: HTMLElement) => void

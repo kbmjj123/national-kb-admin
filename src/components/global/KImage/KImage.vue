@@ -14,6 +14,14 @@ const props = defineProps<{
 }>()
 
 const computedSrc = computed(() => {
-  return props.src ? `${globalSetting.imgUrl}${props.src}` : ''
+	if(props.src){
+		if(props.src.indexOf('http') > -1){
+			return props.src
+		}else{
+			return `${globalSetting.imgUrl}${props.src}`
+		}
+	}else{
+		return ''
+	}
 })
 </script>
