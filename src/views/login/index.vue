@@ -108,10 +108,12 @@ const handleSubmit = async (e: Event) => {
   const { email, password } = formInline
 	const useUserStore = useUser()
 	loading.value = true
-	await useUserStore.login({
+	debugger
+	const res = await useUserStore.login({
     email,
     password,
   })
+	console.info(res)
 	message.success('登录成功，即将进入系统')
 	loading.value = false
 	const route = useRoute()

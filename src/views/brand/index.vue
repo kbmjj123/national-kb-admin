@@ -1,33 +1,35 @@
 <template>
-	<n-form
-		ref="brandFormRef"
-		inline
-		label-placement="left"
-		label-width="auto"
-		:model="brandForm"
-		>
-		<n-form-item label="品牌关键词" path="key">
-			<n-input v-model:value="brandForm.key" placeholder="请输入品牌关键词" clearable></n-input>
-		</n-form-item>
-		<n-form-item :label-width="0">
-			<n-space>
-				<n-button type="primary" @click="getBrandListAction">搜索</n-button>
-				<n-button>重置</n-button>
-				<n-button type="primary" @click="onAddBrand">新增</n-button>
-			</n-space>
-		</n-form-item>
-	</n-form>
-	<n-data-table
-		bordered
-		bottom-bordered
-		:single-line="false"
-		:columns="columns"
-		:data="brandList"
-		:loading="loading"
-		:pagination="pagination"
-	></n-data-table>
-	<!-- 新增或编辑视图 -->
-	<EditBrandModal v-model="showBrand" :item-info="currentBrand"></EditBrandModal>
+	<div class="p-2">
+		<n-form
+			ref="brandFormRef"
+			inline
+			label-placement="left"
+			label-width="auto"
+			:model="brandForm"
+			>
+			<n-form-item label="品牌关键词" path="key">
+				<n-input v-model:value="brandForm.key" placeholder="请输入品牌关键词" clearable></n-input>
+			</n-form-item>
+			<n-form-item :label-width="0">
+				<n-space>
+					<n-button type="primary" @click="getBrandListAction">搜索</n-button>
+					<n-button>重置</n-button>
+					<n-button type="primary" @click="onAddBrand">新增</n-button>
+				</n-space>
+			</n-form-item>
+		</n-form>
+		<n-data-table
+			bordered
+			bottom-bordered
+			:single-line="false"
+			:columns="columns"
+			:data="brandList"
+			:loading="loading"
+			:pagination="pagination"
+		></n-data-table>
+		<!-- 新增或编辑视图 -->
+		<EditBrandModal v-model="showBrand" :item-info="currentBrand"></EditBrandModal>
+	</div>
 </template>
 
 <script setup lang="ts">

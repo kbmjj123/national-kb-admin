@@ -11,11 +11,12 @@ export enum AccountStatus {
 export type AccountType = {
 	id: string,
 	account: string,
+	email: string,
 	name: string,
 	avatar: string,
 	area: string,
 	createTime: string,
-	lastLoginTime: string,
+	loginTime: string,
 	lastLoginIp: string,
 	state: AccountStatus
 }
@@ -46,5 +47,5 @@ export function toggleAccountState(id: string, params: BasicParams): Promise<Obj
 		url: `/account/${id}/toggleAccountState`,
 		method: 'post',
 		data: params
-	})
+	}, { isShowSuccessMessage: true })
 }

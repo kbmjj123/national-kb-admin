@@ -1,26 +1,28 @@
 <template>
-  <n-form inline :model="filterForm" label-width="auto" label-placement="left">
-    <n-form-item label="状态: ">
-      <n-select class="w-[120px]" :options="All_ACCOUNT_STATUS" v-model:value="filterForm.accountStatus"></n-select>
-    </n-form-item>
-    <n-form-item label="账号: ">
-      <n-input placeholder="请输入账号" v-model:value="filterForm.account"></n-input>
-    </n-form-item>
-    <n-form-item>
-      <n-flex>
-        <n-button type="primary" @click="queryAction">搜索</n-button>
-        <n-button @click="onReset">重置</n-button>
-      </n-flex>
-    </n-form-item>
-  </n-form>
-  <n-data-table
-    striped
-    :single-line="false"
-    :columns="columns"
-    :loading="loading"
-    :data="result?.data?.list"
-    :pagination="pagination" />
-	<AccountInfoModal v-model="showAccountInfoFlag" :id="currentAccountId"></AccountInfoModal>
+  <div class="p-2">
+    <n-form inline :model="filterForm" label-width="auto" label-placement="left">
+      <n-form-item label="状态: ">
+        <n-select class="w-[120px]" :options="All_ACCOUNT_STATUS" v-model:value="filterForm.accountStatus"></n-select>
+      </n-form-item>
+      <n-form-item label="账号: ">
+        <n-input placeholder="请输入账号" v-model:value="filterForm.account"></n-input>
+      </n-form-item>
+      <n-form-item>
+        <n-flex>
+          <n-button type="primary" @click="queryAction">搜索</n-button>
+          <n-button @click="onReset">重置</n-button>
+        </n-flex>
+      </n-form-item>
+    </n-form>
+    <n-data-table
+      striped
+      :single-line="false"
+      :columns="columns"
+      :loading="loading"
+      :data="result?.data?.list"
+      :pagination="pagination" />
+    <AccountInfoModal v-model="showAccountInfoFlag" :id="currentAccountId"></AccountInfoModal>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -35,8 +37,8 @@ const { loading, execute, result } = useLoading(getAccountList)
 const filterForm = reactive({
   accountStatus: 0,
   account: '',
-	pageIndex: 1,
-	pageSize: 20
+  pageIndex: 1,
+  pageSize: 20,
 })
 const originalFilter = markRaw(filterForm)
 
@@ -57,17 +59,28 @@ const columns: DataTableColumns<AccountType> = [
     width: 80,
     align: 'center',
     key: 'avatar',
-    render: (row: AccountType) => h(NImage, { src: row.avatar, width: 50, height: 50 }),
+    render: (row: AccountType) =>
+      h(NImage, {
+        src: row.avatar,
+        width: 50,
+        height: 50,
+        lazy: true,
+      }),
   },
   {
     title: '状态',
     width: 100,
     align: 'center',
     key: 'accountStatus',
-    render: (row: AccountType) => h(NText, {}, () => (row.state === AccountStatus.ENABLED ? '使用中' : '禁用')),
+    render: (row: AccountType) => h(NText, {}, () => (row.state === AccountStatus.ENABLED ? '使用中' : '禁用中')),
   },
   { title: '创建时间', width: 120, key: 'createTime', align: 'center' },
-  { title: '最近登录时间', minWidth: 150, key: 'lastLoginTime' },
+  {
+    title: '最近登录时间',
+    minWidth: 150,
+    key: 'loginTime',
+    render: (row: AccountType) => h(NText, {}, () => row.loginTime),
+  },
   { title: '登录地区', minWidth: 150, key: 'area', align: 'center' },
   {
     title: '操作',
@@ -76,29 +89,37 @@ const columns: DataTableColumns<AccountType> = [
     align: 'center',
     key: 'action',
     render: (row: AccountType) =>
-      h(NFlex, {
-				justify: 'center'
-			},[
-        h(
-          NButton,
-          {
-            text: true,
-            type: AccountStatus.ENABLED === row.state ? 'error' : 'primary',
-            onClick: () => {
-              AccountStatus.ENABLED === row.state ? disabledAction(row) : enabledAction(row)
+      h(
+        NFlex,
+        {
+          justify: 'center',
+        },
+        () => [
+          h(
+            NButton,
+            {
+              text: true,
+              type: AccountStatus.ENABLED === row.state ? 'error' : 'primary',
+              onClick: () => {
+                AccountStatus.ENABLED === row.state ? disabledAction(row) : enabledAction(row)
+              },
             },
-          },
-          () => (AccountStatus.ENABLED === row.state ? '禁用' : '启用'),
-        ),
-				h(NButton, {
-					text: true,
-					type: 'primary',
-					onClick: () => {
-						showAccountInfoFlag.value = true
-						currentAccountId.value = row.id
-					}
-				}, () => '详情')
-      ]),
+            () => (AccountStatus.ENABLED === row.state ? '禁用' : '启用'),
+          ),
+          h(
+            NButton,
+            {
+              text: true,
+              type: 'primary',
+              onClick: () => {
+                showAccountInfoFlag.value = true
+                currentAccountId.value = row.id
+              },
+            },
+            () => '详情',
+          ),
+        ],
+      ),
   },
 ]
 const All_ACCOUNT_STATUS = [
@@ -120,8 +141,8 @@ const All_ACCOUNT_STATUS = [
   },
 ]
 const pagination = reactive({
-	pageSize: 20,
-	page: filterForm.pageIndex
+  pageSize: 20,
+  page: filterForm.pageIndex,
 })
 // 启用账号
 const enabledAction = (row: AccountType) => {
@@ -131,7 +152,7 @@ const enabledAction = (row: AccountType) => {
     positiveText: '确定',
     negativeText: '我再想想',
     onPositiveClick: async () => {
-      await toggleAccountState(row.id, { state: '' })
+      await toggleAccountState(row.id, { state: AccountStatus.ENABLED })
       queryAction()
     },
   })
@@ -144,7 +165,7 @@ const disabledAction = (row: AccountType) => {
     positiveText: '确定',
     negativeText: '我再想想',
     onPositiveClick: async () => {
-      await toggleAccountState(row.id, { state: '' })
+      await toggleAccountState(row.id, { state: AccountStatus.DISABLED })
       queryAction()
     },
   })
